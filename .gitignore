@@ -1,0 +1,13 @@
+.build/
+build/
+.DS_Store
+.swiftpm/
+node_modules/
+frontend/data/
+frontend/dist/
+backend/integrations/attestation/data/
+# Rust and Noir build output, wherever it is.
+target/
+__pycache__/
+.env*
+!.env.example
