@@ -1,0 +1,29 @@
+[package]
+name = "huma-grammar"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Harper's offline English grammar checks for the Huma Mac app, behind a two-function C interface."
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Harper (Automattic, Apache-2.0): offline grammar checking. Pinned; bump deliberately.
+harper-core = { version = "=2.11.0", default-features = false, features = ["concurrent"] }
+# harper-core asks for its sibling crates with ^2.11, which now resolves to 2.13 and no longer compiles with it.
+harper-brill = "=2.11.0"
+harper-pos-utils = "=2.11.0"
+serde_json = "1"
+
+# The browser's copy (frontend/write/build.mjs) gets its random numbers from the page, which asks crypto.getRandomValues.
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = "=0.3.4"
+
+[profile.release]
+# Built for size: 5.8 MB instead of 8.1 MB, with the same suggestions. A sentence takes under a millisecond either
+# way (0.8 ms against 0.4 ms). Panics still unwind, so lib.rs can catch one instead of closing the app.
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true

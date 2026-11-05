@@ -1,0 +1,4 @@
+[toolchain]
+# Harper 2.11 needs a newer compiler than 1.93. Pinned; bump deliberately.
+channel = "1.98.0"
+profile = "minimal"

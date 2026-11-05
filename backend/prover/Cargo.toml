@@ -1,0 +1,22 @@
+[package]
+name = "huma-prover"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Huma proving service: opt-in page proofs"
+
+[dependencies]
+axum = { version = "=0.8.9", default-features = false, features = ["http1", "json", "tokio"] }
+tokio = { version = "=1.53.3", features = ["rt-multi-thread", "macros", "process", "fs", "io-util", "time", "sync", "net", "signal"] }
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = "=1.0.145"
+base64 = "=0.22.1"
+sha2 = "=0.10.8"
+hex = "=0.4.3"
+libc = "=0.2.186"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+
+[workspace]
