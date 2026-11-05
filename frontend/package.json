@@ -1,0 +1,54 @@
+{
+  "name": "huma-web",
+  "private": true,
+  "type": "module",
+  "description": "Huma's website: landing page, browser verifier, proof registry and research deck.",
+  "scripts": {
+    "start": "node registry.mjs",
+    "start:configured": "node --env-file=../.env.local registry.mjs",
+    "check:publication": "node --env-file=../.env.local deployment-check.mjs",
+    "test": "node --test test/*.test.mjs",
+    "build": "vite build deck && vite build --config share/vite.config.mjs",
+    "build:share": "vite build --config share/vite.config.mjs",
+    "build:faces": "esbuild faces/entry.mjs --bundle --format=iife --minify --target=safari17 --legal-comments=eof --outfile=../extra/Resources/Faces.js",
+    "dev:deck": "vite deck",
+    "typecheck": "tsc --noEmit -p deck"
+  },
+  "dependencies": {
+    "@arkiv-network/sdk": "1.0.0",
+    "@aws-sdk/client-s3": "3.1156.0",
+    "@dicebear/core": "10.7.0",
+    "@dicebear/styles": "10.6.0",
+    "@privy-io/node": "0.35.0",
+    "@privy-io/react-auth": "3.48.1",
+    "@worldcoin/idkit-core": "4.6.0",
+    "framer-motion": "^11.3.0",
+    "maplibre-gl": "6.14.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "viem": "2.57.10"
+  },
+  "devDependencies": {
+    "@pdf-lib/fontkit": "1.1.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "pdf-lib": "1.17.1",
+    "posthog-js": "1.438.12",
+    "prosemirror-commands": "1.7.2",
+    "prosemirror-history": "1.5.1",
+    "prosemirror-inputrules": "1.5.1",
+    "prosemirror-keymap": "1.2.3",
+    "prosemirror-model": "1.25.12",
+    "prosemirror-schema-list": "1.5.1",
+    "prosemirror-state": "1.4.4",
+    "prosemirror-transform": "1.12.2",
+    "prosemirror-view": "1.42.6",
+    "typescript": "^5.5.3",
+    "vite": "6.4.4"
+  },
+  "overrides": {
+    "ws": "8.22.0",
+    "uuid": "11.1.1"
+  }
+}
