@@ -1,0 +1,130 @@
+{
+  "session" : {
+    "createdAt" : 814302229.875228,
+    "events" : [
+      {
+        "elapsedMilliseconds" : 2,
+        "head" : "51cae3c816223e7558e7726aa9237ecdec903980c64e37c0e9686abd8e99eb28",
+        "insertedText" : "Café 👩🏽‍💻",
+        "location" : 0,
+        "previousHead" : "8d7a62925fb550e554488908e60eaee8d831d87146c901f78ab419d59f219820",
+        "removedLength" : 0,
+        "sequence" : 0,
+        "source" : "typing",
+        "textHash" : "6e861cc9125c4ce713611cfdf17b791fe2561a8e7d1cb1f5ee9d7e171d0abcbe"
+      },
+      {
+        "elapsedMilliseconds" : 5,
+        "head" : "32bc8017618fadde254411169523f1b5108a1ef4c1cda530c6de1dfafe4f4a1b",
+        "insertedText" : "é",
+        "location" : 3,
+        "previousHead" : "51cae3c816223e7558e7726aa9237ecdec903980c64e37c0e9686abd8e99eb28",
+        "removedLength" : 1,
+        "sequence" : 1,
+        "source" : "typing",
+        "textHash" : "461fc6745e2d3897cc546dc576cf7eac82214a290e3efe42287e787bd628aa95"
+      },
+      {
+        "elapsedMilliseconds" : 8,
+        "head" : "9cb5f60622701eeb0abf94b17f1787c3e610443b1def2730cdfd982f59a32aa4",
+        "insertedText" : "\/ \"quoted\"\n\t👩🏽‍💻 ",
+        "location" : 6,
+        "previousHead" : "32bc8017618fadde254411169523f1b5108a1ef4c1cda530c6de1dfafe4f4a1b",
+        "removedLength" : 7,
+        "sequence" : 2,
+        "source" : "paste",
+        "textHash" : "5dc6f21a910dcaab14f4431682b227612666491e101b606f61f2f6ee6620c23c"
+      },
+      {
+        "elapsedMilliseconds" : 11,
+        "head" : "dbb712d9fef51113ac8e3a8c22bd1282989cb8196e4360f4055c148aaaeb1fc1",
+        "insertedText" : "👨",
+        "location" : 18,
+        "previousHead" : "9cb5f60622701eeb0abf94b17f1787c3e610443b1def2730cdfd982f59a32aa4",
+        "removedLength" : 2,
+        "sequence" : 3,
+        "source" : "typing",
+        "textHash" : "109589a47c93a9a51024f4431860e5fc6d5740c804495bebce8e72099c54cb95"
+      },
+      {
+        "elapsedMilliseconds" : 14,
+        "head" : "3e5467f7b967daa1c746205fe6a9201297e75efab91eaf0cbc4ca50a0154dcdf",
+        "insertedText" : "  revised 👨🏽‍💻  \t",
+        "location" : 17,
+        "previousHead" : "dbb712d9fef51113ac8e3a8c22bd1282989cb8196e4360f4055c148aaaeb1fc1",
+        "removedLength" : 9,
+        "sequence" : 4,
+        "source" : "typing",
+        "textHash" : "4dddea48e6f7cf929f242b83bd16ba673f36790e4c5e4f503ca2778075a50616"
+      }
+    ],
+    "id" : "12345678-1234-1234-1234-123456789ABC",
+    "initialText" : "",
+    "inputSamples" : [
+      {
+        "elapsedMilliseconds" : 1,
+        "keyCode" : 0,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 3,
+        "keyCode" : 0,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 4,
+        "keyCode" : 1,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 6,
+        "keyCode" : 1,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 7,
+        "keyCode" : 2,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 9,
+        "keyCode" : 2,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 10,
+        "keyCode" : 3,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 12,
+        "keyCode" : 3,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 13,
+        "keyCode" : 4,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 15,
+        "keyCode" : 4,
+        "kind" : "up",
+        "modifiers" : 0
+      }
+    ],
+    "signedCheckpoints" : [
+
+    ]
+  },
+  "text" : "Café \/ \"quoted\"\n  revised 👨🏽‍💻  \t"
+}

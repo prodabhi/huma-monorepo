@@ -1,0 +1,11 @@
+[package]
+name = "huma-replay-verifier"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+huma-replay-core = { path = "../common" }
+risc0-zkvm = { version = "=3.0.6", default-features = false, features = ["std", "disable-dev-mode"] }
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = "=1.0.145"
+base64 = "=0.22.1"

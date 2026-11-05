@@ -1,0 +1,12 @@
+[package]
+name = "huma-replay-core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = "=1.0.145"
+sha2 = "=0.10.8"
+p256 = { version = "=0.13.2", default-features = false, features = ["ecdsa"] }
+base64 = "=0.22.1"
+hex = "=0.4.3"

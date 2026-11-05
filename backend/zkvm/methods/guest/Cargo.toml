@@ -1,0 +1,19 @@
+[package]
+name = "huma-replay-guest"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+huma-replay-core = { path = "../../common" }
+risc0-zkvm = { version = "=3.0.6", default-features = false, features = ["std", "heap-embedded-alloc"] }
+serde_json = "=1.0.145"
+
+[patch.crates-io]
+p256 = { git = "https://github.com/risc0/RustCrypto-elliptic-curves", rev = "bb0f51ad3ba81585f36ea8a1ea81093d8664b195" }
+sha2 = { git = "https://github.com/risc0/RustCrypto-hashes", rev = "244dc3b08788f7a4ccce14c66896ae3b4f24c166" }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+
+[workspace]

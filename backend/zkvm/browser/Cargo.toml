@@ -1,0 +1,12 @@
+[package]
+name = "huma-replay-browser"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+huma-replay-verifier = { path = "../verifier" }
+serde_json = "=1.0.145"
+wasm-bindgen = "=0.2.129"

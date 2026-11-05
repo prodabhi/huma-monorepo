@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-23",
+  "softwareFixturesOnly": true,
+  "deviceSensorsOrCredentialsUsed": false,
+  "swiftTests": {
+    "passed": 45,
+    "skipped": 0
+  },
+  "rustTests": {
+    "core": 8,
+    "verifier": 2
+  },
+  "readerRegression": {
+    "legacyWasm": true,
+    "registryTestsPassed": 3,
+    "legacyNativeAdapterOffline": true
+  },
+  "media": {
+    "macTestsPassed": 3,
+    "iOSTypecheck": true,
+    "sensorRecorderImplemented": false,
+    "physicalConsistencyProofImplemented": false
+  },
+  "v3Guest": {
+    "imageID": "0968908b3cd5c9b95c692f8786d2d39046de772827fa83992df9495a72c465e9",
+    "executionOnly": [
+      {
+        "fixture": "presence-typed",
+        "cycles": 4696683,
+        "policySatisfied": true,
+        "timelyResponses": 2,
+        "missed": 0
+      },
+      {
+        "fixture": "presence-paste-missed",
+        "cycles": 4517184,
+        "policySatisfied": false,
+        "timelyResponses": 1,
+        "missed": 1
+      }
+    ],
+    "fullProof": {
+      "completed": false,
+      "verified": false,
+      "state": "intentionally-stopped-for-resource-use",
+      "threads": 2,
+      "observedElapsedSeconds": 869,
+      "observedRSSBytes": 9016410112,
+      "observationIsLowerBoundOnStoppedDuration": true,
+      "note": "No V3 public proof was produced or claimed accepted. Optimize before another full attempt."
+    }
+  },
+  "sourceHashes": {
+    "Sources/HumaCore/HumanPresence.swift": "31406152b05d7c936308a76cacd57a1e664e23085873bcf2f8ac6cf6a574ea3e",
+    "Sources/HumaCore/MediaCapture.swift": "9d599fe7cb715d61c4fa7823578fd738c93ff7d0c184d5803bb9a98ee499eb91",
+    "Sources/HumaCore/SessionLog.swift": "c0d5e3b19d91b2d0fbac71e41394407e3d6038594d6d15fc7c8d9d940bff87f2",
+    "Sources/HumaCore/SignedCapture.swift": "e2f75be698dbe7315d8219c168ec929a9007ad92c17a27b59fda46c2d4512f3c",
+    "Sources/Huma/CaptureSigner.swift": "872d4848b4b6973962e3bbd0c8b801f415fbe5d4e0944f889888a95977f5a965",
+    "Sources/Huma/RichTextEditor.swift": "dcc8de40795315cc0f0b2bb37b15c97d93e62d2cc07291d1d5fb34f211b11bc7",
+    "zkvm/common/src/lib.rs": "388679a01e107afb25e9ab5d4cbf27db26f700784adefe16b99d92fecbaf83d4",
+    "zkvm/common/src/human.rs": "a72aaa4fe0b9628b4a90129708669141aff9c5da5c36bb7fab60685d18dd173f",
+    "zkvm/verifier/src/lib.rs": "11725ca49b242b2cf51bbddf2c98c82c6814ef565f5d3d12128ac37a69304cb4"
+  },
+  "preview": {
+    "path": "build/Huma-human-presence-preview.app",
+    "strictCodesignVerified": true,
+    "launched": false
+  }
+}

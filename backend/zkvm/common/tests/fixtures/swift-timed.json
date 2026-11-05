@@ -1,0 +1,314 @@
+{
+  "session" : {
+    "captureRecords" : [
+      {
+        "head" : "702fdeee666fca08c3b8f5067b9470be92df8da64fab3861fe7d7a2dca607c61",
+        "index" : 0,
+        "kind" : "key",
+        "payloadHash" : "54463042cf300e99d43ffe05d22e887fdac50dbb7e817441e28143b077ac0b1e",
+        "previousHead" : "72367c6c19b17d47fdd358863eabdd861f85c328d8e828fefd26cb91e253295b",
+        "sequence" : 0
+      },
+      {
+        "head" : "0b249d125ea0b337d84601ca54c6b8215a07ff37c08c73c018488aabadcde08a",
+        "index" : 0,
+        "kind" : "edit",
+        "payloadHash" : "51cae3c816223e7558e7726aa9237ecdec903980c64e37c0e9686abd8e99eb28",
+        "previousHead" : "702fdeee666fca08c3b8f5067b9470be92df8da64fab3861fe7d7a2dca607c61",
+        "sequence" : 1
+      },
+      {
+        "head" : "c555a43962833ec2e513d3500a3e34327d8ba6d2fb44149725b43ce9baeb42cf",
+        "index" : 1,
+        "kind" : "key",
+        "payloadHash" : "cf284ebd5e74b61c9c625ac9dfb0995effbfec4543e60355e85ce4271a20cf9b",
+        "previousHead" : "0b249d125ea0b337d84601ca54c6b8215a07ff37c08c73c018488aabadcde08a",
+        "sequence" : 2
+      },
+      {
+        "head" : "a127aa39d7190b475eca1408d8d02dbe440e71d3fda70f535cbcf5d03cb6461f",
+        "index" : 2,
+        "kind" : "key",
+        "payloadHash" : "2b7d8dc5ca4641df378a53e30f019871004f498e2aed96228c3306a6683b75f4",
+        "previousHead" : "c555a43962833ec2e513d3500a3e34327d8ba6d2fb44149725b43ce9baeb42cf",
+        "sequence" : 3
+      },
+      {
+        "head" : "c32c1b99e3c8a33f06f1dfb51babf4bac3db27d650a4e08736a4cdf39bd04a6e",
+        "index" : 1,
+        "kind" : "edit",
+        "payloadHash" : "32bc8017618fadde254411169523f1b5108a1ef4c1cda530c6de1dfafe4f4a1b",
+        "previousHead" : "a127aa39d7190b475eca1408d8d02dbe440e71d3fda70f535cbcf5d03cb6461f",
+        "sequence" : 4
+      },
+      {
+        "head" : "2db8cd9ca77ac6d284a8a348e1abcc0b5c2874d93276a2d7ed51456a53304e02",
+        "index" : 3,
+        "kind" : "key",
+        "payloadHash" : "b5537e840e768977eb109ba0f8353367b1576045bddb78f8afe86b7374101fcc",
+        "previousHead" : "c32c1b99e3c8a33f06f1dfb51babf4bac3db27d650a4e08736a4cdf39bd04a6e",
+        "sequence" : 5
+      },
+      {
+        "head" : "44c6eccbe2aa11163eed51764cf5743f773f3a22ef11c07c722fdbbaa67bddda",
+        "index" : 4,
+        "kind" : "key",
+        "payloadHash" : "005e88ec0a2cc3257d20f5a4f6a762c470db67d29e3eb0a87c1107480efc7dee",
+        "previousHead" : "2db8cd9ca77ac6d284a8a348e1abcc0b5c2874d93276a2d7ed51456a53304e02",
+        "sequence" : 6
+      },
+      {
+        "head" : "7f628c9ad1c934c23fe3ca9a7b107e0dfdab8b1561f4eb7b5cd5a33fc8391793",
+        "index" : 2,
+        "kind" : "edit",
+        "payloadHash" : "9cb5f60622701eeb0abf94b17f1787c3e610443b1def2730cdfd982f59a32aa4",
+        "previousHead" : "44c6eccbe2aa11163eed51764cf5743f773f3a22ef11c07c722fdbbaa67bddda",
+        "sequence" : 7
+      },
+      {
+        "head" : "8aa0a67b6b22afdddc3f211cac55f8448da2dcff34bec4bd24aa7dc03c6bd24b",
+        "index" : 5,
+        "kind" : "key",
+        "payloadHash" : "0ba72a10b15ae68474124422634355dffdc5171fdbe89c93038d2bf1fbd9c524",
+        "previousHead" : "7f628c9ad1c934c23fe3ca9a7b107e0dfdab8b1561f4eb7b5cd5a33fc8391793",
+        "sequence" : 8
+      },
+      {
+        "head" : "50a92e3a51f89345ee1f18915c8f965bb9d330beba85285468bead047c2df3d1",
+        "index" : 6,
+        "kind" : "key",
+        "payloadHash" : "b7099d85442312f36e33842d276f14aa54fc9e298ff3dd303337fff541549989",
+        "previousHead" : "8aa0a67b6b22afdddc3f211cac55f8448da2dcff34bec4bd24aa7dc03c6bd24b",
+        "sequence" : 9
+      },
+      {
+        "head" : "a90239aacb1716e046ed83b4098b6a5ea9815d9706ab292b2e4121936cd65c93",
+        "index" : 3,
+        "kind" : "edit",
+        "payloadHash" : "dbb712d9fef51113ac8e3a8c22bd1282989cb8196e4360f4055c148aaaeb1fc1",
+        "previousHead" : "50a92e3a51f89345ee1f18915c8f965bb9d330beba85285468bead047c2df3d1",
+        "sequence" : 10
+      },
+      {
+        "head" : "26cadd79765553bdc078a0f09c9993286fed4c00abb0f58471f3108c49ee868a",
+        "index" : 7,
+        "kind" : "key",
+        "payloadHash" : "77cfc0cb84129811f60e24347f15926d75904adac6a1613107e717062835678f",
+        "previousHead" : "a90239aacb1716e046ed83b4098b6a5ea9815d9706ab292b2e4121936cd65c93",
+        "sequence" : 11
+      },
+      {
+        "head" : "873171a363d2e1e5adb6ca2122f4f49d75fb67a82799dd117cf288d9eccca514",
+        "index" : 8,
+        "kind" : "key",
+        "payloadHash" : "5c3c442b3322cfb457db90074f5120f147057aaaec9c844192edd5c89a81ccce",
+        "previousHead" : "26cadd79765553bdc078a0f09c9993286fed4c00abb0f58471f3108c49ee868a",
+        "sequence" : 12
+      },
+      {
+        "head" : "52f03c248a2d90976c54878e8bb632a78d0cfba6e3a437dca7cbf9477efe8320",
+        "index" : 4,
+        "kind" : "edit",
+        "payloadHash" : "3e5467f7b967daa1c746205fe6a9201297e75efab91eaf0cbc4ca50a0154dcdf",
+        "previousHead" : "873171a363d2e1e5adb6ca2122f4f49d75fb67a82799dd117cf288d9eccca514",
+        "sequence" : 13
+      },
+      {
+        "head" : "806cf6f7a5312f3c2f420dd2b449202b5527627f5a662791f1275d769b972874",
+        "index" : 9,
+        "kind" : "key",
+        "payloadHash" : "06d184533a519be82d42fe24927e909819d9913576e4ee5174814c1209a0a3f7",
+        "previousHead" : "52f03c248a2d90976c54878e8bb632a78d0cfba6e3a437dca7cbf9477efe8320",
+        "sequence" : 14
+      }
+    ],
+    "createdAt" : 814303211.404131,
+    "events" : [
+      {
+        "elapsedMilliseconds" : 2,
+        "head" : "51cae3c816223e7558e7726aa9237ecdec903980c64e37c0e9686abd8e99eb28",
+        "insertedText" : "Café 👩🏽‍💻",
+        "location" : 0,
+        "previousHead" : "8d7a62925fb550e554488908e60eaee8d831d87146c901f78ab419d59f219820",
+        "removedLength" : 0,
+        "sequence" : 0,
+        "source" : "typing",
+        "textHash" : "6e861cc9125c4ce713611cfdf17b791fe2561a8e7d1cb1f5ee9d7e171d0abcbe"
+      },
+      {
+        "elapsedMilliseconds" : 5,
+        "head" : "32bc8017618fadde254411169523f1b5108a1ef4c1cda530c6de1dfafe4f4a1b",
+        "insertedText" : "é",
+        "location" : 3,
+        "previousHead" : "51cae3c816223e7558e7726aa9237ecdec903980c64e37c0e9686abd8e99eb28",
+        "removedLength" : 1,
+        "sequence" : 1,
+        "source" : "typing",
+        "textHash" : "461fc6745e2d3897cc546dc576cf7eac82214a290e3efe42287e787bd628aa95"
+      },
+      {
+        "elapsedMilliseconds" : 8,
+        "head" : "9cb5f60622701eeb0abf94b17f1787c3e610443b1def2730cdfd982f59a32aa4",
+        "insertedText" : "\/ \"quoted\"\n\t👩🏽‍💻 ",
+        "location" : 6,
+        "previousHead" : "32bc8017618fadde254411169523f1b5108a1ef4c1cda530c6de1dfafe4f4a1b",
+        "removedLength" : 7,
+        "sequence" : 2,
+        "source" : "paste",
+        "textHash" : "5dc6f21a910dcaab14f4431682b227612666491e101b606f61f2f6ee6620c23c"
+      },
+      {
+        "elapsedMilliseconds" : 11,
+        "head" : "dbb712d9fef51113ac8e3a8c22bd1282989cb8196e4360f4055c148aaaeb1fc1",
+        "insertedText" : "👨",
+        "location" : 18,
+        "previousHead" : "9cb5f60622701eeb0abf94b17f1787c3e610443b1def2730cdfd982f59a32aa4",
+        "removedLength" : 2,
+        "sequence" : 3,
+        "source" : "typing",
+        "textHash" : "109589a47c93a9a51024f4431860e5fc6d5740c804495bebce8e72099c54cb95"
+      },
+      {
+        "elapsedMilliseconds" : 14,
+        "head" : "3e5467f7b967daa1c746205fe6a9201297e75efab91eaf0cbc4ca50a0154dcdf",
+        "insertedText" : "  revised 👨🏽‍💻  \t",
+        "location" : 17,
+        "previousHead" : "dbb712d9fef51113ac8e3a8c22bd1282989cb8196e4360f4055c148aaaeb1fc1",
+        "removedLength" : 9,
+        "sequence" : 4,
+        "source" : "typing",
+        "textHash" : "4dddea48e6f7cf929f242b83bd16ba673f36790e4c5e4f503ca2778075a50616"
+      }
+    ],
+    "id" : "12345678-1234-1234-1234-123456789ABC",
+    "initialText" : "",
+    "inputSamples" : [
+      {
+        "elapsedMilliseconds" : 1,
+        "keyCode" : 0,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 3,
+        "keyCode" : 0,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 4,
+        "keyCode" : 1,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 6,
+        "keyCode" : 1,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 7,
+        "keyCode" : 2,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 9,
+        "keyCode" : 2,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 10,
+        "keyCode" : 3,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 12,
+        "keyCode" : 3,
+        "kind" : "up",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 13,
+        "keyCode" : 4,
+        "kind" : "down",
+        "modifiers" : 0
+      },
+      {
+        "elapsedMilliseconds" : 15,
+        "keyCode" : 4,
+        "kind" : "up",
+        "modifiers" : 0
+      }
+    ],
+    "signedCheckpoints" : [
+      {
+        "captureCount" : 0,
+        "captureHead" : "72367c6c19b17d47fdd358863eabdd861f85c328d8e828fefd26cb91e253295b",
+        "challenge" : "",
+        "editCount" : 0,
+        "editHead" : "8d7a62925fb550e554488908e60eaee8d831d87146c901f78ab419d59f219820",
+        "isFinal" : false,
+        "kind" : "unattested-p256",
+        "previousCheckpoint" : "",
+        "publicKey" : "BLACquKeJAU0EMEdhuU3E2zt9HKMhuKl71NjGuiyg057NrtDDm7r7Rk1H+19pCVPwifu1HbKMyJTTvNb19b3IPc=",
+        "reportedTime" : {
+          "elapsedMilliseconds" : 0,
+          "unixMilliseconds" : 1792627200000
+        },
+        "sampleCount" : 0,
+        "sequence" : 0,
+        "sessionID" : "12345678-1234-1234-1234-123456789ABC",
+        "signature" : "MEQCIBL3+onL2VHPAmniTIt4Mv4rq+bktr6oHBtQu3GiQx33AiA3fNSotO0QnIFpsk\/93f\/2\/8SP54ZJXcZ\/NrWxxTHGkg==",
+        "textHash" : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "version" : 2
+      },
+      {
+        "captureCount" : 9,
+        "captureHead" : "8aa0a67b6b22afdddc3f211cac55f8448da2dcff34bec4bd24aa7dc03c6bd24b",
+        "challenge" : "",
+        "editCount" : 3,
+        "editHead" : "9cb5f60622701eeb0abf94b17f1787c3e610443b1def2730cdfd982f59a32aa4",
+        "isFinal" : false,
+        "kind" : "unattested-p256",
+        "previousCheckpoint" : "4986005f6937387f73a18bab865e8f7d671e6c3ca729ee10aedca6ff3851b64b",
+        "publicKey" : "BLACquKeJAU0EMEdhuU3E2zt9HKMhuKl71NjGuiyg057NrtDDm7r7Rk1H+19pCVPwifu1HbKMyJTTvNb19b3IPc=",
+        "reportedTime" : {
+          "elapsedMilliseconds" : 9,
+          "unixMilliseconds" : 1792627200009
+        },
+        "sampleCount" : 6,
+        "sequence" : 1,
+        "sessionID" : "12345678-1234-1234-1234-123456789ABC",
+        "signature" : "MEYCIQCAyjkN3n3yImulfkHqBn5916eUYOVm6TuevtWd1Wh8twIhALA1O33LNOBXoCpKU3RFPNOybPlXxHqiWBUs9TpKrC\/W",
+        "textHash" : "5dc6f21a910dcaab14f4431682b227612666491e101b606f61f2f6ee6620c23c",
+        "version" : 2
+      },
+      {
+        "captureCount" : 15,
+        "captureHead" : "806cf6f7a5312f3c2f420dd2b449202b5527627f5a662791f1275d769b972874",
+        "challenge" : "",
+        "editCount" : 5,
+        "editHead" : "3e5467f7b967daa1c746205fe6a9201297e75efab91eaf0cbc4ca50a0154dcdf",
+        "isFinal" : true,
+        "kind" : "unattested-p256",
+        "previousCheckpoint" : "79ca9a1ee625472c1e954cee27d7bd47889ba6fbadbf71638e949aae23596002",
+        "publicKey" : "BLACquKeJAU0EMEdhuU3E2zt9HKMhuKl71NjGuiyg057NrtDDm7r7Rk1H+19pCVPwifu1HbKMyJTTvNb19b3IPc=",
+        "reportedTime" : {
+          "elapsedMilliseconds" : 15,
+          "unixMilliseconds" : 1792627200015
+        },
+        "sampleCount" : 10,
+        "sequence" : 2,
+        "sessionID" : "12345678-1234-1234-1234-123456789ABC",
+        "signature" : "MEQCID4gD0HFx4qIRCLtpQqOAzZH8csUiGU9BVsSDZYsDQkdAiApnCoIoPYLwSosSxqHKqK8E3FXPFoHDMZWQn67Aw4MIQ==",
+        "textHash" : "4dddea48e6f7cf929f242b83bd16ba673f36790e4c5e4f503ca2778075a50616",
+        "version" : 2
+      }
+    ]
+  },
+  "text" : "Café \/ \"quoted\"\n  revised 👨🏽‍💻  \t"
+}
