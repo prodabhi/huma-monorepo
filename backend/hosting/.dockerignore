@@ -1,0 +1,8 @@
+.env*
+**/.env*
+node_modules
+**/node_modules
+**/data
+**/test
+**/tests
+*.tar.gz
