@@ -1,0 +1,459 @@
+{
+  "kind": "huma-prover-performance-attack-v1",
+  "date": "2026-10-23",
+  "scope": "Research measurement of the current packaged Noir prover; no app, key, signature, or provider state changed.",
+  "softwareFixturesOnly": true,
+  "ownerIdentityUsed": false,
+  "host": {
+    "chip": "Apple M4 Max",
+    "cores": 16,
+    "os": "macOS 27.0.0 (darwin arm64)"
+  },
+  "toolchain": {
+    "noir": "1.0.0-beta.25",
+    "barretenberg": "5.2.1",
+    "target": "noir-recursive",
+    "zk": true,
+    "node": "24.22.1"
+  },
+  "why": "Prove time follows circuit gate count at about 8.4-8.7 us/gate on two threads. Reducing gates and increasing thread count are the only large levers found.",
+  "method": [
+    "bb gates --include_gates_per_opcode on the compiled short64 circuit, joined with the artifact's raw-deflate debug_symbols (acir_locations + location_tree) to attribute gates to source lines.",
+    "Source variants compiled with nargo to measure individual constructs; variants that changed semantics were used for attribution only.",
+    "Capacity right-sizing: keep the exact circuit source and signed journal, change only global OPS/SCALARS/BYTES/SAMPLES/CPS, rebuild the witness from the same signed capture, prove, verify, and compare public inputs.",
+    "The right-sized profiles keep CPS (and therefore the public journal ABI) unchanged so the resulting public inputs are byte-identical to the current profile's."
+  ],
+  "baseline": [
+    {
+      "fixture": "40 chars",
+      "profile": "assurance64-v1",
+      "limits": {
+        "OPS": 372,
+        "SCALARS": 64,
+        "BYTES": 256,
+        "SAMPLES": 132,
+        "CPS": 8,
+        "PRES": 8
+      },
+      "session": {
+        "operations": 201,
+        "samples": 80,
+        "checkpoints": 4,
+        "rawBytes": 40
+      },
+      "gates": 260386,
+      "acirOpcodes": 166356,
+      "proveMs2Threads": 2380,
+      "witnessMsJs": 504,
+      "publishedAppCompleteMs": 3079.97
+    },
+    {
+      "fixture": "120 chars",
+      "profile": "assurance128-cp32-v1",
+      "limits": {
+        "OPS": 756,
+        "SCALARS": 128,
+        "BYTES": 512,
+        "SAMPLES": 260,
+        "CPS": 32,
+        "PRES": 8
+      },
+      "session": {
+        "operations": 601,
+        "samples": 240,
+        "checkpoints": 9,
+        "rawBytes": 120
+      },
+      "gates": 522977,
+      "acirOpcodes": 341561,
+      "proveMs2Threads": 4570,
+      "witnessMsApp": 1187,
+      "publishedAppCompleteMs": 5931.9
+    },
+    {
+      "fixture": "250 chars",
+      "profile": "assurance256-cp32-v1",
+      "limits": {
+        "OPS": 1536,
+        "SCALARS": 256,
+        "BYTES": 1024,
+        "SAMPLES": 516,
+        "CPS": 32,
+        "PRES": 8
+      },
+      "session": {
+        "operations": 1251,
+        "samples": 500,
+        "checkpoints": 24,
+        "rawBytes": 250
+      },
+      "gates": 969400,
+      "acirOpcodes": 663743,
+      "proveMs2Threads": 8440,
+      "witnessMsJs": 2084,
+      "witnessMsApp": 2312,
+      "publishedAppCompleteMs": 10813.8
+    }
+  ],
+  "gateAttributionShort64": {
+    "gates": 260386,
+    "attributedGates": 246345,
+    "bySourceFile": {
+      "src/main.nr replay": {
+        "gates": 141553,
+        "share": 0.544
+      },
+      "src/assurance.nr behavior/origin/presence": {
+        "gates": 28415,
+        "share": 0.109
+      },
+      "std Poseidon2 permutation": {
+        "gates": 25612,
+        "share": 0.098
+      },
+      "SHA-256 (noir-sha256)": {
+        "gates": 25553,
+        "share": 0.098
+      },
+      "std field assert_max_bit_size": {
+        "gates": 16177,
+        "share": 0.062
+      },
+      "src/commit.nr packing": {
+        "gates": 5192,
+        "share": 0.02
+      },
+      "src/bytes.nr canonical/trailing policy": {
+        "gates": 3773,
+        "share": 0.014
+      }
+    },
+    "byAcirOpcodeClass": {
+      "ASSERT": {
+        "opcodes": 104687,
+        "gates": 164701,
+        "share": 0.633
+      },
+      "BLACKBOX::RANGE": {
+        "opcodes": 34042,
+        "gates": 44669,
+        "share": 0.172
+      },
+      "BRILLIG": {
+        "opcodes": 23979,
+        "gates": 34847,
+        "share": 0.134
+      },
+      "READ": {
+        "opcodes": 2267,
+        "gates": 8544,
+        "share": 0.033
+      },
+      "BLACKBOX::POSEIDON2_PERMUTATION": {
+        "opcodes": 337,
+        "gates": 4589,
+        "share": 0.018
+      }
+    },
+    "topSourceLines": [
+      {
+        "line": "std/hash/mod.nr:118 poseidon2_permutation_internal",
+        "gates": 25612
+      },
+      {
+        "line": "std/field/mod.nr:17 __assert_max_bit_size",
+        "gates": 16121
+      },
+      {
+        "line": "sha256.nr:104 sha256_compression",
+        "gates": 15792
+      },
+      {
+        "line": "main.nr:188 next_times backward pass",
+        "gates": 11686
+      },
+      {
+        "line": "main.nr:106 elapsed select",
+        "gates": 7346
+      },
+      {
+        "line": "assurance.nr:57 rate_ring modulo 20",
+        "gates": 4880
+      },
+      {
+        "line": "main.nr:61 padding/opcode branch",
+        "gates": 4550
+      },
+      {
+        "line": "main.nr:71 scalar validity",
+        "gates": 4372
+      },
+      {
+        "line": "main.nr:80 removed u64 extraction",
+        "gates": 4092
+      },
+      {
+        "line": "main.nr:98 begin source check",
+        "gates": 4092
+      },
+      {
+        "line": "assurance.nr:46 held_time",
+        "gates": 4059
+      },
+      {
+        "line": "main.nr:81 next_source u64 extraction",
+        "gates": 3903
+      }
+    ],
+    "conclusion": "There is no single removable hotspot below protocol hashing and behavior: the replay interpreter is a long tail of boolean and range constraints. Capacity is the only large safe lever."
+  },
+  "threadScalingMs": {
+    "note": "Same witness and circuit; HARDWARE_CONCURRENCY and RAYON_NUM_THREADS set per run; nice 10.",
+    "longBaseline969k": {
+      "2": [
+        8210,
+        8440
+      ],
+      "4": 5000,
+      "8": 3360,
+      "16": [
+        2890,
+        2980
+      ]
+    },
+    "longTight797k": {
+      "2": 6877,
+      "4": 4120,
+      "8": 2889
+    },
+    "shortBaseline260k": {
+      "2": 2380,
+      "4": 1470,
+      "16": 940
+    },
+    "shortTight166k": {
+      "2": 1595,
+      "4": 990,
+      "8": 660
+    },
+    "totalCpuUserSecondsLongBaseline": {
+      "2": 14.59,
+      "8": 16.53,
+      "16": 20.47
+    },
+    "conclusion": "8 threads is the practical knee (2.4x at about 13% more total CPU work); 4 threads removes 39% of wall time."
+  },
+  "rightSizedCandidates": [
+    {
+      "name": "short-tight8",
+      "base": "short64-cp8-v2",
+      "limits": {
+        "OPS": 204,
+        "SCALARS": 64,
+        "BYTES": 64,
+        "SAMPLES": 84,
+        "CPS": 8,
+        "PRES": 8
+      },
+      "sessionOps": 201,
+      "gates": 165765,
+      "acirOpcodes": 101621,
+      "gatesVsBase": -0.363,
+      "proveMs": {
+        "2": 1595,
+        "4": 990,
+        "8": 660
+      },
+      "witnessMsJs": 310,
+      "publicInputsSha256": "2ef90b1c945c666761d7475b7a4f82c97b1863fca105d69a92f92c37d6489d25",
+      "publicInputsMatchBase": true,
+      "nativeVerified": {
+        "2": true,
+        "4": true,
+        "8": true
+      },
+      "vkSha256": "799b5ec7f640ba5d114e83415bf6e0cec5a60058d2c3e219ceddfc8257b57db8",
+      "bytecodeSha256": "ac8e05e00d82c5dfffdd5496d90a7083c373a320169b614bee4f8878f907940a"
+    },
+    {
+      "name": "medium-tight32",
+      "base": "short128-cp32-v2",
+      "limits": {
+        "OPS": 660,
+        "SCALARS": 128,
+        "BYTES": 128,
+        "SAMPLES": 252,
+        "CPS": 32,
+        "PRES": 8
+      },
+      "sessionOps": 601,
+      "gates": 449968,
+      "acirOpcodes": 302465,
+      "gatesVsBase": -0.14,
+      "proveMs": {
+        "2": 4063
+      },
+      "witnessMsJs": null,
+      "witnessNote": "not measured; ACIR ratio implies about 1.05 s",
+      "publicInputsSha256": "matches the packaged adaptive-medium proof",
+      "publicInputsMatchBase": true,
+      "nativeVerified": {
+        "2": true
+      },
+      "vkSha256": "0949fdc43359c8ec758d75b706a70b458e212026ac364b9b49c27310bdbe4f6d",
+      "bytecodeSha256": "81a1df97ab27d005f08bc38b6cf98a41c310cd01c9380938d3c64cfab6e6dce8"
+    },
+    {
+      "name": "long-tight32",
+      "base": "cp32-pres8-v1",
+      "limits": {
+        "OPS": 1272,
+        "SCALARS": 256,
+        "BYTES": 256,
+        "SAMPLES": 504,
+        "CPS": 32,
+        "PRES": 8
+      },
+      "sessionOps": 1251,
+      "gates": 796569,
+      "acirOpcodes": 563705,
+      "gatesVsBase": -0.178,
+      "proveMs": {
+        "2": 6877,
+        "4": 4120,
+        "8": 2889
+      },
+      "witnessMsJs": 1816,
+      "publicInputsSha256": "4554871278d799c4c4c47944734791ce871b98e09f9b539a23472bc4ea1d6f27",
+      "publicInputsMatchBase": true,
+      "nativeVerified": {
+        "2": true,
+        "4": true,
+        "8": true
+      },
+      "vkSha256": "3a541bb46bc39663b59c3fc8b3df84806489721dc9e7c7ce951a8ec68824c5aa",
+      "bytecodeSha256": "7d44317e8808bf27e5fb5b8d673d5dad2f3f8cfb4bb9a4a4e6e7a4afc96559d4"
+    }
+  ],
+  "sizingBreakdown": [
+    {
+      "change": "long: OPS 1536 -> 1272 only",
+      "gates": 869019
+    },
+    {
+      "change": "long: OPS 1272 + BYTES 256",
+      "gates": 800122
+    },
+    {
+      "change": "long: OPS 1272 + BYTES 256 + SAMPLES 504 + CPS 28",
+      "gates": 789495
+    },
+    {
+      "change": "long: same but CPS 32 (ABI preserved)",
+      "gates": 796569
+    },
+    {
+      "change": "short: OPS 372 -> 204 only",
+      "gates": 197324
+    },
+    {
+      "change": "short: OPS 204 + BYTES 64",
+      "gates": 179977
+    },
+    {
+      "change": "short: OPS 204 + BYTES 64 + SAMPLES 84 + CPS 4",
+      "gates": 158691
+    },
+    {
+      "change": "short: same + SCALARS 48",
+      "gates": 155120
+    },
+    {
+      "change": "short: CPS 8 (ABI preserved)",
+      "gates": 165765
+    },
+    {
+      "change": "medium: OPS 660 only",
+      "gates": 486683
+    },
+    {
+      "change": "medium: OPS 660 + BYTES 128 + SAMPLES 252 + CPS 32",
+      "gates": 449968
+    }
+  ],
+  "completeServiceProjectionMs": {
+    "note": "INFERENCE: prove + measured/inferred witness + 20 ms native verify + 280 ms measured worker/parent overhead. Not an app acceptance run.",
+    "shortTight2Threads": 2205,
+    "shortTight4Threads": 1600,
+    "mediumTight2Threads": 5413,
+    "mediumTight4Threads": 3790,
+    "longTight2Threads": 8993,
+    "longTight4Threads": 6236,
+    "longTight8Threads": 5005,
+    "baselineFromAppAcceptance": {
+      "short": 3079.97,
+      "medium": 5931.9,
+      "long": 10813.8
+    }
+  },
+  "deadEnds": [
+    {
+      "candidate": "noir-rollup verifier target",
+      "measurement": "7.72 s prove at 2 threads on 969,400 gates, 15,360-byte proof",
+      "verdict": "6% faster than noir-recursive but requires a different reader target and pins; rejected for 6%."
+    },
+    {
+      "candidate": "evm verifier target",
+      "measurement": "8.36 s prove, 10,304-byte proof",
+      "verdict": "slower; rejected."
+    },
+    {
+      "candidate": "limb-based op decoding (remove u64 division/masking)",
+      "measurement": "254,850 vs 260,386 gates (-2.1%) on short64",
+      "verdict": "not worth a private-ABI/protocol change."
+    },
+    {
+      "candidate": "remove 16/17-bit bounded arithmetic",
+      "measurement": "621,137 vs 522,977 gates (+18.8%) on short128",
+      "verdict": "current bounds are already the cheap form."
+    },
+    {
+      "candidate": "constant-folded u64 extraction variant",
+      "measurement": "-50,665 gates (-9.7%)",
+      "verdict": "overstates the real rewrite because downstream comparisons folded; not a valid semantics-preserving change."
+    },
+    {
+      "candidate": "drop phase polynomial assertions",
+      "measurement": "-34,786 gates (-6.7%)",
+      "verdict": "weakens the replay relation; rejected."
+    }
+  ],
+  "recommendations": [
+    "Add tight capacity tiers ahead of the existing profiles and keep the current profiles as fallbacks. This is additive and backward compatible: the tight proofs produce byte-identical public inputs and signatures.",
+    "Keep CPS unchanged per tier so the public journal ABI, reader ABI pin, and statement identity do not change; only program/VK pins need adding.",
+    "Run the existing per-profile constraint and boundary suites plus independent WASM verification before registering a tier, and pin its VK/program in worker.mjs, assurance-profile.mjs, prepare.py, package.py and native profile_fit.rs.",
+    "If thermal testing accepts it, use 4 threads for the final proof (39% less wall time, about the same total CPU work). 8 threads is the knee for the largest tier; 16 adds 20% total CPU for 12% wall time.",
+    "The remaining floor is witness generation (1.82 s for the largest tight tier) and protocol hashing (Poseidon2 + SHA-256 about 20% of gates). No micro-optimization found can remove the 250-character two-thread proof's remaining gap; chunked proving during writing is the architectural answer for that case."
+  ],
+  "integrationCost": {
+    "newProgramBytes": {
+      "short-tight8": 1305488,
+      "medium-tight32": 3947940,
+      "long-tight32": 7398624
+    },
+    "note": "Compiled program JSON sizes are 1.3-7.4 MB per tier, smaller than the 11 MB full program; VK is 3,680 bytes per tier."
+  },
+  "artifacts": {
+    "root": "build/research/noir-profile-sizing",
+    "perCandidate": [
+      "src/",
+      "Nargo.toml",
+      "inputs.json",
+      "Prover.toml",
+      "target/huma_compact_experiment.json",
+      "setup/vk",
+      "proof*"
+    ],
+    "note": "Software fixtures and disposable keys only; no owner key, signature, Touch ID prompt, app launch, provider account or upload was used."
+  }
+}

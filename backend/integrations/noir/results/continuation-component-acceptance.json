@@ -1,0 +1,1071 @@
+{
+  "kind": "huma-continuation-component-acceptance-v1",
+  "softwareFixturesOnly": true,
+  "ownerKeysOrBiometricsUsed": false,
+  "appChanged": false,
+  "sdkProfileRegistered": false,
+  "completeHumaSessionProof": false,
+  "completeTenThousandCharacterSessionVerified": false,
+  "noir": "1.0.0-beta.25",
+  "barretenberg": "5.2.1",
+  "zeroKnowledge": true,
+  "threads": 2,
+  "nice": 10,
+  "nativeChunksChecked": 921,
+  "witnessCasesPassed": 76,
+  "weakenedWitnessOnlyControlsPassed": 3,
+  "selectedReplayProofsGenerated": 6,
+  "nativeCryptographicChecksPassed": 18,
+  "independentWasmChecksPassed": 18,
+  "stateCommitment": {
+    "domain": "0x48554d410601",
+    "privateSaltBits": 256,
+    "scalarsPerField": 12,
+    "bitsPerScalar": 21,
+    "completePhysicalGapBufferIncluded": true,
+    "fullReplayAndTranscriptStateIncluded": true,
+    "genesisConstrained": true,
+    "nonFinalChunksAlignedToTwelveWords": true
+  },
+  "cases": [
+    {
+      "name": "revision-v3",
+      "case": "revision",
+      "capacity": 64,
+      "operations": 32,
+      "nativeChunks": 3,
+      "finalScalars": 6,
+      "finalUtf8Bytes": 8,
+      "chunkOperations": 12,
+      "scalarPack": 12,
+      "gates": 13198,
+      "compileAndFirstWitness": {
+        "wallMs": 191.74,
+        "peakSampledRSS": 0
+      },
+      "nativeChecks": {
+        "allBoundaryCountersMatchExistingReplay": true,
+        "allCapturePrefixesMatchExistingProtocol": true,
+        "finalTextMatchesExistingReplay": true,
+        "droppedAndReorderedMetadataRejected": true,
+        "invalidAppendRollsBack": true
+      },
+      "referenceSha256": "1af5354091f2fc5ae80b4cd74c51f9c93ab9eac54afc3e0a429bb116bf5d53b3",
+      "sourceSha256": "3d18b9e1c0e4d2dee1a042eab1a0e25cd0f4e7cff9cea75180833b5d096c6820",
+      "artifactSha256": "fba01fa66c2ff6a42902aee9d5a68d62b538acddb1d647f6c88cf1e35c07ba24",
+      "bytecodeSha256": "f50dca40610ec7c5b10569926df163745c2dda95bf69244edeec5447b01dde19",
+      "constraints": {
+        "kind": "huma-continuation-constraints-v1",
+        "artifactSha256": "fba01fa66c2ff6a42902aee9d5a68d62b538acddb1d647f6c88cf1e35c07ba24",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 113.05,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk1",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 111.12,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk2",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 111.95,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedCursor",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 109.44
+          },
+          {
+            "case": "RejectChangedTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 114.12
+          },
+          {
+            "case": "RejectChangedCounter",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 112.91
+          },
+          {
+            "case": "RejectChangedSource",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 116.87
+          },
+          {
+            "case": "RejectChangedPrivateBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 112.39
+          },
+          {
+            "case": "RejectChangedTranscriptHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 112.53
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 110.07
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 110.26
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 109.99
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 111.39
+          },
+          {
+            "case": "RejectChangedCapturePrefix",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 111.69
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 110.07
+          },
+          {
+            "case": "RejectPackedScalarAlias",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 110.37
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 109.89
+          },
+          {
+            "case": "RejectForgedGenesisTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 110.2
+          },
+          {
+            "case": "RejectDirtyGenesisBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 109.29
+          }
+        ],
+        "unsafeControls": [
+          {
+            "case": "UnsafeForgedGenesisTime",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 167.31,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "UnsafeDirtyGenesisBuffer",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 116.66,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "UnsafePackedAlias",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 169.13,
+            "peakSampledRSS": 0
+          }
+        ],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "nativeProofs": {
+        "kind": "huma-continuation-component-proof-v1",
+        "case": "revision",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "completeHumaSessionProof": false,
+        "tenThousandCharacterSessionSupported": false,
+        "appChanged": false,
+        "allReplayChunksProved": true,
+        "nativeChunks": 3,
+        "selectedChunksProved": 3,
+        "artifactSha256": "fba01fa66c2ff6a42902aee9d5a68d62b538acddb1d647f6c88cf1e35c07ba24",
+        "sourceSha256": "3d18b9e1c0e4d2dee1a042eab1a0e25cd0f4e7cff9cea75180833b5d096c6820",
+        "keySha256": "31a4e4ef2ab2186414a20c66ff793248a3627e2c7e78937d205c3b5f4b19e85f",
+        "setupMs": 61.822208,
+        "setupExcludedFromChunkTiming": true,
+        "threads": 2,
+        "nice": 10,
+        "cases": [
+          {
+            "index": 0,
+            "boundary": {
+              "capture_root": "19377387528291578160717455033010658725173893388162681981585086874609354424772",
+              "end_offset": 12,
+              "end_root": "13561590295945537541601684619719980207691397589894812277528075468240708838440",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "start_offset": 0,
+              "start_root": "5492751135829258996725503360712980279343302365900223287563552563270316190450"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 115.14,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 175.65125,
+            "witnessProveVerifyMs": 313.919,
+            "proofBytes": 14656,
+            "publicInputsBytes": 256,
+            "proofSha256": "040a52a6035f846a3c38ea979955e6b09055a6088ae93ff2a84f349c1c041415",
+            "publicInputsSha256": "f0d3926c92fe7a4e02f0a0e621e8671123b9c757fe71885d5e9c877a072ed063"
+          },
+          {
+            "index": 1,
+            "boundary": {
+              "capture_root": "9196780543126300053247000252062605288737421231513385967773658219086231457197",
+              "end_offset": 24,
+              "end_root": "4917461689882882053479880598899280048323303026567356269624822999465111209889",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "start_offset": 12,
+              "start_root": "13561590295945537541601684619719980207691397589894812277528075468240708838440"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 123.82,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 172.197875,
+            "witnessProveVerifyMs": 318.377,
+            "proofBytes": 14656,
+            "publicInputsBytes": 256,
+            "proofSha256": "dc4d01ea0c21a2375b26507969c509d7c8ea0094041ed0086466dc6af73f81c1",
+            "publicInputsSha256": "86acf55f61b38c093c36ded6636f5caca99b93ce3848c7a040bc783c6b70af1f"
+          },
+          {
+            "index": 2,
+            "boundary": {
+              "capture_root": "7741175548625755320782625865624309078199827853930166879266559589161646821052",
+              "end_offset": 32,
+              "end_root": "21188946578491480821820222733318153256687662548965791123041203518518960048057",
+              "final_step": true,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "start_offset": 24,
+              "start_root": "4917461689882882053479880598899280048323303026567356269624822999465111209889"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 116.86,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 172.578084,
+            "witnessProveVerifyMs": 311.839,
+            "proofBytes": 14656,
+            "publicInputsBytes": 256,
+            "proofSha256": "0a6467450935dfd5ad107b3958c0e3d2b907aa0c66b7d9e4fe6c446015aab3f7",
+            "publicInputsSha256": "64b09de7e3ae24c347334f380d58b6a4d84f47a35a40c685d7a2f7812c32b496"
+          }
+        ]
+      },
+      "independentWasmChecks": {
+        "kind": "huma-continuation-component-wasm-v1",
+        "keySha256": "31a4e4ef2ab2186414a20c66ff793248a3627e2c7e78937d205c3b5f4b19e85f",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "completeHumaSessionProof": false,
+        "appChanged": false,
+        "cases": [
+          {
+            "index": 0,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 0,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 1,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 2,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "typing10000-v3",
+      "case": "typing10000",
+      "capacity": 10000,
+      "operations": 50003,
+      "nativeChunks": 417,
+      "finalScalars": 10000,
+      "finalUtf8Bytes": 10000,
+      "chunkOperations": 120,
+      "scalarPack": 12,
+      "gates": 234061,
+      "compileAndFirstWitness": {
+        "wallMs": 2145.67,
+        "peakSampledRSS": 384106496
+      },
+      "nativeChecks": {
+        "allBoundaryCountersMatchExistingReplay": true,
+        "allCapturePrefixesMatchExistingProtocol": true,
+        "finalTextMatchesExistingReplay": true,
+        "droppedAndReorderedMetadataRejected": true,
+        "invalidAppendRollsBack": true
+      },
+      "referenceSha256": "a09a8b082b3ece2f571115ae0bae53dcca3e121558e245f4de6b9ad71a311e8e",
+      "sourceSha256": "b3e62d313b17f68f49edfab80e0dbf3d66f7fa00fa59b242e40b9d822ace3f1f",
+      "artifactSha256": "c7541f18c0ce488002ba2941d28b90616cf020390ac50b41b785539837411503",
+      "bytecodeSha256": "b391092764a9d638f14c97cc1688d74f078ddd0280fe8e176b89f47d7134724d",
+      "constraints": {
+        "kind": "huma-continuation-constraints-v1",
+        "artifactSha256": "c7541f18c0ce488002ba2941d28b90616cf020390ac50b41b785539837411503",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 236.92,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk208",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 241.9,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk416",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 241.37,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedCursor",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 184.62
+          },
+          {
+            "case": "RejectChangedTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.9
+          },
+          {
+            "case": "RejectChangedCounter",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 187.98
+          },
+          {
+            "case": "RejectChangedSource",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.68
+          },
+          {
+            "case": "RejectChangedPrivateBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.62
+          },
+          {
+            "case": "RejectChangedTranscriptHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 188.01
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 188.41
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 183.4
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 203.02
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 206.12
+          },
+          {
+            "case": "RejectChangedCapturePrefix",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 204.35
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 207.8
+          },
+          {
+            "case": "RejectPackedScalarAlias",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 188.79
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 198.85
+          },
+          {
+            "case": "RejectForgedGenesisTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 187.55
+          },
+          {
+            "case": "RejectDirtyGenesisBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 189.72
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "nativeProofs": {
+        "kind": "huma-continuation-component-proof-v1",
+        "case": "typing10000",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "completeHumaSessionProof": false,
+        "tenThousandCharacterSessionSupported": false,
+        "appChanged": false,
+        "allReplayChunksProved": false,
+        "nativeChunks": 417,
+        "selectedChunksProved": 3,
+        "artifactSha256": "c7541f18c0ce488002ba2941d28b90616cf020390ac50b41b785539837411503",
+        "sourceSha256": "b3e62d313b17f68f49edfab80e0dbf3d66f7fa00fa59b242e40b9d822ace3f1f",
+        "keySha256": "a143ba57b0bc14b7849be8a33e3361ccca65faec05583dd6151a938f26c32fca",
+        "setupMs": 692.374792,
+        "setupExcludedFromChunkTiming": true,
+        "threads": 2,
+        "nice": 10,
+        "cases": [
+          {
+            "index": 0,
+            "boundary": {
+              "capture_root": "20481158575785335321408864639604422468310466599133951226935894501827980223424",
+              "end_offset": 120,
+              "end_root": "21272322354133612612272955546265401085364766267702504394303043341866996291943",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "start_offset": 0,
+              "start_root": "9212173029294751702428148093993555801906448722665100863022335975614366110872"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 242.36,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 1952.417125,
+            "witnessProveVerifyMs": 2217.388,
+            "proofBytes": 14656,
+            "publicInputsBytes": 256,
+            "proofSha256": "4471599462fc83e6f802f8545d43c8cad37088dff2f473f3d5310cc93e590d32",
+            "publicInputsSha256": "fc4d0a501458fbf42446c951074253c3bdea16e13db75b73e91b81c411e1efce"
+          },
+          {
+            "index": 208,
+            "boundary": {
+              "capture_root": "5701286149089298108008571982478265594741102953382223578574229091584434778393",
+              "end_offset": 25080,
+              "end_root": "11693837787804340599348050202759935670303676142502582278156737031001211034642",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "start_offset": 24960,
+              "start_root": "17144994107664612558752655905407479890735466705638451583713997868179244883513"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 251.1,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 1978.7844169999998,
+            "witnessProveVerifyMs": 2252.764,
+            "proofBytes": 14656,
+            "publicInputsBytes": 256,
+            "proofSha256": "4a21eb54370f4be0747cbd94de274403db6000016d8bd0cc86a1bfa0550a0a1b",
+            "publicInputsSha256": "635283e1690e602dddd9b5a8e7d419720453ac3d84673486e20318f1ed313b8c"
+          },
+          {
+            "index": 416,
+            "boundary": {
+              "capture_root": "14906715607372137112479751862260845189328617508744596719253766381342368462381",
+              "end_offset": 50003,
+              "end_root": "21518396271101595672364632559916008260166570395134832413806443339208665295209",
+              "final_step": true,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "start_offset": 49920,
+              "start_root": "13744845698427700081360755025953327247440824247718525522668239474473151258117"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 246.17,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 1992.9044159999999,
+            "witnessProveVerifyMs": 2261.34,
+            "proofBytes": 14656,
+            "publicInputsBytes": 256,
+            "proofSha256": "74549308361d1b89c8b6e17bb9bc8a6db0f3e3f893ace5ca37bdd5fd99a9f98d",
+            "publicInputsSha256": "b0f0cf910297cd67f7901ea2b4310c6f2a432703c48d00c603207101b115c127"
+          }
+        ]
+      },
+      "independentWasmChecks": {
+        "kind": "huma-continuation-component-wasm-v1",
+        "keySha256": "a143ba57b0bc14b7849be8a33e3361ccca65faec05583dd6151a938f26c32fca",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "completeHumaSessionProof": false,
+        "appChanged": false,
+        "cases": [
+          {
+            "index": 0,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 0,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 208,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 208,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 208,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 416,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 416,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 416,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "emoji10000-v3",
+      "case": "emoji10000",
+      "capacity": 10000,
+      "operations": 50003,
+      "nativeChunks": 417,
+      "finalScalars": 10000,
+      "finalUtf8Bytes": 40000,
+      "chunkOperations": 120,
+      "scalarPack": 12,
+      "gates": 234061,
+      "compileAndFirstWitness": {
+        "wallMs": 1878.75,
+        "peakSampledRSS": 412778496
+      },
+      "nativeChecks": {
+        "allBoundaryCountersMatchExistingReplay": true,
+        "allCapturePrefixesMatchExistingProtocol": true,
+        "finalTextMatchesExistingReplay": true,
+        "droppedAndReorderedMetadataRejected": true,
+        "invalidAppendRollsBack": true
+      },
+      "referenceSha256": "f163a48f681ed1bbfc55f243a89d603f65e1b0da3fd44fea9319f64c8f67e2ce",
+      "sourceSha256": "b3e62d313b17f68f49edfab80e0dbf3d66f7fa00fa59b242e40b9d822ace3f1f",
+      "artifactSha256": "ae8365c52ae9d9d0c0a21c4fbf9fccc9c4ec1ed8b8545983d5b8ba19c7a7aed4",
+      "bytecodeSha256": "b391092764a9d638f14c97cc1688d74f078ddd0280fe8e176b89f47d7134724d",
+      "constraints": {
+        "kind": "huma-continuation-constraints-v1",
+        "artifactSha256": "ae8365c52ae9d9d0c0a21c4fbf9fccc9c4ec1ed8b8545983d5b8ba19c7a7aed4",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 235.67,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk208",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 246.99,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk416",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 244.41,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedCursor",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 184.24
+          },
+          {
+            "case": "RejectChangedTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.65
+          },
+          {
+            "case": "RejectChangedCounter",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 185.64
+          },
+          {
+            "case": "RejectChangedSource",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 185.6
+          },
+          {
+            "case": "RejectChangedPrivateBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 188.3
+          },
+          {
+            "case": "RejectChangedTranscriptHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.74
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 194.98
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.58
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 198.37
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 202.9
+          },
+          {
+            "case": "RejectChangedCapturePrefix",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 203.67
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 203.15
+          },
+          {
+            "case": "RejectPackedScalarAlias",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 182.95
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 201.33
+          },
+          {
+            "case": "RejectForgedGenesisTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 187.54
+          },
+          {
+            "case": "RejectDirtyGenesisBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.49
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "baseline10000-v3",
+      "case": "baseline10000",
+      "capacity": 10000,
+      "operations": 10001,
+      "nativeChunks": 84,
+      "finalScalars": 10000,
+      "finalUtf8Bytes": 40000,
+      "chunkOperations": 120,
+      "scalarPack": 12,
+      "gates": 234061,
+      "compileAndFirstWitness": {
+        "wallMs": 1869.77,
+        "peakSampledRSS": 409157632
+      },
+      "nativeChecks": {
+        "allBoundaryCountersMatchExistingReplay": true,
+        "allCapturePrefixesMatchExistingProtocol": true,
+        "finalTextMatchesExistingReplay": true,
+        "droppedAndReorderedMetadataRejected": true,
+        "invalidAppendRollsBack": true
+      },
+      "referenceSha256": "666b4bfa299ac8d7ecffb5f00459e95981f7b16ae6d46deabfa95455b73ec8a7",
+      "sourceSha256": "b3e62d313b17f68f49edfab80e0dbf3d66f7fa00fa59b242e40b9d822ace3f1f",
+      "artifactSha256": "32c6ade4ae6f4ae04011e1f8291a3502b036d9586f1c74ca35a4a18f9f6ea86e",
+      "bytecodeSha256": "b391092764a9d638f14c97cc1688d74f078ddd0280fe8e176b89f47d7134724d",
+      "constraints": {
+        "kind": "huma-continuation-constraints-v1",
+        "artifactSha256": "32c6ade4ae6f4ae04011e1f8291a3502b036d9586f1c74ca35a4a18f9f6ea86e",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 237.85,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk42",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 242.24,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk83",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 247.63,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedCursor",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 183.49
+          },
+          {
+            "case": "RejectChangedTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 189.34
+          },
+          {
+            "case": "RejectChangedCounter",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 187.91
+          },
+          {
+            "case": "RejectChangedSource",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 194.3
+          },
+          {
+            "case": "RejectChangedPrivateBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 188.11
+          },
+          {
+            "case": "RejectChangedTranscriptHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.41
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.21
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 184.39
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 198.89
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 211.02
+          },
+          {
+            "case": "RejectChangedCapturePrefix",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 206.48
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 203.91
+          },
+          {
+            "case": "RejectPackedScalarAlias",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 183.65
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 198.36
+          },
+          {
+            "case": "RejectForgedGenesisTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 186.96
+          },
+          {
+            "case": "RejectDirtyGenesisBuffer",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 187.84
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    }
+  ],
+  "decision": "Keep this replay component isolated. Per-chunk timings do not establish complete 10k-session latency or policy assurance.",
+  "notYetProved": [
+    "Behavior and held-key state carried across chunks.",
+    "Input-origin state authenticated to the same event stream.",
+    "Presence challenges and original checkpoint signatures authenticated across chunks.",
+    "Exact final master text and canonicalization bound to the last state.",
+    "Every chunk cryptographically verified and linked in a bounded portable format.",
+    "Complete 10k-session generation and verification latency."
+  ],
+  "harnessSourceSha256": {
+    "experiments/noir-compact/continuation_cases.py": "aacf7390bdce22ce0b1312d654c1357f51abc2d526de208d4064f25f267c155d",
+    "experiments/noir-compact/continuation_checks.py": "d42a24d3c8a0519dd4256426595b2ea930b6736385a8b82faa37dea90c8fa749",
+    "experiments/noir-compact/continuation_prove.py": "6f4c94cbed4cef621acd569ca49e604f8d076cf0b657eb3ab7e12d45a912627a",
+    "experiments/noir-compact/continuation_verify.mjs": "d343288403da127f4e88e8349e35be793c63c5a06c30d86855c766a654b2f0f0",
+    "experiments/noir-compact/native/examples/continuation_cases.rs": "7366bc30f2948c6d3dc391ef4a5a60c444b8d895b99f7cac865618b8bf4129e5",
+    "experiments/noir-compact/public_text_cases.py": "29e1bf0a4b9115d24fbfce27c5c8c32a71a605279c116a7d61aeca08b7fceb7e",
+    "experiments/noir-compact/src/commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "experiments/noir-compact/native/src/ops.rs": "27103be74f1f644d77ea1ee018e8d9518f2d51f75baf848a64650e514ab34394",
+    "experiments/noir-compact/native/src/commit.rs": "f9a49d7942478448a3ff2cf913c79ac5cef03b075c80f288c414991775f9a2ab"
+  },
+  "benchmarkHarnessSourceSha256": {
+    "experiments/noir-compact/continuation_cases.py": "aacf7390bdce22ce0b1312d654c1357f51abc2d526de208d4064f25f267c155d",
+    "experiments/noir-compact/continuation_checks.py": "d42a24d3c8a0519dd4256426595b2ea930b6736385a8b82faa37dea90c8fa749",
+    "experiments/noir-compact/continuation_prove.py": "6f4c94cbed4cef621acd569ca49e604f8d076cf0b657eb3ab7e12d45a912627a",
+    "experiments/noir-compact/continuation_verify.mjs": "d47d3f7949925afe5ae41700d0911a4a80f2aca8dc17823a3dfb3a47182bdbe3",
+    "experiments/noir-compact/native/examples/continuation_cases.rs": "5e1dca9567c1a403d7bb1507eefee1f03c143296bd137503978bd7d938b4b8ae",
+    "experiments/noir-compact/public_text_cases.py": "29e1bf0a4b9115d24fbfce27c5c8c32a71a605279c116a7d61aeca08b7fceb7e",
+    "experiments/noir-compact/src/commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "experiments/noir-compact/native/src/ops.rs": "27103be74f1f644d77ea1ee018e8d9518f2d51f75baf848a64650e514ab34394",
+    "experiments/noir-compact/native/src/commit.rs": "f9a49d7942478448a3ff2cf913c79ac5cef03b075c80f288c414991775f9a2ab"
+  },
+  "harnessRefactorRevalidated": {
+    "replayReferenceChanges": "Research-only visibility for module reuse; no semantic changes.",
+    "frozenNativeFixtures": [
+      {
+        "case": "revision",
+        "frozenFixtureUnchanged": true,
+        "referenceSha256": "1af5354091f2fc5ae80b4cd74c51f9c93ab9eac54afc3e0a429bb116bf5d53b3"
+      },
+      {
+        "case": "typing10000",
+        "frozenFixtureUnchanged": true,
+        "referenceSha256": "a09a8b082b3ece2f571115ae0bae53dcca3e121558e245f4de6b9ad71a311e8e"
+      },
+      {
+        "case": "emoji10000",
+        "frozenFixtureUnchanged": true,
+        "referenceSha256": "f163a48f681ed1bbfc55f243a89d603f65e1b0da3fd44fea9319f64c8f67e2ce"
+      },
+      {
+        "case": "baseline10000",
+        "frozenFixtureUnchanged": true,
+        "referenceSha256": "666b4bfa299ac8d7ecffb5f00459e95981f7b16ae6d46deabfa95455b73ec8a7"
+      }
+    ],
+    "verifierChanges": "Routing for the new interaction component and check-only mode.",
+    "originalSixProofsAndEighteenWasmOutcomesRechecked": true,
+    "previousResultFilesUnchanged": true
+  }
+}

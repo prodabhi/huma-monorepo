@@ -1,0 +1,106 @@
+{
+ "kind": "huma-chunking-and-finalization-acceptance-v1",
+ "date": "2026-10-23",
+ "softwareFixturesOnly": true,
+ "ownerIdentityUsed": false,
+ "appChanged": false,
+ "completeHumaSessionProof": false,
+ "signaturesVerified": false,
+ "threads": 2,
+ "nice": 10,
+ "chunkSizing": {
+  "capacity": 10000,
+  "model": "gates ~= 217k fixed + 574 per operation",
+  "measuredGates": {
+   "120": 286073,
+   "480": 492743,
+   "528": 520299,
+   "1200": 906083,
+   "1440": 1043863,
+   "2400": 1594983
+  },
+  "note": "Prove time follows real gate count (~8.4-8.7 us/gate on 2 threads), not power-of-two padding."
+ },
+ "chunk528": {
+  "chunks": 95,
+  "totalOperations": 50003,
+  "gates": 520299,
+  "constraintChecks": 44,
+  "constraintMismatches": [],
+  "provedChunks": [
+   0,
+   47,
+   94
+  ],
+  "proveMs": [
+   4363,
+   4343,
+   4442
+  ],
+  "witnessProveVerifyMs": [
+   5102,
+   5050,
+   5148
+  ],
+  "tamperRejected": true,
+  "estimatedSessionProveSeconds": 416,
+  "baseline120EstimatedSessionProveSeconds": 1055
+ },
+ "finalization": {
+  "capacity64": {
+   "case": "master-trailing",
+   "capacity": 64,
+   "gates": 21007,
+   "proveMs": 259,
+   "witnessProveVerifyMs": 414,
+   "proofBytes": 14656,
+   "tamper": {
+    "raw_commitmentRejected": true,
+    "canonical_commitmentRejected": true,
+    "canonical_scalarsRejected": true,
+    "state_rootRejected": true,
+    "changedProofRejected": true
+   },
+   "constraintChecks": 33,
+   "constraintMismatches": []
+  },
+  "capacity10000": {
+   "case": "typing10000",
+   "capacity": 10000,
+   "gates": 939259,
+   "proveMs": 7558,
+   "witnessProveVerifyMs": 9174,
+   "proofBytes": 14656,
+   "tamper": {
+    "raw_commitmentRejected": true,
+    "canonical_commitmentRejected": true,
+    "canonical_scalarsRejected": true,
+    "state_rootRejected": true,
+    "changedProofRejected": true
+   },
+   "constraintChecks": 31,
+   "constraintMismatches": []
+  }
+ },
+ "readerBinding": {
+  "module": "experiments/noir-compact/browser/final-text.mjs",
+  "test": "experiments/noir-compact/browser/test/final-text.test.mjs",
+  "testsPassed": 5,
+  "fixtures": 14,
+  "policy": "canonical match tolerates only trailing ASCII space/tab; raw match is exact bytes"
+ },
+ "remaining": [
+  "carry and verify every original checkpoint and presence signature in the chain",
+  "incremental native proving in the app under 2-thread/thermal limits",
+  "all-chunk proof of a full 10k session at 528 operations",
+  "reader: chain verification + final-text binding in one portable bundle"
+ ],
+ "sourceSha256": {
+  "experiments/noir-compact/finalization_cases.py": "182fce85a4c8fb38dcb415f2dfee015ab4b959856b5d65633fb5de8f763c727f",
+  "experiments/noir-compact/finalization_checks.py": "65ea6b8c9a177555fa5f7c1847ef7f92a4ffeb126fdfd55666eaba9b95b79e68",
+  "experiments/noir-compact/finalization_prove.py": "80fe19683da0f4b47cd045a1899a64979592fb0139ce73031b654acaa890d5ba",
+  "experiments/noir-compact/browser/final-text.mjs": "54895b503c37e43d731c6d5ba55bd921c54d0250f2c5f2354a1e20dc3848b241",
+  "experiments/noir-compact/native/examples/continuation_cases.rs": "eb9154db14c035ef4f79907fa11c3b595ef6aac7fe3df4fac361bd6f8d173362",
+  "experiments/noir-compact/native/examples/interaction_cases.rs": "2ac31de642951e7e3304be595370a40b943078a5d1966190c8572208a929a2de"
+ }
+}

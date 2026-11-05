@@ -1,0 +1,1126 @@
+{
+  "kind": "huma-short-bucket-research-v2",
+  "softwareFixturesOnly": true,
+  "ownerIdentityUsed": false,
+  "proofGenerated": true,
+  "profilesRegisteredNow": true,
+  "historicalAdmissionFlagsDescribeTimeOfMeasurement": true,
+  "rustTests": {
+    "passed": 33,
+    "failed": 0
+  },
+  "sourceGenerationTests": {
+    "passed": 2,
+    "failed": 0
+  },
+  "selected": [
+    {
+      "directory": "build/research/noir-capacity/short64-cp8-v2",
+      "sizing": {
+        "softwareFixtureOnly": true,
+        "proofGenerated": false,
+        "newSignaturesGenerated": false,
+        "bucket": "short64",
+        "completeHistoryEligibility": {
+          "eligible": true,
+          "limits": {
+            "BYTES": 256,
+            "CPS": 8,
+            "OPS": 372,
+            "PRES": 8,
+            "SAMPLES": 132,
+            "SCALARS": 64
+          },
+          "name": "short64",
+          "reasons": []
+        },
+        "registeredForProving": false,
+        "originalCaptureSha256": "f26138113757d9d38ed8fd37a99d2597f1179286475fdf871d1f48338414a3ec",
+        "limits": {
+          "OPS": 372,
+          "SCALARS": 64,
+          "BYTES": 256,
+          "SAMPLES": 132,
+          "CPS": 8,
+          "PRES": 8
+        },
+        "checkpointSignatures": 4,
+        "presenceSignatures": 2,
+        "signedJournalPreserved": true,
+        "compileAndWitness": {
+          "wallMs": 3860.98,
+          "peakSampledRSS": 732708864
+        },
+        "gates": {
+          "functions": [
+            {
+              "acir_opcodes": 166356,
+              "circuit_size": 260386
+            }
+          ]
+        },
+        "bytecodeSha256": "c282b242a8ba73bf03b889ec4e512287f9a746ec4fdf5bd47555cd12666f04ec",
+        "sourceSha256": {
+          "main.nr": "56701cd18c79e8c90bd875cac6b5204b845236291fac61f1ecb65eee7c3e7e8c",
+          "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+          "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+          "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+        }
+      },
+      "policyChecks": {
+        "experimental": true,
+        "softwareKeysOnly": true,
+        "artifactSha256": "9767b52427e04a2e00ba42bc5dc5518dbfe67bf4aa5830f5d151e0e33bd57a2e",
+        "limits": {
+          "OPS": 372,
+          "SCALARS": 64,
+          "BYTES": 256,
+          "CPS": 8,
+          "SAMPLES": 132,
+          "PRES": 8
+        },
+        "cases": [
+          {
+            "case": "Validrollover",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 477.33,
+            "peakSampledRSS": 134479872,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validrepeat",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 505.0,
+            "peakSampledRSS": 137838592,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validunpaired",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 503.68,
+            "peakSampledRSS": 112558080,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validrate",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 509.71,
+            "peakSampledRSS": 133791744,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validdwell",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 513.04,
+            "peakSampledRSS": 129777664,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validmissingorigin",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 522.78,
+            "peakSampledRSS": 184565760,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validlate",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 580.54,
+            "peakSampledRSS": 181125120,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validtimeout",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 503.07,
+            "peakSampledRSS": 123863040,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validu64max",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 495.41,
+            "peakSampledRSS": 127582208,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "RejectOriginPID",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 433.8
+          },
+          {
+            "case": "RejectKeyboardType",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 409.99
+          },
+          {
+            "case": "RejectRepeatFlag",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 411.92
+          },
+          {
+            "case": "RejectPresenceNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 412.71
+          },
+          {
+            "case": "RejectLateSeal",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 410.48
+          },
+          {
+            "case": "RejectOmittedPresenceCoverage",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 414.18
+          },
+          {
+            "case": "RejectPublicPresenceCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 405.31
+          },
+          {
+            "case": "RejectUnboundSampleTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 390.28
+          },
+          {
+            "case": "RejectUnusedOriginPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 401.63
+          },
+          {
+            "case": "RejectUnusedPresenceRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 412.34
+          },
+          {
+            "case": "RejectForgedHumanRhythm",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 398.45
+          },
+          {
+            "case": "RejectReusedKeySample",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 403.08
+          }
+        ],
+        "controls": []
+      },
+      "boundaryChecks": {
+        "artifactSha256": "9767b52427e04a2e00ba42bc5dc5518dbfe67bf4aa5830f5d151e0e33bd57a2e",
+        "fixtureSha256": "d4d3801ecd9c92394c3b781942177ea37fe1daeafe3ecb9d99f114369a7adfab",
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "ownerIdentityUsed": false,
+        "cases": [
+          {
+            "case": "BoundaryFullAscii",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 547.59,
+            "peakSampledRSS": 177831936,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryFullUnicode",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 500.17,
+            "peakSampledRSS": 116555776,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryDeleteAllUnicode",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 502.8,
+            "peakSampledRSS": 125026304,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryOverflowScalars",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 369.36,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryOverflowAfterDeletion",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 370.15,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          }
+        ]
+      },
+      "nativeProofs": [
+        {
+          "softwareFixtureOnly": true,
+          "ownerIdentityUsed": false,
+          "registeredForProving": false,
+          "proofGenerated": true,
+          "nativeZkAndAllSignaturesVerified": true,
+          "fullSignedJournalPreserved": true,
+          "limits": {
+            "OPS": 372,
+            "SCALARS": 64,
+            "BYTES": 256,
+            "SAMPLES": 132,
+            "CPS": 8,
+            "PRES": 8
+          },
+          "textScalars": 1,
+          "textBytes": 1,
+          "operations": 278,
+          "checkpointSignatures": 2,
+          "presenceSignatures": 1,
+          "validationMs": 0.398,
+          "warmWitness": {
+            "wallMs": 454.2,
+            "peakSampledRSS": 139280384
+          },
+          "proveMs": 2264.091542,
+          "verifyMs": 25.99,
+          "contiguousWitnessProveVerifyMs": 2752.928,
+          "setupPerformed": false,
+          "setupExcludedFromProofTiming": true,
+          "threads": 2,
+          "nice": 10,
+          "artifactSha256": "9767b52427e04a2e00ba42bc5dc5518dbfe67bf4aa5830f5d151e0e33bd57a2e",
+          "programKeyHash": "bf1319ff4d1bc49029fa4875a9c5f529a5d17ec85bae5547ace311bbbbc3d3df",
+          "proofBytes": 14656,
+          "publicInputsBytes": 3008,
+          "attestationVerified": false,
+          "trustedTime": false,
+          "appServiceMeasured": false
+        },
+        {
+          "softwareFixtureOnly": true,
+          "ownerIdentityUsed": false,
+          "registeredForProving": false,
+          "proofGenerated": true,
+          "nativeZkAndAllSignaturesVerified": true,
+          "fullSignedJournalPreserved": true,
+          "limits": {
+            "OPS": 372,
+            "SCALARS": 64,
+            "BYTES": 256,
+            "SAMPLES": 132,
+            "CPS": 8,
+            "PRES": 8
+          },
+          "textScalars": 40,
+          "textBytes": 40,
+          "operations": 201,
+          "checkpointSignatures": 4,
+          "presenceSignatures": 2,
+          "validationMs": 14.159,
+          "warmWitness": {
+            "wallMs": 518.31,
+            "peakSampledRSS": 116850688
+          },
+          "proveMs": 2489.586041,
+          "verifyMs": 35.418,
+          "contiguousWitnessProveVerifyMs": 3052.795,
+          "setupPerformed": true,
+          "setupExcludedFromProofTiming": true,
+          "threads": 2,
+          "nice": 10,
+          "artifactSha256": "9767b52427e04a2e00ba42bc5dc5518dbfe67bf4aa5830f5d151e0e33bd57a2e",
+          "programKeyHash": "bf1319ff4d1bc49029fa4875a9c5f529a5d17ec85bae5547ace311bbbbc3d3df",
+          "proofBytes": 14656,
+          "publicInputsBytes": 3008,
+          "attestationVerified": false,
+          "trustedTime": false,
+          "appServiceMeasured": false
+        },
+        {
+          "softwareFixtureOnly": true,
+          "ownerIdentityUsed": false,
+          "registeredForProving": false,
+          "proofGenerated": true,
+          "nativeZkAndAllSignaturesVerified": true,
+          "fullSignedJournalPreserved": true,
+          "limits": {
+            "OPS": 372,
+            "SCALARS": 64,
+            "BYTES": 256,
+            "SAMPLES": 132,
+            "CPS": 8,
+            "PRES": 8
+          },
+          "textScalars": 64,
+          "textBytes": 256,
+          "operations": 147,
+          "checkpointSignatures": 2,
+          "presenceSignatures": 1,
+          "validationMs": 0.448,
+          "warmWitness": {
+            "wallMs": 492.19,
+            "peakSampledRSS": 131186688
+          },
+          "proveMs": 2326.845834,
+          "verifyMs": 26.329,
+          "contiguousWitnessProveVerifyMs": 2854.676,
+          "setupPerformed": false,
+          "setupExcludedFromProofTiming": true,
+          "threads": 2,
+          "nice": 10,
+          "artifactSha256": "9767b52427e04a2e00ba42bc5dc5518dbfe67bf4aa5830f5d151e0e33bd57a2e",
+          "programKeyHash": "bf1319ff4d1bc49029fa4875a9c5f529a5d17ec85bae5547ace311bbbbc3d3df",
+          "proofBytes": 14656,
+          "publicInputsBytes": 3008,
+          "attestationVerified": false,
+          "trustedTime": false,
+          "appServiceMeasured": false
+        }
+      ],
+      "independentWasm": {
+        "kind": "huma-short-bucket-wasm-check-v1",
+        "sdkProfileRegistered": false,
+        "proofGenerated": false,
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "programKeyHash": "bf1319ff4d1bc49029fa4875a9c5f529a5d17ec85bae5547ace311bbbbc3d3df",
+        "cases": [
+          {
+            "name": "original40",
+            "validProofAccepted": true,
+            "changedProofRejected": true,
+            "changedPublicInputsRejected": true,
+            "proofSha256": "31b8c77efc14986999b7dce9b127ed343886dfef197345385d1783df1c84e5f9",
+            "publicInputsSha256": "2ef90b1c945c666761d7475b7a4f82c97b1863fca105d69a92f92c37d6489d25"
+          },
+          {
+            "name": "unicode64",
+            "validProofAccepted": true,
+            "changedProofRejected": true,
+            "changedPublicInputsRejected": true,
+            "proofSha256": "97a6bc1ed9742fe19f79a7dffce43e5bde18784498261a5d6e8e705946db68e3",
+            "publicInputsSha256": "54ac536e043fdd5fec8888da9fb8aff0c0bec0468d7c34ab1b956ca8a5d7e6a5"
+          },
+          {
+            "name": "deleted64",
+            "validProofAccepted": true,
+            "changedProofRejected": true,
+            "changedPublicInputsRejected": true,
+            "proofSha256": "c84a57febeed7d52a66951763acea349418e04564e6572394fefb58e68aea86f",
+            "publicInputsSha256": "e21ad9aca846c6eeee10c3f3f42c5fe0316be36959c04751ef194b8dad467851"
+          }
+        ]
+      }
+    },
+    {
+      "directory": "build/research/noir-capacity/short128-cp32-v2",
+      "sizing": {
+        "softwareFixtureOnly": true,
+        "proofGenerated": false,
+        "newSignaturesGenerated": false,
+        "bucket": "short128",
+        "completeHistoryEligibility": {
+          "eligible": true,
+          "limits": {
+            "BYTES": 512,
+            "CPS": 32,
+            "OPS": 756,
+            "PRES": 8,
+            "SAMPLES": 260,
+            "SCALARS": 128
+          },
+          "name": "short128",
+          "reasons": []
+        },
+        "registeredForProving": false,
+        "originalCaptureSha256": "f26138113757d9d38ed8fd37a99d2597f1179286475fdf871d1f48338414a3ec",
+        "limits": {
+          "OPS": 756,
+          "SCALARS": 128,
+          "BYTES": 512,
+          "SAMPLES": 260,
+          "CPS": 32,
+          "PRES": 8
+        },
+        "checkpointSignatures": 4,
+        "presenceSignatures": 2,
+        "signedJournalPreserved": true,
+        "compileAndWitness": {
+          "wallMs": 10416.49,
+          "peakSampledRSS": 1354530816
+        },
+        "gates": {
+          "functions": [
+            {
+              "acir_opcodes": 341561,
+              "circuit_size": 522977
+            }
+          ]
+        },
+        "bytecodeSha256": "6cb951178bc0530e85d7826e3720a641d2580015577b515aa950b960e0e3bb61",
+        "sourceSha256": {
+          "main.nr": "ac3135bcdadb277a673303357fa1b2280d533f0853de5d2f68d98bc97df82a69",
+          "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+          "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+          "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+        }
+      },
+      "policyChecks": {
+        "experimental": true,
+        "softwareKeysOnly": true,
+        "artifactSha256": "8e6bea9227b29d40993e7a6ea3c26b201b0251f0c55562becbe0079eb6731dde",
+        "limits": {
+          "OPS": 756,
+          "SCALARS": 128,
+          "BYTES": 512,
+          "CPS": 32,
+          "SAMPLES": 260,
+          "PRES": 8
+        },
+        "cases": [
+          {
+            "case": "Validrollover",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 867.35,
+            "peakSampledRSS": 339525632,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validrepeat",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 849.26,
+            "peakSampledRSS": 339410944,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validunpaired",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 820.39,
+            "peakSampledRSS": 342491136,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validrate",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 834.77,
+            "peakSampledRSS": 336822272,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validdwell",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 825.38,
+            "peakSampledRSS": 342491136,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validmissingorigin",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 813.25,
+            "peakSampledRSS": 337444864,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validlate",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 814.73,
+            "peakSampledRSS": 340721664,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validtimeout",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 832.06,
+            "peakSampledRSS": 338935808,
+            "policySatisfied": true,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "Validu64max",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 810.32,
+            "peakSampledRSS": 337952768,
+            "policySatisfied": false,
+            "softwareKeysOnly": true,
+            "proofGenerated": false
+          },
+          {
+            "case": "RejectOriginPID",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 644.14
+          },
+          {
+            "case": "RejectKeyboardType",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 644.75
+          },
+          {
+            "case": "RejectRepeatFlag",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 641.8
+          },
+          {
+            "case": "RejectPresenceNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 652.02
+          },
+          {
+            "case": "RejectLateSeal",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 636.38
+          },
+          {
+            "case": "RejectOmittedPresenceCoverage",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 637.96
+          },
+          {
+            "case": "RejectPublicPresenceCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 657.68
+          },
+          {
+            "case": "RejectUnboundSampleTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 626.66
+          },
+          {
+            "case": "RejectUnusedOriginPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 622.79
+          },
+          {
+            "case": "RejectUnusedPresenceRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 651.18
+          },
+          {
+            "case": "RejectForgedHumanRhythm",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 624.56
+          },
+          {
+            "case": "RejectReusedKeySample",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 622.19
+          }
+        ],
+        "controls": []
+      },
+      "boundaryChecks": {
+        "artifactSha256": "8e6bea9227b29d40993e7a6ea3c26b201b0251f0c55562becbe0079eb6731dde",
+        "fixtureSha256": "84aef238a1e12709f4c05e52fa476bf48692c3b0a1895cbbbb2946ed6431c5f4",
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "ownerIdentityUsed": false,
+        "cases": [
+          {
+            "case": "BoundaryFullAscii",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 880.72,
+            "peakSampledRSS": 338968576,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryFullUnicode",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 814.51,
+            "peakSampledRSS": 337739776,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryDeleteAllUnicode",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 825.23,
+            "peakSampledRSS": 338804736,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryOverflowScalars",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 560.81,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          },
+          {
+            "case": "BoundaryOverflowAfterDeletion",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 566.02,
+            "completeHistory": true,
+            "softwareKeysOnly": true,
+            "policySatisfied": true
+          }
+        ]
+      },
+      "nativeProofs": [
+        {
+          "softwareFixtureOnly": true,
+          "ownerIdentityUsed": false,
+          "registeredForProving": false,
+          "proofGenerated": true,
+          "nativeZkAndAllSignaturesVerified": true,
+          "fullSignedJournalPreserved": true,
+          "limits": {
+            "OPS": 756,
+            "SCALARS": 128,
+            "BYTES": 512,
+            "SAMPLES": 260,
+            "CPS": 32,
+            "PRES": 8
+          },
+          "textScalars": 1,
+          "textBytes": 1,
+          "operations": 470,
+          "checkpointSignatures": 2,
+          "presenceSignatures": 1,
+          "validationMs": 0.478,
+          "warmWitness": {
+            "wallMs": 807.42,
+            "peakSampledRSS": 301547520
+          },
+          "proveMs": 4292.304167,
+          "verifyMs": 29.083,
+          "contiguousWitnessProveVerifyMs": 5137.223,
+          "setupPerformed": false,
+          "setupExcludedFromProofTiming": true,
+          "threads": 2,
+          "nice": 10,
+          "artifactSha256": "8e6bea9227b29d40993e7a6ea3c26b201b0251f0c55562becbe0079eb6731dde",
+          "programKeyHash": "f8360140d689befc8f23b1794d5f0a9fe373a415804bd8881acdc4886af7f19c",
+          "proofBytes": 14656,
+          "publicInputsBytes": 4544,
+          "attestationVerified": false,
+          "trustedTime": false,
+          "appServiceMeasured": false
+        },
+        {
+          "softwareFixtureOnly": true,
+          "ownerIdentityUsed": false,
+          "registeredForProving": false,
+          "proofGenerated": true,
+          "nativeZkAndAllSignaturesVerified": true,
+          "fullSignedJournalPreserved": true,
+          "limits": {
+            "OPS": 756,
+            "SCALARS": 128,
+            "BYTES": 512,
+            "SAMPLES": 260,
+            "CPS": 32,
+            "PRES": 8
+          },
+          "textScalars": 30,
+          "textBytes": 30,
+          "operations": 151,
+          "checkpointSignatures": 32,
+          "presenceSignatures": 2,
+          "validationMs": 24.354,
+          "warmWitness": {
+            "wallMs": 842.18,
+            "peakSampledRSS": 339214336
+          },
+          "proveMs": 4501.600875,
+          "verifyMs": 36.5,
+          "contiguousWitnessProveVerifyMs": 5389.238,
+          "setupPerformed": false,
+          "setupExcludedFromProofTiming": true,
+          "threads": 2,
+          "nice": 10,
+          "artifactSha256": "8e6bea9227b29d40993e7a6ea3c26b201b0251f0c55562becbe0079eb6731dde",
+          "programKeyHash": "f8360140d689befc8f23b1794d5f0a9fe373a415804bd8881acdc4886af7f19c",
+          "proofBytes": 14656,
+          "publicInputsBytes": 4544,
+          "attestationVerified": false,
+          "trustedTime": false,
+          "appServiceMeasured": false
+        },
+        {
+          "softwareFixtureOnly": true,
+          "ownerIdentityUsed": false,
+          "registeredForProving": false,
+          "proofGenerated": true,
+          "nativeZkAndAllSignaturesVerified": true,
+          "fullSignedJournalPreserved": true,
+          "limits": {
+            "OPS": 756,
+            "SCALARS": 128,
+            "BYTES": 512,
+            "SAMPLES": 260,
+            "CPS": 32,
+            "PRES": 8
+          },
+          "textScalars": 40,
+          "textBytes": 40,
+          "operations": 201,
+          "checkpointSignatures": 4,
+          "presenceSignatures": 2,
+          "validationMs": 10.657,
+          "warmWitness": {
+            "wallMs": 864.75,
+            "peakSampledRSS": 339656704
+          },
+          "proveMs": 4661.233333,
+          "verifyMs": 33.571,
+          "contiguousWitnessProveVerifyMs": 5569.216,
+          "setupPerformed": true,
+          "setupExcludedFromProofTiming": true,
+          "threads": 2,
+          "nice": 10,
+          "artifactSha256": "8e6bea9227b29d40993e7a6ea3c26b201b0251f0c55562becbe0079eb6731dde",
+          "programKeyHash": "f8360140d689befc8f23b1794d5f0a9fe373a415804bd8881acdc4886af7f19c",
+          "proofBytes": 14656,
+          "publicInputsBytes": 4544,
+          "attestationVerified": false,
+          "trustedTime": false,
+          "appServiceMeasured": false
+        },
+        {
+          "softwareFixtureOnly": true,
+          "ownerIdentityUsed": false,
+          "registeredForProving": false,
+          "proofGenerated": true,
+          "nativeZkAndAllSignaturesVerified": true,
+          "fullSignedJournalPreserved": true,
+          "limits": {
+            "OPS": 756,
+            "SCALARS": 128,
+            "BYTES": 512,
+            "SAMPLES": 260,
+            "CPS": 32,
+            "PRES": 8
+          },
+          "textScalars": 128,
+          "textBytes": 512,
+          "operations": 211,
+          "checkpointSignatures": 2,
+          "presenceSignatures": 1,
+          "validationMs": 1.379,
+          "warmWitness": {
+            "wallMs": 812.05,
+            "peakSampledRSS": 337182720
+          },
+          "proveMs": 4403.463042,
+          "verifyMs": 30.035,
+          "contiguousWitnessProveVerifyMs": 5254.11,
+          "setupPerformed": false,
+          "setupExcludedFromProofTiming": true,
+          "threads": 2,
+          "nice": 10,
+          "artifactSha256": "8e6bea9227b29d40993e7a6ea3c26b201b0251f0c55562becbe0079eb6731dde",
+          "programKeyHash": "f8360140d689befc8f23b1794d5f0a9fe373a415804bd8881acdc4886af7f19c",
+          "proofBytes": 14656,
+          "publicInputsBytes": 4544,
+          "attestationVerified": false,
+          "trustedTime": false,
+          "appServiceMeasured": false
+        }
+      ],
+      "independentWasm": {
+        "kind": "huma-short-bucket-wasm-check-v1",
+        "sdkProfileRegistered": false,
+        "proofGenerated": false,
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "programKeyHash": "f8360140d689befc8f23b1794d5f0a9fe373a415804bd8881acdc4886af7f19c",
+        "cases": [
+          {
+            "name": "original40",
+            "validProofAccepted": true,
+            "changedProofRejected": true,
+            "changedPublicInputsRejected": true,
+            "proofSha256": "f67d751f8854bd56aa4fc55955f86eecf993ed4ddd2fcd2187d8a34a2e5f4c4f",
+            "publicInputsSha256": "c830abdbebe4e11a98f5354ba1918d65894ec89a475a4911fb3c871ef7f3a285"
+          },
+          {
+            "name": "original32cp",
+            "validProofAccepted": true,
+            "changedProofRejected": true,
+            "changedPublicInputsRejected": true,
+            "proofSha256": "e357f9b755fc5a2261d29f7b24202a99158c6c02245c8cd57b66a5e4c63a43b5",
+            "publicInputsSha256": "8de46e6f3447351e3bf8afe12750ba982179d30d36e37e9f3c78b20372773d97"
+          },
+          {
+            "name": "unicode128",
+            "validProofAccepted": true,
+            "changedProofRejected": true,
+            "changedPublicInputsRejected": true,
+            "proofSha256": "361746ec5b318f19178c22d6fc835fe879ca0f5e85bfa9dc23ec31bf2f8d1e84",
+            "publicInputsSha256": "e4a59941c4b20c94008d27a44045c95fdb9010e1cd1272157e3d5bf41feb6e9a"
+          },
+          {
+            "name": "deleted128",
+            "validProofAccepted": true,
+            "changedProofRejected": true,
+            "changedPublicInputsRejected": true,
+            "proofSha256": "6696d259055813945df60852c568c60e9542c00655d788c17fc68529274acee4",
+            "publicInputsSha256": "ccdf5fd23e4872e739f0c3bfe5775a81bc252c240d7c530d1a55e75e826f95ad"
+          }
+        ]
+      }
+    }
+  ],
+  "rejectedSizing": [
+    {
+      "softwareFixtureOnly": true,
+      "proofGenerated": false,
+      "newSignaturesGenerated": false,
+      "bucket": "short64",
+      "completeHistoryEligibility": {
+        "eligible": true,
+        "limits": {
+          "BYTES": 256,
+          "CPS": 32,
+          "OPS": 384,
+          "PRES": 8,
+          "SAMPLES": 132,
+          "SCALARS": 64
+        },
+        "name": "short64",
+        "reasons": []
+      },
+      "registeredForProving": false,
+      "originalCaptureSha256": "f26138113757d9d38ed8fd37a99d2597f1179286475fdf871d1f48338414a3ec",
+      "limits": {
+        "OPS": 384,
+        "SCALARS": 64,
+        "BYTES": 256,
+        "SAMPLES": 132,
+        "CPS": 32,
+        "PRES": 8
+      },
+      "checkpointSignatures": 4,
+      "presenceSignatures": 2,
+      "signedJournalPreserved": true,
+      "compileAndWitness": {
+        "wallMs": 4260.1,
+        "peakSampledRSS": 781795328
+      },
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 186367,
+            "circuit_size": 307342
+          }
+        ]
+      },
+      "bytecodeSha256": "8b7b433eff8dc15f6e966d8934d498dc209233e2a3e8598e6d9aee19ee8bda64",
+      "sourceSha256": {
+        "main.nr": "ae6594197a0c3ea112f4c3c8a7d221cb42d55125a0e7e49766592aaa7ee66ca2",
+        "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+        "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+        "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+      }
+    },
+    {
+      "softwareFixtureOnly": true,
+      "proofGenerated": false,
+      "newSignaturesGenerated": false,
+      "bucket": "short128",
+      "completeHistoryEligibility": {
+        "eligible": true,
+        "limits": {
+          "BYTES": 512,
+          "CPS": 32,
+          "OPS": 768,
+          "PRES": 8,
+          "SAMPLES": 260,
+          "SCALARS": 128
+        },
+        "name": "short128",
+        "reasons": []
+      },
+      "registeredForProving": false,
+      "originalCaptureSha256": "f26138113757d9d38ed8fd37a99d2597f1179286475fdf871d1f48338414a3ec",
+      "limits": {
+        "OPS": 768,
+        "SCALARS": 128,
+        "BYTES": 512,
+        "SAMPLES": 260,
+        "CPS": 32,
+        "PRES": 8
+      },
+      "checkpointSignatures": 4,
+      "presenceSignatures": 2,
+      "signedJournalPreserved": true,
+      "compileAndWitness": {
+        "wallMs": 10311.47,
+        "peakSampledRSS": 1369014272
+      },
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 345284,
+            "circuit_size": 527504
+          }
+        ]
+      },
+      "bytecodeSha256": "3bae57c498ae0b9343efb924a08ce4a9b56aea029e5cddfafa9ea7b4915a68bc",
+      "sourceSha256": {
+        "main.nr": "c5261657c820b346370df93e9caa30313570dde21f94f233dec4cf52b8ee784f",
+        "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+        "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+        "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+      }
+    },
+    {
+      "softwareFixtureOnly": true,
+      "proofGenerated": false,
+      "newSignaturesGenerated": false,
+      "bucket": "short128",
+      "completeHistoryEligibility": {
+        "eligible": true,
+        "limits": {
+          "BYTES": 512,
+          "CPS": 32,
+          "OPS": 768,
+          "PRES": 8,
+          "SAMPLES": 260,
+          "SCALARS": 128
+        },
+        "name": "short128",
+        "reasons": []
+      },
+      "registeredForProving": false,
+      "tightGeometry": true,
+      "originalCaptureSha256": "f26138113757d9d38ed8fd37a99d2597f1179286475fdf871d1f48338414a3ec",
+      "limits": {
+        "OPS": 768,
+        "SCALARS": 128,
+        "BYTES": 512,
+        "SAMPLES": 260,
+        "CPS": 32,
+        "PRES": 8
+      },
+      "checkpointSignatures": 4,
+      "presenceSignatures": 2,
+      "signedJournalPreserved": true,
+      "compileAndWitness": {
+        "wallMs": 10607.24,
+        "peakSampledRSS": 1359888384
+      },
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 345284,
+            "circuit_size": 526058
+          }
+        ]
+      },
+      "bytecodeSha256": "0a84979d8183b2efd7a70c6b9302b3a43c24e5ae6320fbe09bd3f87c3be0949f",
+      "sourceSha256": {
+        "main.nr": "b2f37e0bc19bfd404358dd7d7031476d94c2480350f0c32275c94990a957dddb",
+        "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+        "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+        "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+      }
+    }
+  ],
+  "rejectedGeometryGeneratorRetained": false,
+  "sourceSha256": {
+    "experiments/noir-compact/native/src/assurance_input.rs": "8279a8d09e3313b1a0bfd2dfc8399e333075b949f55d1b6a6c50bb1d3bc54919",
+    "experiments/noir-compact/native/src/profile_fit.rs": "6a69bf70e9828132938e1020b703c271b822f93b7ccb72a78b82e76cef0ef3b5",
+    "experiments/noir-compact/native/src/main.rs": "d71714bed85f700aaebb4495b837e80e3d2b090568de8cdab164a03f2142ad81",
+    "experiments/noir-compact/native/src/lib.rs": "7048787124460c8596a6f93b86982c01d6cb339d3db1ce959c03ed75cb310fe2",
+    "experiments/noir-compact/capacity_cases.py": "b2da1712df42f965b6fd7c921a97035ec5f5ab36123466cb35ba0f19df9eb106",
+    "experiments/noir-compact/test_capacity_cases.py": "7f49aeef2313d42cb6c173f0f6ccc2d339f7629634b125914fba18dd200c051a",
+    "experiments/noir-compact/assurance_checks.py": "b98162d8b4a7ade0b98eeeafafb553beb5dadb70c547fa5bbc5e28f035381939",
+    "experiments/noir-compact/bucket_checks.py": "7c0b4c8ba3cdf7cca67833ced8fca1f7cc80e85344246e71cc7fc7720429edca",
+    "experiments/noir-compact/bucket_prove.py": "c89dc0bf129d732d688e8b250db29c5f2afcccc40152c29b9a9d0b2b65ae8e44",
+    "experiments/noir-compact/bucket_verify.mjs": "89c001216f4403ba06003b17c56d5cc1b15be21665c31e1327953f6d2d57423a",
+    "experiments/noir-compact/native/examples/bucket_boundaries.rs": "60d159c8d60c5ef59450c4b01006eae95ec3b1cdc2486b89025b620d2ec49475"
+  }
+}

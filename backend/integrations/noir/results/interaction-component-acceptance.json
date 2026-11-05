@@ -1,0 +1,6375 @@
+{
+  "kind": "huma-interaction-continuation-acceptance-v1",
+  "softwareFixturesOnly": true,
+  "ownerKeysOrBiometricsUsed": false,
+  "appChanged": false,
+  "sdkProfileRegistered": false,
+  "completeHumaSessionProof": false,
+  "completeTenThousandCharacterSessionVerified": false,
+  "noir": "1.0.0-beta.25",
+  "barretenberg": "5.2.1",
+  "zeroKnowledge": true,
+  "threads": 2,
+  "nice": 10,
+  "nativeChunksChecked": 1090,
+  "witnessCasesPassed": 578,
+  "weakenedWitnessOnlyControlsPassed": 3,
+  "selectedCombinedProofsGenerated": 23,
+  "nativeCryptographicChecksPassed": 115,
+  "independentWasmChecksPassed": 115,
+  "stateCommitment": {
+    "compositeDomain": "0x48554d410602",
+    "interactionDomain": "0x48554d410603",
+    "completeReplayStateBound": true,
+    "all256HeldKeysBound": true,
+    "heldTimestampBits": 65,
+    "heldValuesPerField": 2,
+    "rateWindowEntries": 20,
+    "rateTimestampsPerField": 3,
+    "allExistingBehaviorRulesPreserved": true,
+    "originSeedBlockAndPrefixDomainsUnchanged": true,
+    "originPayloadBits": 98,
+    "originEventsPerBlock": 6,
+    "oneOriginPerActualKeySample": true,
+    "originsOnOtherOperationsRejected": true,
+    "genesisConstrained": true
+  },
+  "fullPassingTrace": {
+    "case": "rollover-full-v3",
+    "nativeChunks": 17,
+    "witnessChunksChecked": 17,
+    "allRulesPass": true,
+    "allChunksCryptographicallyProved": true,
+    "verificationKeyCreated": true,
+    "independentWasmVerified": true,
+    "portableRoundTripVerified": true
+  },
+  "cases": [
+    {
+      "name": "revision-v2",
+      "case": "revision",
+      "capacity": 64,
+      "chunkOperations": 12,
+      "nativeOperations": 32,
+      "nativeChunks": 3,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 1,
+      "originResidues": [
+        1,
+        2,
+        4
+      ],
+      "finalRules": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 38609,
+      "compileAndWitness": {
+        "wallMs": 277.63,
+        "peakSampledRSS": 107085824
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "67cd43e78aad0d5f1eb32bcdba3364073b2f7c1e1e8d8e679dbc5ce38b4486d2",
+      "sourceSha256": "36927a9aa57580fa26fde81122bb3869d2abdbf478cd1991bfc2251acc22fd14",
+      "artifactSha256": "3ea93cd4f3d57c4f289d536b39a85d0f9ed55be1c25af9f06bd86010a26b4551",
+      "bytecodeSha256": "8c70caa34727715680eaa7eaab001dbd6c27c798c4138007da3c4ac6acc24e63",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "3ea93cd4f3d57c4f289d536b39a85d0f9ed55be1c25af9f06bd86010a26b4551",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 136.35,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk1",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 145.64,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk2",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 133.77,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 124.16
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.62
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.15
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.12
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.29
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 124.72
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 124.81
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.05
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 125.82
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.31
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 121.83
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 120.23
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 120.63
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 119.35
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.44
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.51
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.61
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 120.61
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.71
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.58
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.71
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.23
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.02
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.11
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.78
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 125.8
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.95
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.0
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.39
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.88
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.35
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 124.57
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.81
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 124.61
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 124.49
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.8
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 122.18
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 123.75
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.4
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.9
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.13
+          }
+        ],
+        "unsafeControls": [
+          {
+            "case": "UnsafeForgedGenesisHeldKey",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 272.43,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "UnsafeForgedGenesisPause",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 160.17,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "UnsafeForgedGenesisOriginHead",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 136.89,
+            "peakSampledRSS": 0
+          }
+        ],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "nativeProofs": {
+        "kind": "huma-interaction-continuation-proof-v1",
+        "case": "revision",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "replayBehaviorAndOriginsBoundTogether": true,
+        "signaturesVerified": false,
+        "completeHumaSessionProof": false,
+        "completeTenThousandCharacterSessionVerified": false,
+        "appChanged": false,
+        "allReplayChunksProved": true,
+        "nativeChunks": 3,
+        "selectedChunksProved": 3,
+        "linkChecks": {
+          "droppedChunkRejected": true,
+          "reorderedChunksRejected": true,
+          "resetStateRejected": true,
+          "changedSessionRejected": true
+        },
+        "artifactSha256": "3ea93cd4f3d57c4f289d536b39a85d0f9ed55be1c25af9f06bd86010a26b4551",
+        "sourceSha256": "36927a9aa57580fa26fde81122bb3869d2abdbf478cd1991bfc2251acc22fd14",
+        "keySha256": "7d8aaa95ab9082418273f656b44ae5a37ee39038c506274a5fa81730b26c6558",
+        "setupMs": 153.298791,
+        "setupExcludedFromChunkTiming": true,
+        "validPathSumMs": 1909.114,
+        "researchAllChecksWallMs": 2104.999,
+        "appServiceMeasured": false,
+        "threads": 2,
+        "nice": 10,
+        "cases": [
+          {
+            "index": 0,
+            "boundary": {
+              "capture_root": "19377387528291578160717455033010658725173893388162681981585086874609354424772",
+              "end_offset": 12,
+              "end_root": "14929323944868024493695627778664321677921524052473040732700289293761783751716",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 0,
+              "origin_present": 0,
+              "origin_root": "13269999508051164356119881838406644565774656363713783349169035809848992138539",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 0,
+              "start_root": "11284313990309570314972100913015554654375033300279381732885872335131088195093"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 147.44,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 459.935875,
+            "witnessProveVerifyMs": 632.735,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "11a43f899d8e24ec04cbc9768acd22fe269fe8cbc90b7cb520d817e05974d565",
+            "publicInputsSha256": "5b8c6201573cb92029e34a2d0df8f7afaf9c64683da491ead359e83aa9769a5e"
+          },
+          {
+            "index": 1,
+            "boundary": {
+              "capture_root": "9196780543126300053247000252062605288737421231513385967773658219086231457197",
+              "end_offset": 24,
+              "end_root": "5755917219130757416255139346639262279925048573531548007233587062772352685446",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 1,
+              "origin_present": 1,
+              "origin_root": "2400006918390494948558358304198363027894445164850501734616026646554108634373",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 12,
+              "start_root": "14929323944868024493695627778664321677921524052473040732700289293761783751716"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 153.97,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 464.471958,
+            "witnessProveVerifyMs": 643.304,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "66a88da939e250ef573a999c153e7d665a611d676d6b4c5294b9d948796518b1",
+            "publicInputsSha256": "efebcab2669ac9f350d216f559e3ddd01e898529cca96294ecac698346e4a6cd"
+          },
+          {
+            "index": 2,
+            "boundary": {
+              "capture_root": "7741175548625755320782625865624309078199827853930166879266559589161646821052",
+              "end_offset": 32,
+              "end_root": "18192824389219163445701810833201984713977980738566880121771919041741871851048",
+              "final_step": true,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 3,
+              "origin_present": 3,
+              "origin_root": "2635706882767480627411611086639920789779697587257189506953272273762356530753",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+                true,
+                false,
+                true
+              ],
+              "start_offset": 24,
+              "start_root": "5755917219130757416255139346639262279925048573531548007233587062772352685446"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 150.23,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 458.13925,
+            "witnessProveVerifyMs": 633.075,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "40a7108282ea4024d175f727ac7a6fe411d5857c8a7c07bd6eeb0abebd343afc",
+            "publicInputsSha256": "1e5770adba0267dc7a32908b76af86264463e40ead410a553dbe13acc5190d5e"
+          }
+        ]
+      },
+      "independentWasmChecks": {
+        "kind": "huma-interaction-continuation-wasm-v1",
+        "keySha256": "7d8aaa95ab9082418273f656b44ae5a37ee39038c506274a5fa81730b26c6558",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "completeHumaSessionProof": false,
+        "appChanged": false,
+        "cases": [
+          {
+            "index": 0,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 0,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 1,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 2,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "typing10000-v2",
+      "case": "typing10000",
+      "capacity": 10000,
+      "chunkOperations": 120,
+      "nativeOperations": 50003,
+      "nativeChunks": 417,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 416,
+      "originResidues": [
+        2,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 286073,
+      "compileAndWitness": {
+        "wallMs": 3763.66,
+        "peakSampledRSS": 448872448
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "12c20e1e529e30f787a7fb14990a5345ea5d65c84d4e79632fdd048bd8ae4c9b",
+      "sourceSha256": "c11c52ef8e6061493cce6e9e797458376e51f58bb720802ce4a7b20128b644b1",
+      "artifactSha256": "5dcb0f8caaf5fd77ad6f0b873bef60f8375c585cdf5c13a14cb5ec1cbb7e88a6",
+      "bytecodeSha256": "c128fcead7da916c84270b6d022c7b9ab2a57ad6d733fc41991cdfa7d1822ed6",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "5dcb0f8caaf5fd77ad6f0b873bef60f8375c585cdf5c13a14cb5ec1cbb7e88a6",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 311.57,
+            "peakSampledRSS": 144506880
+          },
+          {
+            "case": "ValidChunk208",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 312.46,
+            "peakSampledRSS": 144048128
+          },
+          {
+            "case": "ValidChunk416",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 308.51,
+            "peakSampledRSS": 148635648
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 225.08
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 230.36
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 226.4
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 235.92
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 226.2
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 232.86
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 232.45
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 229.35
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 230.5
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 228.83
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 231.25
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 228.67
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 231.33
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 226.67
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 249.98
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.34
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.74
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 227.32
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 247.9
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.44
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 267.74
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 267.9
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 268.94
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.51
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 225.41
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 250.88
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.75
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 268.81
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.11
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.36
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 251.24
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 268.4
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 248.94
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.1
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 267.8
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 250.82
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 242.87
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 247.43
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 229.19
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 228.94
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 228.17
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "nativeProofs": {
+        "kind": "huma-interaction-continuation-proof-v1",
+        "case": "typing10000",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "replayBehaviorAndOriginsBoundTogether": true,
+        "signaturesVerified": false,
+        "completeHumaSessionProof": false,
+        "completeTenThousandCharacterSessionVerified": false,
+        "appChanged": false,
+        "allReplayChunksProved": false,
+        "nativeChunks": 417,
+        "selectedChunksProved": 3,
+        "artifactSha256": "5dcb0f8caaf5fd77ad6f0b873bef60f8375c585cdf5c13a14cb5ec1cbb7e88a6",
+        "sourceSha256": "c11c52ef8e6061493cce6e9e797458376e51f58bb720802ce4a7b20128b644b1",
+        "keySha256": "29a197f58aabc86761f0a1859618c4afbe9565c7d0a1b55ac7f6de44d8985c69",
+        "setupMs": 891.13325,
+        "setupExcludedFromChunkTiming": true,
+        "threads": 2,
+        "nice": 10,
+        "cases": [
+          {
+            "index": 0,
+            "boundary": {
+              "capture_root": "20481158575785335321408864639604422468310466599133951226935894501827980223424",
+              "end_offset": 120,
+              "end_root": "18136868831263735229621612252927460280724471144434626182347463152489064355519",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 40,
+              "origin_present": 44,
+              "origin_root": "5829442100807296293635198831836224154748601118422503907462706068777508645607",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 0,
+              "start_root": "8460214360998075208448531194927567543073230879281030632774657442502318877323"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 307.94,
+              "peakSampledRSS": 145063936
+            },
+            "proveMs": 2483.2036669999998,
+            "witnessProveVerifyMs": 2817.593,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "29899bc05da3e2cdb872ee1b7ac1b55880518e0384ad946ff16a95cf05608df3",
+            "publicInputsSha256": "c4ea6d0bd38eaf8b46db608f2958bd0092d87b48debdf7b0a10f84af78ba06c5"
+          },
+          {
+            "index": 208,
+            "boundary": {
+              "capture_root": "5701286149089298108008571982478265594741102953382223578574229091584434778393",
+              "end_offset": 25080,
+              "end_root": "2389868601608218058973932597759741497252932193267141166049893437648131412169",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 8582,
+              "origin_present": 9440,
+              "origin_root": "5836990961974147746345392174491451825266403562304354101261116147064122640271",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 24960,
+              "start_root": "6366604477584372390585674629583814336366980417035566608451411022265894719401"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 315.06,
+              "peakSampledRSS": 146604032
+            },
+            "proveMs": 2557.5592500000002,
+            "witnessProveVerifyMs": 2898.707,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "866483759b1164ce586b5fdd47626cca3a9addcba2845d0e76ab8d402c3dfaf6",
+            "publicInputsSha256": "b94ce92f95d0aa568a4d161ec76edc9e1624bdb165c7e54da2415da8dce0131b"
+          },
+          {
+            "index": 416,
+            "boundary": {
+              "capture_root": "14906715607372137112479751862260845189328617508744596719253766381342368462381",
+              "end_offset": 50003,
+              "end_root": "8372767564123480692127203272691066589002553668310025622182124259503917663126",
+              "final_step": true,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 17111,
+              "origin_present": 18823,
+              "origin_root": "21784011835354471190441247963956429384577412214422484875439462377053736780890",
+              "policy_satisfied": false,
+              "rules": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                true
+              ],
+              "start_offset": 49920,
+              "start_root": "438824513528373591907353663748459288622731680077965143882803067291088034945"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 316.89,
+              "peakSampledRSS": 146194432
+            },
+            "proveMs": 2569.9069170000002,
+            "witnessProveVerifyMs": 2913.235,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "51569ad8043b01454e8fe6101926db5643a3e2f9efee86d8e7afba3e905fae2a",
+            "publicInputsSha256": "e299870ed3b3e5606cf30e9da8fddf43570c01b4f16f9cf0de422826b9b93dc9"
+          }
+        ]
+      },
+      "independentWasmChecks": {
+        "kind": "huma-interaction-continuation-wasm-v1",
+        "keySha256": "29a197f58aabc86761f0a1859618c4afbe9565c7d0a1b55ac7f6de44d8985c69",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "completeHumaSessionProof": false,
+        "appChanged": false,
+        "cases": [
+          {
+            "index": 0,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 0,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 208,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 208,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 208,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 208,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 208,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 416,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 416,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 416,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 416,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 416,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "emoji10000-v2",
+      "case": "emoji10000",
+      "capacity": 10000,
+      "chunkOperations": 120,
+      "nativeOperations": 50003,
+      "nativeChunks": 417,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 416,
+      "originResidues": [
+        2,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 286073,
+      "compileAndWitness": {
+        "wallMs": 2592.89,
+        "peakSampledRSS": 594001920
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "06abcf0343b30494071d3c4987595f4258b5a3643a23eb13d7131de3ec65a217",
+      "sourceSha256": "c11c52ef8e6061493cce6e9e797458376e51f58bb720802ce4a7b20128b644b1",
+      "artifactSha256": "2773b9ff330826b416313b3551802888690705c7bd238ec6c11e8012f6185e7d",
+      "bytecodeSha256": "c128fcead7da916c84270b6d022c7b9ab2a57ad6d733fc41991cdfa7d1822ed6",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "2773b9ff330826b416313b3551802888690705c7bd238ec6c11e8012f6185e7d",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 307.45,
+            "peakSampledRSS": 142360576
+          },
+          {
+            "case": "ValidChunk208",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 312.24,
+            "peakSampledRSS": 142721024
+          },
+          {
+            "case": "ValidChunk416",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 313.07,
+            "peakSampledRSS": 144670720
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 233.55
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 231.79
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 232.9
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 236.08
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 233.89
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 235.18
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 240.44
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 236.08
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 236.42
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 230.7
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 228.55
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 234.3
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 230.08
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 235.57
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.59
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.28
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.31
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 224.71
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.17
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.92
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.32
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 273.28
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.46
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.8
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 234.9
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 268.05
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.67
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.6
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.53
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 268.99
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.29
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.6
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.95
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.94
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 272.6
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 284.42
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 336.21
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 274.92
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 250.42
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 275.7
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 404.48
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "baseline10000-v2",
+      "case": "baseline10000",
+      "capacity": 10000,
+      "chunkOperations": 120,
+      "nativeOperations": 10001,
+      "nativeChunks": 84,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 0,
+      "originResidues": [
+        0
+      ],
+      "finalRules": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "policySatisfied": false,
+      "gates": 286073,
+      "compileAndWitness": {
+        "wallMs": 2569.19,
+        "peakSampledRSS": 451264512
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "1be54ff468c88c21a30efa85bce60d0e1ce92a9263562cb458a974e0051e53c4",
+      "sourceSha256": "c11c52ef8e6061493cce6e9e797458376e51f58bb720802ce4a7b20128b644b1",
+      "artifactSha256": "4b2dce3b46503e09caa6ef97b2c98fce58c7e35c1a50c7f8daaa831d23b138ae",
+      "bytecodeSha256": "c128fcead7da916c84270b6d022c7b9ab2a57ad6d733fc41991cdfa7d1822ed6",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "4b2dce3b46503e09caa6ef97b2c98fce58c7e35c1a50c7f8daaa831d23b138ae",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 308.0,
+            "peakSampledRSS": 142065664
+          },
+          {
+            "case": "ValidChunk42",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 315.1,
+            "peakSampledRSS": 148275200
+          },
+          {
+            "case": "ValidChunk83",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 310.59,
+            "peakSampledRSS": 144654336
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 231.81
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 229.41
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 229.62
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 226.01
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 222.45
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 225.82
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 222.69
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 242.73
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.46
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 233.78
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 228.14
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 228.74
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 230.87
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 232.44
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.79
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.01
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.15
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 226.17
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 249.68
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.74
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 234.91
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.16
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 269.41
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.74
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.81
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.75
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 273.99
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.51
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.84
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 271.33
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 272.84
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 270.34
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 268.45
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 249.68
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 230.5
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 232.27
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 240.19
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "rollover-full-v3",
+      "case": "rollover",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 202,
+      "nativeChunks": 17,
+      "witnessChunksChecked": 17,
+      "boundariesWithHeldKeys": 16,
+      "originResidues": [
+        0,
+        2,
+        4,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": true,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 314.64,
+        "peakSampledRSS": 127336448
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "d9900cb981507c4194c3058a6860afa06bf4183b474f890156cb8f7ba02fcbdb",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "65bef62d72135b24f6890830aa8fd5c08fd671b08034f480c336b9829200eb18",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "65bef62d72135b24f6890830aa8fd5c08fd671b08034f480c336b9829200eb18",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 148.53,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk1",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 147.99,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk2",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 148.51,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk3",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 148.19,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk4",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 148.17,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk5",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 147.89,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk6",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 146.93,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk7",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 147.99,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk8",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 146.48,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk9",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 147.37,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk10",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 153.46,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk11",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 157.98,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk12",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 148.22,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk13",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 146.8,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk14",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 149.41,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk15",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 148.78,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk16",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 148.16,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.48
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 145.28
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.2
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.72
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.85
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.5
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.58
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 140.13
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.22
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.48
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.12
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 139.9
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.32
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.47
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 140.39
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.54
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.19
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.66
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.5
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.98
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.45
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 139.62
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.29
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.18
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.17
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.92
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 140.78
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.06
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.4
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 142.3
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 144.08
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.54
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 140.51
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.92
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.85
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 139.31
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.9
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 140.35
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.51
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.78
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.19
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "nativeProofs": {
+        "kind": "huma-interaction-continuation-proof-v1",
+        "case": "rollover",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "replayBehaviorAndOriginsBoundTogether": true,
+        "signaturesVerified": false,
+        "completeHumaSessionProof": false,
+        "completeTenThousandCharacterSessionVerified": false,
+        "appChanged": false,
+        "allReplayChunksProved": true,
+        "nativeChunks": 17,
+        "selectedChunksProved": 17,
+        "linkChecks": {
+          "droppedChunkRejected": true,
+          "reorderedChunksRejected": true,
+          "resetStateRejected": true,
+          "changedSessionRejected": true
+        },
+        "artifactSha256": "65bef62d72135b24f6890830aa8fd5c08fd671b08034f480c336b9829200eb18",
+        "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+        "keySha256": "e4417cf3287a69d79ec01fe858bdecc4dd0d8f9f0c1ee5edaab7f00e020329a8",
+        "setupMs": 158.29925,
+        "setupExcludedFromChunkTiming": true,
+        "validPathSumMs": 11079.189,
+        "researchAllChecksWallMs": 12153.177,
+        "appServiceMeasured": false,
+        "threads": 2,
+        "nice": 10,
+        "cases": [
+          {
+            "index": 0,
+            "boundary": {
+              "capture_root": "16845350859988032795707470181217889949487767245387021552244184659828426752145",
+              "end_offset": 12,
+              "end_root": "19065071419441786214601252786310025871078304555175687033309433680825867238834",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 4,
+              "origin_present": 4,
+              "origin_root": "19012201346420789684523304645463177582156564123244454133059263152798690101213",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 0,
+              "start_root": "10040691367711449629816027402354281311939520031647738220272354134609674370122"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 145.28,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 468.486584,
+            "witnessProveVerifyMs": 638.044,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "708688461cc2c80b1e04dd38e846ff66342669c902f68d619d0c02ee18e0ea09",
+            "publicInputsSha256": "038d57d56830967ed4b6a74a963d1975319ea74182b64d51a2120ba850862e92"
+          },
+          {
+            "index": 1,
+            "boundary": {
+              "capture_root": "15971843792839075993869601790965266284246541728997523476673869970192598386019",
+              "end_offset": 24,
+              "end_root": "11779605959600707445770816611865116790563158956387332184240428888841253486821",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 8,
+              "origin_present": 8,
+              "origin_root": "7043100139185246085802602514615673059228535115856406639171560505821324494691",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 12,
+              "start_root": "19065071419441786214601252786310025871078304555175687033309433680825867238834"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 146.05,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 469.165083,
+            "witnessProveVerifyMs": 639.789,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "97594eb71f2ecf457ba1ce51da2e8b4065196a068374b555aa8559a51fe399d6",
+            "publicInputsSha256": "d2c270bc20af87ad3eb971f1c8723c07f3f9e21c167240c31433b63c036285b6"
+          },
+          {
+            "index": 2,
+            "boundary": {
+              "capture_root": "20150418045184473021067793440852999251614946407801740831285514907026858439570",
+              "end_offset": 36,
+              "end_root": "9831900085082523205191312805670269555172422970982482458000945085906823181394",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 14,
+              "origin_present": 14,
+              "origin_root": "21747658783042101254103100793479944015432859639365745958302104080113417124442",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 24,
+              "start_root": "11779605959600707445770816611865116790563158956387332184240428888841253486821"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 145.56,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 475.419625,
+            "witnessProveVerifyMs": 646.075,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "a8e91f0387fc3ff1ec932aecbe1c256aa0d673cff94983ecc44e7227a8eef882",
+            "publicInputsSha256": "a331a5b96b562fda3257649c5730642d94947068c7e56356a8a3a5feb5e32aef"
+          },
+          {
+            "index": 3,
+            "boundary": {
+              "capture_root": "20005248127881802279236651446029011362440166725772979883245449260484927349554",
+              "end_offset": 48,
+              "end_root": "4775751090067325891451258086159792357072638510850290145110695414178794906389",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 18,
+              "origin_present": 18,
+              "origin_root": "8683510980815122250613583949584861993138467713318698314686306106802953176058",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 36,
+              "start_root": "9831900085082523205191312805670269555172422970982482458000945085906823181394"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 145.34,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 469.315791,
+            "witnessProveVerifyMs": 639.648,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "0c3298336b175a1d38c534c6800933fb4e7cbe8ace116f6a2b9caa6830221ace",
+            "publicInputsSha256": "b4eb6d3e416bd3f8576517345f4d0a1ed051aa87d8b8a31c81184c7a5ad80e7d"
+          },
+          {
+            "index": 4,
+            "boundary": {
+              "capture_root": "15704579531236847148723683317963290266336988226695546887925145178251769108167",
+              "end_offset": 60,
+              "end_root": "6161248081976513838114707721022381853457029424924974754510481832054712321973",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 23,
+              "origin_present": 23,
+              "origin_root": "2301911306482456367103947189293622018172921011718558075005118981495094899883",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 48,
+              "start_root": "4775751090067325891451258086159792357072638510850290145110695414178794906389"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 146.27,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 476.83425,
+            "witnessProveVerifyMs": 647.495,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "1a4bc8e2f522f7512f1150f948e4afdc36edb8073f6b694e3d58dbe5ad8c504a",
+            "publicInputsSha256": "8f36e54d088d5e5313ba3c91c6bf8d5fc5657c44e91329588a18ab2423cd6314"
+          },
+          {
+            "index": 5,
+            "boundary": {
+              "capture_root": "7383349279124614630986351184064839332425282883293938177052769614890473043335",
+              "end_offset": 72,
+              "end_root": "14864274763422043811063745971446303842151212712497017383075190010146934192230",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 28,
+              "origin_present": 28,
+              "origin_root": "2124162115643951347775966523040278657728105038979853897877378209933891948855",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 60,
+              "start_root": "6161248081976513838114707721022381853457029424924974754510481832054712321973"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 147.85,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 472.704834,
+            "witnessProveVerifyMs": 645.434,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "75ef6dc0bf5b929ec4b631935cbf2c941779f7c9b1114cef04e2bcd20329bf59",
+            "publicInputsSha256": "800a40bd4e9ac9de57ab0c0eec3c0fe18348fc51b2b8f56c31922a955a3276f7"
+          },
+          {
+            "index": 6,
+            "boundary": {
+              "capture_root": "8755464024940702539496603524848620294949963959815295555235634003061480084011",
+              "end_offset": 84,
+              "end_root": "10415034760065303668514937826074623967394062382715828231522354320806952076101",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 32,
+              "origin_present": 32,
+              "origin_root": "3570629426425458942327194072921868366662667030211259197312852437805504363088",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 72,
+              "start_root": "14864274763422043811063745971446303842151212712497017383075190010146934192230"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 147.26,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 468.953625,
+            "witnessProveVerifyMs": 640.691,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "3bfa3a736a6158041a2e63cddcfea73d9ca6dafbd23a48b3d2d9777280494511",
+            "publicInputsSha256": "fbf7333f69730c4e852d5b8643f932ac72881b7f4d8094c0479219cb2c06c386"
+          },
+          {
+            "index": 7,
+            "boundary": {
+              "capture_root": "12805375218152614257917783829974983215456764405314980982209463087139057406641",
+              "end_offset": 96,
+              "end_root": "14681630669305341934073913115221355789033059762521072484938372269867130968271",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 38,
+              "origin_present": 38,
+              "origin_root": "2467322526973147609027744809447577545715465535018187953424163888838730098271",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 84,
+              "start_root": "10415034760065303668514937826074623967394062382715828231522354320806952076101"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 145.84,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 475.635291,
+            "witnessProveVerifyMs": 646.132,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "00e2f929b9b6e6d061f2bbc2f0634390bf0b51760b85e7f9bb23a4e93fdc29ac",
+            "publicInputsSha256": "a6b278863d3594ad73113d8362a7d66c87ef6be3c063848e442a7fc13caa749f"
+          },
+          {
+            "index": 8,
+            "boundary": {
+              "capture_root": "11606817185385874560585946845871311099847013755107042160014739628795027415690",
+              "end_offset": 108,
+              "end_root": "19059354019340033538468609103485797974001264844672273667963346991175179930595",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 42,
+              "origin_present": 42,
+              "origin_root": "14757445152634089253587173019149224836116127199443168753184683593462344200793",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 96,
+              "start_root": "14681630669305341934073913115221355789033059762521072484938372269867130968271"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 148.31,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 482.743791,
+            "witnessProveVerifyMs": 654.7,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "236e7dc902865f5e856dbead95ac70ff7788ff81a0ce9cf2ba11728677a7cf03",
+            "publicInputsSha256": "59ef5fe36a8746cf4285879af529f5b1a2d14738bff5fd40340b340add22f06d"
+          },
+          {
+            "index": 9,
+            "boundary": {
+              "capture_root": "7046601010370671192405865720507549166938597077377523359046737493603680919695",
+              "end_offset": 120,
+              "end_root": "4949427272937456490744787816251099043932821951214226744478517514654092813566",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 47,
+              "origin_present": 47,
+              "origin_root": "11801722500250729309810129113017791724343181220091313934066509695074073749995",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 108,
+              "start_root": "19059354019340033538468609103485797974001264844672273667963346991175179930595"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 147.78,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 475.791083,
+            "witnessProveVerifyMs": 648.053,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "64cfda7eb87644b6bcefdc695d58221bb5724954cc3f440f0575a16f431f68f5",
+            "publicInputsSha256": "7c3d3272b44b635a1aa87b04f64423ee68b525f4464fdebf474ec3bff6279b07"
+          },
+          {
+            "index": 10,
+            "boundary": {
+              "capture_root": "1828718118674493951864070542441208637227378369755052224584231205901503268062",
+              "end_offset": 132,
+              "end_root": "6246813717662450761554591374458495677881630201331935855323950977120310435735",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 52,
+              "origin_present": 52,
+              "origin_root": "9152429467435846208617704855113682420850133897504867353041361192047861557866",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 120,
+              "start_root": "4949427272937456490744787816251099043932821951214226744478517514654092813566"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 148.98,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 475.526709,
+            "witnessProveVerifyMs": 649.258,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "21dbf7a7d1a8a6890ab3ba333a74e105617cb2896e2af2a03f603b8a9d44014e",
+            "publicInputsSha256": "4aa40da540b061e84ce6b73efc13c5f260b6f562036a0142fb9b94b650a1ee58"
+          },
+          {
+            "index": 11,
+            "boundary": {
+              "capture_root": "19273032067384181400979577864741711015470944222628267421115528086231954346321",
+              "end_offset": 144,
+              "end_root": "18881511740459304574056033543801120188012147253719726309038755190427906585064",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 56,
+              "origin_present": 56,
+              "origin_root": "13796176641718162895590212575477716705653948563741382726572414973588318082813",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 132,
+              "start_root": "6246813717662450761554591374458495677881630201331935855323950977120310435735"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 148.35,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 474.493833,
+            "witnessProveVerifyMs": 647.415,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "3a6df036ad6fa20f249acd615b16293f64709eee618abad96e8c0e171b50c1ea",
+            "publicInputsSha256": "d3ed351a45bbb5cbc680b90040a882f5512ee5cf375e8b0742519f0ac429f90b"
+          },
+          {
+            "index": 12,
+            "boundary": {
+              "capture_root": "19865511919246354582312576579443865354022305070466273113257881100665090326660",
+              "end_offset": 156,
+              "end_root": "18485947721410764645152133656129110617041026677163166335371625187921975196216",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 62,
+              "origin_present": 62,
+              "origin_root": "913368206691687240407835044058153213755270484324463827776403487958360357839",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 144,
+              "start_root": "18881511740459304574056033543801120188012147253719726309038755190427906585064"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 148.05,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 475.102083,
+            "witnessProveVerifyMs": 647.635,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "c346915803a181028663af97cea95007a79655a076870d4af41d2702810a8f9c",
+            "publicInputsSha256": "79243ab36223c7628755e924ebeff06ee12bae83b3e7efbc79cfc17548c3aede"
+          },
+          {
+            "index": 13,
+            "boundary": {
+              "capture_root": "242345440526207486682784158881341854294528392314575444104835060174807431171",
+              "end_offset": 168,
+              "end_root": "17663417275202636955156721163711540701499187722330911541333326299471123152310",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 66,
+              "origin_present": 66,
+              "origin_root": "7704725190847305129184648740075181268841181783107012750908106847459282087612",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 156,
+              "start_root": "18485947721410764645152133656129110617041026677163166335371625187921975196216"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 148.57,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 482.868167,
+            "witnessProveVerifyMs": 657.682,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "4bba91f24caa7aa8271b69d26467caa097d26681ede65e30c28ca9d56156bd09",
+            "publicInputsSha256": "87d4c4c61baece36d30984e3c848550b055b5a32940190b1335d5b7ab736a94a"
+          },
+          {
+            "index": 14,
+            "boundary": {
+              "capture_root": "10402455526933629458119681287205240606994630669806514712273054737676515443174",
+              "end_offset": 180,
+              "end_root": "6716014530996899210787365514920469807971663220243605907846411448886154825085",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 71,
+              "origin_present": 71,
+              "origin_root": "19071196922009338344918930649100304175973163342273133373703956700127501311580",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 168,
+              "start_root": "17663417275202636955156721163711540701499187722330911541333326299471123152310"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 157.32,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 493.988625,
+            "witnessProveVerifyMs": 677.073,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "da6a49d4676afb7b64d43107853d1691ca22f758b2ee4a7f0651159ae280e64f",
+            "publicInputsSha256": "1da1d29e465312afadafd0d411beca2e8540b5fa14fa4a02cc4c873c16ce78c5"
+          },
+          {
+            "index": 15,
+            "boundary": {
+              "capture_root": "9890299109523790282628603779812726769030282481619337765954297153282610352706",
+              "end_offset": 192,
+              "end_root": "7363196736133294158250843301627234402343367769769990709184094938617287463948",
+              "final_step": false,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 76,
+              "origin_present": 76,
+              "origin_root": "18335985001903778106240268858330363919219828176362608690940641343587365196120",
+              "policy_satisfied": false,
+              "rules": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false
+              ],
+              "start_offset": 180,
+              "start_root": "6716014530996899210787365514920469807971663220243605907846411448886154825085"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 153.84,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 477.69425,
+            "witnessProveVerifyMs": 656.69,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "2aa438660a54781a0fcf2416f7d55fd68eaa9c49c593996424c1f9191f6f2cdd",
+            "publicInputsSha256": "4dbbd16cce50452e529d4e5d16a3d0968f0ea4adc84876123e5e1df67a4c7cfd"
+          },
+          {
+            "index": 16,
+            "boundary": {
+              "capture_root": "12759062058971247574793329164574822515709315801906150052499676287472071788569",
+              "end_offset": 202,
+              "end_root": "9644023669673521207046128813209966960126873837888521310285501396087258691738",
+              "final_step": true,
+              "nonce": [
+                "1",
+                "2"
+              ],
+              "origin_hid": 80,
+              "origin_present": 80,
+              "origin_root": "13039362101693732349328076482322636777384214898373559470342623410167481115903",
+              "policy_satisfied": true,
+              "rules": [
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true
+              ],
+              "start_offset": 192,
+              "start_root": "7363196736133294158250843301627234402343367769769990709184094938617287463948"
+            },
+            "nativeVerified": true,
+            "changedCapturePrefixRejected": true,
+            "changedOriginRootRejected": true,
+            "changedPolicyRejected": true,
+            "changedProofRejected": true,
+            "witness": {
+              "wallMs": 152.49,
+              "peakSampledRSS": 0
+            },
+            "proveMs": 487.439292,
+            "witnessProveVerifyMs": 697.375,
+            "proofBytes": 14656,
+            "publicInputsBytes": 672,
+            "proofSha256": "60b71a1bb05ccd8fabf46cbd029b23c436a3158a3bd31ba938996715f48f2744",
+            "publicInputsSha256": "2c663c6d834efd6517b416b437c9a2acebb75f1556f3f714f809a8ae1cf908f5"
+          }
+        ]
+      },
+      "independentWasmChecks": {
+        "kind": "huma-interaction-continuation-wasm-v1",
+        "keySha256": "e4417cf3287a69d79ec01fe858bdecc4dd0d8f9f0c1ee5edaab7f00e020329a8",
+        "softwareFixturesOnly": true,
+        "ownerIdentityUsed": false,
+        "completeHumaSessionProof": false,
+        "appChanged": false,
+        "cases": [
+          {
+            "index": 0,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 0,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 0,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 1,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 1,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 2,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 2,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 3,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 3,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 3,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 3,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 3,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 4,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 4,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 4,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 4,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 4,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 5,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 5,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 5,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 5,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 5,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 6,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 6,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 6,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 6,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 6,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 7,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 7,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 7,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 7,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 7,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 8,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 8,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 8,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 8,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 8,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 9,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 9,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 9,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 9,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 9,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 10,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 10,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 10,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 10,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 10,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 11,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 11,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 11,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 11,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 11,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 12,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 12,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 12,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 12,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 12,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 13,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 13,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 13,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 13,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 13,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 14,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 14,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 14,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 14,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 14,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 15,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 15,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 15,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 15,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 15,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 16,
+            "name": "Valid",
+            "verified": true,
+            "expectedVerified": true
+          },
+          {
+            "index": 16,
+            "name": "ChangedCapturePrefix",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 16,
+            "name": "ChangedProof",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 16,
+            "name": "ChangedOriginRoot",
+            "verified": false,
+            "expectedVerified": false
+          },
+          {
+            "index": 16,
+            "name": "ChangedPolicy",
+            "verified": false,
+            "expectedVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "repeat-v2",
+      "case": "repeat",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 203,
+      "nativeChunks": 17,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 16,
+      "originResidues": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": true,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 299.11,
+        "peakSampledRSS": 128827392
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "5f0ec0d971b2722258fdf6694afc19bf7ebd43aacb1fd8117e2941111c8c1e47",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "b2b0591d6a861d4180cf2c17cf12f9dc9266502d5900c436c7eec8aaab214669",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "b2b0591d6a861d4180cf2c17cf12f9dc9266502d5900c436c7eec8aaab214669",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 139.04,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk8",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 167.55,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk16",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 144.23,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.72
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.34
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.32
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.18
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.74
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.43
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.28
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.07
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.81
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.39
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.97
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.25
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.2
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.94
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.49
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.27
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.83
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.14
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.1
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.19
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.47
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.57
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.09
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.6
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.82
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 139.86
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.37
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.83
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.91
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.7
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.77
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.61
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.87
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.0
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.04
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.58
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.08
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.94
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.27
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.34
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.19
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "unpaired-v2",
+      "case": "unpaired",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 197,
+      "nativeChunks": 17,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 13,
+      "originResidues": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 299.55,
+        "peakSampledRSS": 124895232
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "909391641ecfc0dcd0409e011a3cc3b006bec93e5949d1f3d38dcb5f9c67961b",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "7cadd5c3792ad655667f7f8b4e64d1b7af5c33e8ae19c59526d838d1979c70d9",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "7cadd5c3792ad655667f7f8b4e64d1b7af5c33e8ae19c59526d838d1979c70d9",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 138.87,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk8",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 138.36,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk16",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 146.54,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.78
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.83
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.73
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.44
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.15
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.61
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.81
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.87
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 139.21
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.47
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.62
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.36
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.12
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.54
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.67
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.88
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.91
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.59
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.91
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.71
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.62
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.71
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.8
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.21
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.65
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.31
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.9
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.43
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.12
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.91
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.25
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.29
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.04
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.96
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.22
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.45
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.4
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.31
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.06
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.61
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.28
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "rate-v2",
+      "case": "rate",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 202,
+      "nativeChunks": 17,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 16,
+      "originResidues": [
+        0,
+        2,
+        3,
+        4,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "policySatisfied": false,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 298.9,
+        "peakSampledRSS": 127893504
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "f2513ecffad84faf1eea74077341cba789d2b0d57c4e5844e72c35a5b519dda2",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "12d2b735484de96390aede14be83b3f557c6d3fe5d17b0bc4c473dfd026ddba4",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "12d2b735484de96390aede14be83b3f557c6d3fe5d17b0bc4c473dfd026ddba4",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 141.44,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk8",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 145.68,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk16",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 142.88,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.31
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.67
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.99
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.12
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.29
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.41
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.91
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.42
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.06
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.6
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.41
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.49
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.45
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.63
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.68
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.79
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.75
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.29
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.64
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.04
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.83
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.55
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.85
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.08
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.73
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 139.14
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 140.49
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.77
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.11
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.95
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.66
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.2
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.33
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.47
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.96
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.39
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.27
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.02
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.22
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.45
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.58
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "dwell-v2",
+      "case": "dwell",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 202,
+      "nativeChunks": 17,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 13,
+      "originResidues": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 296.53,
+        "peakSampledRSS": 108118016
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "db2d4c053722e7a250259e2fded42c8b8cea2b68b27326e84c4900269ca1e710",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "9da117cec4b7d79efc41d9d1bd0ca46b2371418d978a0772a85be6e80d031912",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "9da117cec4b7d79efc41d9d1bd0ca46b2371418d978a0772a85be6e80d031912",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 139.65,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk8",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 137.91,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk16",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 140.65,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.41
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.94
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.54
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.26
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.99
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.95
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.76
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.95
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.06
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.6
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.84
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.95
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.41
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.02
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.85
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.3
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.8
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.9
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.47
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.26
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.48
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.36
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.14
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.25
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.92
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.27
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.0
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.95
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.68
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.78
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.93
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.9
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.71
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.45
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.31
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.69
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.05
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 147.21
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.48
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.74
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.43
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "missing-origin-v2",
+      "case": "missing-origin",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 202,
+      "nativeChunks": 17,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 13,
+      "originResidues": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "finalRules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": true,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 300.22,
+        "peakSampledRSS": 125517824
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "2e4d4ef2d1db23b02355db2338b5944104b0588d63a926d90cc4f9c5d2405afb",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "10e2da3823803fdf22cf1873ea0f7d56fa645ffd0a66894725575d2f2eb531b4",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "10e2da3823803fdf22cf1873ea0f7d56fa645ffd0a66894725575d2f2eb531b4",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 140.08,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk8",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 142.13,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk16",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 139.75,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.17
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.1
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.61
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.47
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.32
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.35
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.98
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.46
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.96
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.75
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.91
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.69
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.6
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.26
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.14
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.65
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.93
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.61
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.0
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.07
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.98
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.75
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.96
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.16
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.59
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.95
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.12
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.93
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.48
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.17
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.69
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.37
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.19
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.94
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.13
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.96
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.45
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.07
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.49
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.55
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.14
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "u64max-v2",
+      "case": "u64max",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 259,
+      "nativeChunks": 22,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 0,
+      "originResidues": [
+        0,
+        1
+      ],
+      "finalRules": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 299.92,
+        "peakSampledRSS": 134479872
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "8f1090f2865c75a2658d69a3f9fc4dcc225901a222da7f8ddf78a5aa30738360",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "c58b95fbf3e36bd6cf4aded6be3f7c6fa6809b198f91d806f624caab03e033a8",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "c58b95fbf3e36bd6cf4aded6be3f7c6fa6809b198f91d806f624caab03e033a8",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 144.79,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk11",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 144.66,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk21",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 146.43,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.76
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.48
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.21
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.5
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.45
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.14
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.73
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.98
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.12
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.31
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.86
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.59
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.67
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.04
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.52
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.21
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.33
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.61
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.97
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.71
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.24
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.84
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.68
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.91
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.04
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.26
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.36
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.05
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.39
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.15
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.7
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.74
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.3
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.15
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.87
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.94
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.65
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "paste-small-v2",
+      "case": "paste-small",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 202,
+      "nativeChunks": 17,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 13,
+      "originResidues": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "finalRules": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 299.8,
+        "peakSampledRSS": 129761280
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "4bfaddc587e098719ed8da6f1af2a211940242ae454b269c1d453b65941012dd",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "b87c54afb585c09aafb6ae345c943cccaf1734f29a446dc088b72df7514abe36",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "b87c54afb585c09aafb6ae345c943cccaf1734f29a446dc088b72df7514abe36",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 139.54,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk8",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 143.32,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk16",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 140.74,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.66
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.61
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.39
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.85
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.65
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.99
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.05
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.65
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.04
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.73
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.94
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.59
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.57
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.78
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.61
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.35
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.23
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.82
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.26
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.21
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.18
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.83
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.03
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.87
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.42
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.05
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.34
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.38
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.72
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.4
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.54
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.04
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.77
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.46
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 134.11
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.35
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.91
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.79
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.58
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.38
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.63
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    },
+    {
+      "name": "paste-large-v2",
+      "case": "paste-large",
+      "capacity": 256,
+      "chunkOperations": 12,
+      "nativeOperations": 329,
+      "nativeChunks": 28,
+      "witnessChunksChecked": 3,
+      "boundariesWithHeldKeys": 24,
+      "originResidues": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "finalRules": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": false,
+      "gates": 41632,
+      "compileAndWitness": {
+        "wallMs": 302.08,
+        "peakSampledRSS": 128532480
+      },
+      "nativeAllBoundaryPoliciesMatchSharedPolicy": true,
+      "nativeAllCaptureAndOriginPrefixesMatchExistingProtocol": true,
+      "nativeFinalTextMatchesReplay": true,
+      "referenceSha256": "4b4c3e50b3d78cf2f2ca29a73d6d128ea5336062260ac1712bba84b129be69ec",
+      "sourceSha256": "2706fda8d2eaf45256b7d1d1e3f0770b143931054b8be619aee691066fa370b5",
+      "artifactSha256": "4fb044e76a2eb53a83960b0c1c96f95edd2225264ca2a43f976436403a4d3602",
+      "bytecodeSha256": "8cba7c93142b6624ff74b9d3a3ceb2d51bcf57b5b86b1fc0ed05d6a77c5d2cbc",
+      "constraints": {
+        "kind": "huma-interaction-continuation-constraints-v1",
+        "artifactSha256": "4fb044e76a2eb53a83960b0c1c96f95edd2225264ca2a43f976436403a4d3602",
+        "cases": [
+          {
+            "case": "ValidChunk0",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 138.9,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk14",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 138.22,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "ValidChunk27",
+            "accepted": true,
+            "expectedAccepted": true,
+            "wallMs": 139.7,
+            "peakSampledRSS": 0
+          },
+          {
+            "case": "RejectChangedReplayTime",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.86
+          },
+          {
+            "case": "RejectChangedPrivateText",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.7
+          },
+          {
+            "case": "RejectChangedHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.7
+          },
+          {
+            "case": "RejectChangedRateWindow",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.97
+          },
+          {
+            "case": "RejectChangedDownCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.04
+          },
+          {
+            "case": "RejectChangedPairs",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.22
+          },
+          {
+            "case": "RejectChangedAnomalies",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 126.69
+          },
+          {
+            "case": "RejectChangedPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.79
+          },
+          {
+            "case": "RejectChangedRateResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.96
+          },
+          {
+            "case": "RejectChangedOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.49
+          },
+          {
+            "case": "RejectChangedOriginTail",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 127.27
+          },
+          {
+            "case": "RejectChangedOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 125.86
+          },
+          {
+            "case": "RejectChangedSessionNonce",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.69
+          },
+          {
+            "case": "RejectChangedStartRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.36
+          },
+          {
+            "case": "RejectChangedEndRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 136.17
+          },
+          {
+            "case": "RejectChangedCaptureRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 141.15
+          },
+          {
+            "case": "RejectChangedOriginRoot",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.11
+          },
+          {
+            "case": "RejectChangedStartOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.27
+          },
+          {
+            "case": "RejectChangedEndOffset",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.61
+          },
+          {
+            "case": "RejectChangedOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.5
+          },
+          {
+            "case": "RejectChangedInputPid",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.13
+          },
+          {
+            "case": "RejectChangedInputState",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.47
+          },
+          {
+            "case": "RejectChangedInputKeyboard",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 141.2
+          },
+          {
+            "case": "RejectChangedRepeat",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.94
+          },
+          {
+            "case": "RejectOriginOnNonKeyOperation",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.21
+          },
+          {
+            "case": "RejectForgedPolicyResult",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.22
+          },
+          {
+            "case": "RejectForgedRule0",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 135.85
+          },
+          {
+            "case": "RejectForgedRule1",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.8
+          },
+          {
+            "case": "RejectForgedRule2",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 140.76
+          },
+          {
+            "case": "RejectForgedRule3",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 137.31
+          },
+          {
+            "case": "RejectForgedRule4",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.82
+          },
+          {
+            "case": "RejectForgedRule5",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.88
+          },
+          {
+            "case": "RejectForgedRule6",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.11
+          },
+          {
+            "case": "RejectForgedRule7",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 132.51
+          },
+          {
+            "case": "RejectForgedRule8",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 138.09
+          },
+          {
+            "case": "RejectForgedPublicOriginCount",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 139.24
+          },
+          {
+            "case": "RejectNonzeroPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 133.31
+          },
+          {
+            "case": "RejectOriginInPadding",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 131.51
+          },
+          {
+            "case": "RejectForgedGenesisHeldKey",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 130.18
+          },
+          {
+            "case": "RejectForgedGenesisPause",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 128.44
+          },
+          {
+            "case": "RejectForgedGenesisOriginHead",
+            "accepted": false,
+            "expectedAccepted": false,
+            "wallMs": 129.36
+          }
+        ],
+        "unsafeControls": [],
+        "proofGenerated": false,
+        "verificationKeyCreated": false,
+        "completeHumaSessionProof": false
+      },
+      "proofGenerated": false,
+      "allReplayChunksProved": false
+    }
+  ],
+  "remainingValidation": [],
+  "remainingForAppAdoption": [
+    "Carry presence challenges and authenticate every original checkpoint/presence signature.",
+    "Bind the exact final master and canonical text to the final state.",
+    "Extend portable verification with the final text and signature/presence evidence before app/SDK admission.",
+    "Prove and verify every chunk of a complete10k session; reject partial histories.",
+    "Implement and measure native incremental proving under the existing thermal, priority and exclusivity controls.",
+    "Meet complete-session latency targets and perform real hardware/provider acceptance."
+  ],
+  "appServiceMeasured": false,
+  "decision": "Keep combined continuation research outside app and SDK; full session assurance is not yet established.",
+  "harnessSourceSha256": {
+    "experiments/noir-compact/interaction_cases.py": "ee8db26f871ab9ebca306e0f4f23ecba709141eac4d007cce9fcec43d7c466db",
+    "experiments/noir-compact/interaction_checks.py": "82874daa8120f0f37970f64909313f6fc2f23d9b6f50ae87830b1ea7953bf664",
+    "experiments/noir-compact/interaction_prove.py": "3bf44eeec1d1394c2f1fd2b355509a6237c5385bd3956fcd53bc448ce5637945",
+    "experiments/noir-compact/continuation_cases.py": "aacf7390bdce22ce0b1312d654c1357f51abc2d526de208d4064f25f267c155d",
+    "experiments/noir-compact/continuation_verify.mjs": "d343288403da127f4e88e8349e35be793c63c5a06c30d86855c766a654b2f0f0",
+    "experiments/noir-compact/native/examples/interaction_cases.rs": "57b60547be0c53eaf3e1cf3b420b73565d39f925d6adb504e4965bc8c0aaa319",
+    "experiments/noir-compact/native/examples/continuation_cases.rs": "7366bc30f2948c6d3dc391ef4a5a60c444b8d895b99f7cac865618b8bf4129e5",
+    "experiments/noir-compact/src/assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870",
+    "experiments/noir-compact/src/commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "experiments/noir-compact/public_text_cases.py": "29e1bf0a4b9115d24fbfce27c5c8c32a71a605279c116a7d61aeca08b7fceb7e",
+    "experiments/noir-compact/browser/interaction-chain.mjs": "9e0c0fdea3d839c064fc28529fcab23423a5417c1ab4ff3fe953b69419176463",
+    "experiments/noir-compact/interaction_chain_verify.mjs": "70e11a74266c16e2266208b75545ff9e329cacd526603da5020b47342e4961d1",
+    "experiments/noir-compact/browser/interaction-chain-page.mjs": "be0a83d85e18603d6b55cb311fef8072711424b6ebcfd1ce3924d04c99239e85",
+    "experiments/noir-compact/browser/interaction-chain-browser.mjs": "f907927643188be64acee26df2c74080387508085f7b807cb0dd13e1f9b7d7c3"
+  },
+  "currentNativeReferenceRechecked": [
+    {
+      "case": "revision",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "typing10000",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "emoji10000",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "baseline10000",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "rollover",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "repeat",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "unpaired",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "rate",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "dwell",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "missing-origin",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "u64max",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "paste-small",
+      "frozenFixtureUnchanged": true
+    },
+    {
+      "case": "paste-large",
+      "frozenFixtureUnchanged": true
+    }
+  ],
+  "originTailResiduesExercised": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "portableChain": {
+    "kind": "huma-portable-interaction-chain-acceptance-v1",
+    "softwareFixturesOnly": true,
+    "ownerIdentityUsed": false,
+    "appChanged": false,
+    "sdkProfileRegistered": false,
+    "completeHumaSessionProof": false,
+    "keyHash": "e4417cf3287a69d79ec01fe858bdecc4dd0d8f9f0c1ee5edaab7f00e020329a8",
+    "chunks": 17,
+    "exportedBytes": 348109,
+    "exportSha256": "af48e1fd7d9a4a5ad50feb4dcb9085e42e502a829535a6389fe38019b46d8e8d",
+    "wasmSetupMs": 14.994166999999997,
+    "allChunkVerificationMs": 134.85275,
+    "setupAndVerifyMs": 149.846917,
+    "valid": {
+      "componentVerified": true,
+      "scope": "replay-behavior-origin",
+      "profile": "interaction256-ops12-v1",
+      "chunks": 17,
+      "operations": 202,
+      "nonce": [
+        "1",
+        "2"
+      ],
+      "finalStateRoot": "9644023669673521207046128813209966960126873837888521310285501396087258691738",
+      "captureRoot": "12759062058971247574793329164574822515709315801906150052499676287472071788569",
+      "originRoot": "13039362101693732349328076482322636777384214898373559470342623410167481115903",
+      "rules": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "policySatisfied": true,
+      "originPresent": 80,
+      "originHid": 80,
+      "checkpointSignaturesVerified": false,
+      "hardwareAttestationVerified": false,
+      "finalTextVerified": false
+    },
+    "negativeChecks": [
+      {
+        "name": "DroppedChunk",
+        "rejected": true,
+        "code": "Link"
+      },
+      {
+        "name": "ReorderedChunks",
+        "rejected": true,
+        "code": "Link"
+      },
+      {
+        "name": "PartialPrefix",
+        "rejected": true,
+        "code": "Link"
+      },
+      {
+        "name": "CrossSession",
+        "rejected": true,
+        "code": "Link"
+      },
+      {
+        "name": "ResetState",
+        "rejected": true,
+        "code": "Link"
+      },
+      {
+        "name": "ChangedFinalOriginRoot",
+        "rejected": true,
+        "code": "ProofRejected"
+      },
+      {
+        "name": "ForgedFinalPolicy",
+        "rejected": true,
+        "code": "ProofRejected"
+      },
+      {
+        "name": "ChangedProof",
+        "rejected": true,
+        "code": "ProofRejected"
+      },
+      {
+        "name": "UnknownProfile",
+        "rejected": true,
+        "code": "UntrustedProfile"
+      },
+      {
+        "name": "SubstitutedVerifierKey",
+        "rejected": true,
+        "code": "KeyRejected"
+      },
+      {
+        "name": "NonCanonicalBase64",
+        "rejected": true,
+        "code": "Format"
+      },
+      {
+        "name": "ExtraPrivateClaim",
+        "rejected": true,
+        "code": "Format"
+      },
+      {
+        "name": "EmptyChain",
+        "rejected": true,
+        "code": "Format"
+      },
+      {
+        "name": "Sampled10kChunksAreNotACompleteChain",
+        "rejected": true,
+        "code": "Link"
+      }
+    ],
+    "sdkRejectedUnfinishedComponent": true,
+    "completeTenThousandCharacterSessionVerified": false
+  },
+  "actualChrome": {
+    "kind": "huma-interaction-chain-chrome-v1",
+    "passed": 8,
+    "failed": 0,
+    "message": "",
+    "results": [
+      {
+        "name": "All17 proofs and links verify in Chrome",
+        "passed": true
+      },
+      {
+        "name": "Component scope remains explicit",
+        "passed": true
+      },
+      {
+        "name": "Dropped chunk rejected",
+        "passed": true,
+        "rejectedAs": "Link"
+      },
+      {
+        "name": "Reordered chunks rejected",
+        "passed": true,
+        "rejectedAs": "Link"
+      },
+      {
+        "name": "Changed proof rejected",
+        "passed": true,
+        "rejectedAs": "ProofRejected"
+      },
+      {
+        "name": "Changed final origin root rejected",
+        "passed": true,
+        "rejectedAs": "ProofRejected"
+      },
+      {
+        "name": "Substituted verifier key rejected",
+        "passed": true,
+        "rejectedAs": "KeyRejected"
+      },
+      {
+        "name": "Sampled10k proofs rejected as incomplete",
+        "passed": true,
+        "rejectedAs": "Link"
+      }
+    ],
+    "timing": {
+      "setupMs": 38.599999994039536,
+      "verifyMs": 141.2000000178814,
+      "setupAndVerifyMs": 179.80000001192093
+    },
+    "softwareFixturesOnly": true,
+    "ownerIdentityUsed": false,
+    "appChanged": false,
+    "completeHumaSessionProof": false,
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "crossOriginIsolated": false,
+    "sameOriginCSP": true,
+    "externalDNSDisabled": true,
+    "osNetworkDeny": false
+  },
+  "resolvedValidationBlocker": {
+    "kind": "codex-approval-service-authentication",
+    "reason": "Automatic approval review could not complete because its access token was revoked.",
+    "actionNotExecuted": "Independent WASM verification of the small combined revision proofs.",
+    "unsafeActionDetermination": false,
+    "userAction": "Sign out and sign back in to restore approval-service authentication.",
+    "resolved": true,
+    "automaticApprovalReviewAvailableAgain": true,
+    "ownerAuthenticationPerformedByAgent": false
+  }
+}

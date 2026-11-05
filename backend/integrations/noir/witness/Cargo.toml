@@ -1,0 +1,32 @@
+[package]
+name = "huma-witness"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Builds a Noir program's witness natively for bb: the solver noir_js runs, without WebAssembly."
+
+[lib]
+name = "huma_witness"
+path = "lib.rs"
+
+[[bin]]
+name = "witness"
+path = "main.rs"
+
+# Noir v1.0.0-beta.25 (22 July 2026), the release the circuits are compiled with. These crates aren't on crates.io
+# at that version, so they come from the tagged commit; Cargo.lock started from that commit's lockfile.
+[dependencies]
+acvm = { git = "https://github.com/noir-lang/noir", rev = "75061fab15986eedee4e7d9104ff87dd9fa4ca10", features = ["bn254"] }
+bn254_blackbox_solver = { git = "https://github.com/noir-lang/noir", rev = "75061fab15986eedee4e7d9104ff87dd9fa4ca10" }
+noirc_abi = { git = "https://github.com/noir-lang/noir", rev = "75061fab15986eedee4e7d9104ff87dd9fa4ca10", features = ["bn254"] }
+base64 = "0.22.1"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[workspace]

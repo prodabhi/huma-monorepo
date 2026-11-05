@@ -1,0 +1,605 @@
+{
+  "date": "2026-10-23",
+  "softwareFixturesOnly": true,
+  "newProofsGenerated": 2,
+  "profile": "assurance256-cp32-v1",
+  "proofKind": "huma-compact-assurance-public-proof-v5",
+  "defaultNewRecordings": true,
+  "captureScheme": "poseidon2-capture-v4",
+  "signatureDomainsUnchanged": true,
+  "checkpointCadenceUnchanged": true,
+  "limits": {
+    "operations": 1536,
+    "intermediateScalars": 256,
+    "rawUtf8Bytes": 1024,
+    "keyEvents": 516,
+    "checkpoints": 32,
+    "presence": 8
+  },
+  "gates": 969400,
+  "previousEightSlotGates": 926956,
+  "publicInputFields": 142,
+  "publicInputBytes": 4544,
+  "verificationKeySha256": "5b3a98abe325feca9d5187668fc3e97ab0486b0a0f1e5cb2f904de1c67621b11",
+  "publicAbiSha256": "39aa83ef3ddeb5cb43c4f424d39f9ae349cc031241e5650da3678b3f96b9d075",
+  "bytecodeSha256": "d2816750fd1278beb70c16743e4851561f9d5b30c57770f1a707a4d16ef2d2bc",
+  "capacityCandidates": {
+    "cp16-pres8-v1": {
+      "softwareFixtureOnly": true,
+      "proofGenerated": false,
+      "newSignaturesGenerated": false,
+      "originalCaptureSha256": "10386588498b202f15e1a710935503c942eb145f58ab6a6ccb565d0a091dd24b",
+      "limits": {
+        "OPS": 1536,
+        "SCALARS": 256,
+        "BYTES": 1024,
+        "CPS": 16,
+        "SAMPLES": 516,
+        "PRES": 8
+      },
+      "checkpointSignatures": 7,
+      "presenceSignatures": 2,
+      "signedJournalPreserved": true,
+      "compileAndWitness": {
+        "wallMs": 32929.49,
+        "peakSampledRSS": 3458744320
+      },
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 652863,
+            "circuit_size": 941104
+          }
+        ]
+      },
+      "bytecodeSha256": "3c27977add14aa383c167346b3358c139698ce373cb189e710a0e22b94d4f04a",
+      "sourceSha256": {
+        "main.nr": "725b125336d7e44d51626eda41f88ee78f6ce6e5594053b015a8d4bed94ac3be",
+        "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+        "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+        "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+      }
+    },
+    "cp32-pres8-v1": {
+      "softwareFixtureOnly": true,
+      "proofGenerated": false,
+      "newSignaturesGenerated": false,
+      "originalCaptureSha256": "10386588498b202f15e1a710935503c942eb145f58ab6a6ccb565d0a091dd24b",
+      "limits": {
+        "OPS": 1536,
+        "SCALARS": 256,
+        "BYTES": 1024,
+        "CPS": 32,
+        "SAMPLES": 516,
+        "PRES": 8
+      },
+      "checkpointSignatures": 7,
+      "presenceSignatures": 2,
+      "signedJournalPreserved": true,
+      "compileAndWitness": {
+        "wallMs": 35691.61,
+        "peakSampledRSS": 3510140928
+      },
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 663743,
+            "circuit_size": 969400
+          }
+        ]
+      },
+      "bytecodeSha256": "d2816750fd1278beb70c16743e4851561f9d5b30c57770f1a707a4d16ef2d2bc",
+      "sourceSha256": {
+        "main.nr": "f2d9b612782a4fc67b0941030689d96b95283b0cc6574582da88e6c1ebcab75f",
+        "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+        "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+        "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+      }
+    }
+  },
+  "fullPolicyWitnessChecks": {
+    "experimental": true,
+    "softwareKeysOnly": true,
+    "artifactSha256": "2b2643b82e123e892b4acee9e57f18f4e740b592d54a56dd652dc14de2176539",
+    "cases": [
+      {
+        "case": "Validtyped250",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1489.67,
+        "peakSampledRSS": 490471424,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validrollover",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1437.25,
+        "peakSampledRSS": 488865792,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validrepeat",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1432.27,
+        "peakSampledRSS": 489242624,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validunpaired",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1431.42,
+        "peakSampledRSS": 487325696,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validrate",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1431.66,
+        "peakSampledRSS": 487473152,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validdwell",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1496.53,
+        "peakSampledRSS": 489603072,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validmissingorigin",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1429.0,
+        "peakSampledRSS": 488423424,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validlate",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1424.29,
+        "peakSampledRSS": 487342080,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validtimeout",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1433.94,
+        "peakSampledRSS": 487587840,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validu64max",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1427.5,
+        "peakSampledRSS": 495173632,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "RejectOriginPID",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1160.88
+      },
+      {
+        "case": "RejectKeyboardType",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1153.58
+      },
+      {
+        "case": "RejectRepeatFlag",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1144.97
+      },
+      {
+        "case": "RejectPresenceNonce",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1189.2
+      },
+      {
+        "case": "RejectLateSeal",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1168.41
+      },
+      {
+        "case": "RejectOmittedPresenceCoverage",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1146.05
+      },
+      {
+        "case": "RejectPublicPresenceCount",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1147.37
+      },
+      {
+        "case": "RejectUnboundSampleTime",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1121.46
+      },
+      {
+        "case": "RejectUnusedOriginPadding",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1115.89
+      },
+      {
+        "case": "RejectUnusedPresenceRoot",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1160.46
+      },
+      {
+        "case": "RejectForgedHumanRhythm",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1110.32
+      },
+      {
+        "case": "RejectReusedKeySample",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1133.07
+      }
+    ],
+    "controls": []
+  },
+  "nativeSlow": {
+    "backend": "noir-assurance-v5",
+    "changedProofRejected": true,
+    "checkpointSignaturesVerified": 24,
+    "cryptoChildrenOutboundNetworkDenied": true,
+    "editInvalidatesProofAndLink": true,
+    "fullServiceMilliseconds": 12151.093208,
+    "localPublicationVerified": true,
+    "newProofGenerated": true,
+    "ownerKeysOrBiometricsUsed": false,
+    "passed": true,
+    "presenceSignaturesVerified": 2,
+    "profile": "assurance256-cp32-v1",
+    "proofIdentity": "dfb15a818175c4468f744024cf52e0363e3989136209d2e5cfe1c58cc35e7c7c",
+    "realCoinbaseAccepted": false,
+    "realR2Accepted": false,
+    "saveReopenVerified": true,
+    "softwareFixtureOnly": true,
+    "threads": 2,
+    "timings": {
+      "proveMs": 8769.245334,
+      "validationMs": 55.010042000000006,
+      "verifyMs": 20.95024999999987,
+      "witnessMs": 2384.288458
+    },
+    "totalAcceptanceMilliseconds": 15762.590958,
+    "workerMilliseconds": 11175.044542000001
+  },
+  "nativeBoundary": {
+    "backend": "noir-assurance-v5",
+    "changedProofRejected": true,
+    "checkpointSignaturesVerified": 32,
+    "cryptoChildrenOutboundNetworkDenied": true,
+    "editInvalidatesProofAndLink": true,
+    "fullServiceMilliseconds": 10740.8795,
+    "localPublicationVerified": true,
+    "newProofGenerated": true,
+    "ownerKeysOrBiometricsUsed": false,
+    "passed": true,
+    "presenceSignaturesVerified": 2,
+    "profile": "assurance256-cp32-v1",
+    "proofIdentity": "51dab7133d231e117f659ff46a80068c3b303b83898880822cbaad9f1848eafe",
+    "realCoinbaseAccepted": false,
+    "realR2Accepted": false,
+    "saveReopenVerified": true,
+    "softwareFixtureOnly": true,
+    "threads": 2,
+    "timings": {
+      "proveMs": 8240.406583,
+      "validationMs": 41.56699999999999,
+      "verifyMs": 22.366124999998647,
+      "witnessMs": 2251.045333
+    },
+    "totalAcceptanceMilliseconds": 13550.120875,
+    "workerMilliseconds": 10514.339458
+  },
+  "legacyV4Compatibility": {
+    "backend": "noir-assurance-v4",
+    "changedProofRejected": true,
+    "checkpointSignaturesVerified": 7,
+    "cryptoChildrenOutboundNetworkDenied": true,
+    "editInvalidatesProofAndLink": true,
+    "fullServiceMilliseconds": 1339.41425,
+    "localPublicationVerified": true,
+    "newProofGenerated": false,
+    "ownerKeysOrBiometricsUsed": false,
+    "passed": true,
+    "presenceSignaturesVerified": 2,
+    "profile": "assurance256-v1",
+    "proofIdentity": "c12a8574de25d1b53b71216e560d44d420b99598794d2c36fdd91d8fbd21a649",
+    "realCoinbaseAccepted": false,
+    "realR2Accepted": false,
+    "saveReopenVerified": true,
+    "softwareFixtureOnly": true,
+    "threads": 2,
+    "timings": {
+      "validationMs": 46.772332999999996,
+      "verifyMs": 214.05700000000002
+    },
+    "totalAcceptanceMilliseconds": 4786.17125,
+    "workerMilliseconds": 214.15775
+  },
+  "eightSlotV5Compatibility": {
+    "backend": "noir-assurance-v5",
+    "changedProofRejected": true,
+    "checkpointSignaturesVerified": 7,
+    "cryptoChildrenOutboundNetworkDenied": true,
+    "editInvalidatesProofAndLink": true,
+    "fullServiceMilliseconds": 280.377208,
+    "localPublicationVerified": true,
+    "newProofGenerated": false,
+    "ownerKeysOrBiometricsUsed": false,
+    "passed": true,
+    "presenceSignaturesVerified": 2,
+    "profile": "assurance256-v2",
+    "proofIdentity": "3fc834ba0c6cadf0c69b70435bf1275920c4d7c88fd1c5843ae92dcce5409b46",
+    "realCoinbaseAccepted": false,
+    "realR2Accepted": false,
+    "saveReopenVerified": true,
+    "softwareFixtureOnly": true,
+    "threads": 2,
+    "timings": {
+      "validationMs": 34.877792,
+      "verifyMs": 18.598167000000004
+    },
+    "totalAcceptanceMilliseconds": 3954.01375,
+    "workerMilliseconds": 18.70729200000001
+  },
+  "legacyRiscZeroCompatibility": {
+    "passed": true,
+    "cachedPublicReceipt": true,
+    "newProofGenerated": false,
+    "realProviderAuthorization": false,
+    "r2Remote": false,
+    "masterAndProofDownloaded": true,
+    "nativeCryptographicReverification": true,
+    "linkSaveReopenAndEditInvalidation": true,
+    "externalNetworkDeniedForNative": true,
+    "deviceKeysOrBiometricsUsed": false
+  },
+  "tests": {
+    "swift": 45,
+    "compactRust": 27,
+    "node": 48,
+    "chrome": 41
+  },
+  "browser": {
+    "passed": 41,
+    "failed": 0,
+    "crossOriginIsolated": false,
+    "softwareFixturesOnly": true,
+    "results": [
+      {
+        "name": "RISC Zero verified through common browser worker",
+        "passed": true
+      },
+      {
+        "name": "native Mac envelope verifies with matching statement hash",
+        "passed": true
+      },
+      {
+        "name": "compact proof and every signature verify through common worker",
+        "passed": true
+      },
+      {
+        "name": "compact envelope retains proof identity",
+        "passed": true
+      },
+      {
+        "name": "Unicode fixture retains exact character policy",
+        "passed": true
+      },
+      {
+        "name": "only absolute-end ASCII space/tab ignored",
+        "passed": true
+      },
+      {
+        "name": "changed displayed text rejected",
+        "passed": true
+      },
+      {
+        "name": "changed claimed capture rejected",
+        "passed": true
+      },
+      {
+        "name": "invented policy result rejected",
+        "passed": true
+      },
+      {
+        "name": "fake manufacturer attachment rejected",
+        "passed": true
+      },
+      {
+        "name": "retired account policy rejected",
+        "passed": true
+      },
+      {
+        "name": "cancellation and single admission",
+        "passed": true
+      },
+      {
+        "name": "real image proof verifies exact master in browser",
+        "passed": true
+      },
+      {
+        "name": "real audio proof verifies exact master in browser",
+        "passed": true
+      },
+      {
+        "name": "real video proof verifies exact master in browser",
+        "passed": true
+      },
+      {
+        "name": "media envelope rejects altered master and claimed policy",
+        "passed": true
+      },
+      {
+        "name": "media browser rejects changed SNARK and unsupported freshness claim",
+        "passed": true
+      },
+      {
+        "name": "full Noir writing-policy proof verifies origin and presence in browser",
+        "passed": true
+      },
+      {
+        "name": "fresh Swift capture proof preserves all original signatures in browser",
+        "passed": true
+      },
+      {
+        "name": "optimized V5 verifies the original full signed statement in browser",
+        "passed": true
+      },
+      {
+        "name": "expanded profile verifies all 24 original checkpoints in browser",
+        "passed": true
+      },
+      {
+        "name": "expanded profile verifies all 32 original checkpoints in browser",
+        "passed": true
+      },
+      {
+        "name": "expanded browser profile rejects a changed final checkpoint signature",
+        "passed": true
+      },
+      {
+        "name": "optional Noir history disclosure verifies proof without certifying raw history",
+        "passed": true
+      },
+      {
+        "name": "browser distinguishes valid proof from satisfied writing policy",
+        "passed": true
+      },
+      {
+        "name": "browser rejects changed V4 presence signature",
+        "passed": true
+      },
+      {
+        "name": "proof reader has no account flow or retired service bundle",
+        "passed": true
+      },
+      {
+        "name": "existing reader accepts legacy RISC Zero via shared core",
+        "passed": true
+      },
+      {
+        "name": "existing reader imports native evidence envelope",
+        "passed": true
+      },
+      {
+        "name": "existing reader imports compact evidence envelope",
+        "passed": true
+      },
+      {
+        "name": "existing reader imports full Noir writing policy with its results",
+        "passed": true
+      },
+      {
+        "name": "reader imports optimized V5 and renders its policy and presence results",
+        "passed": true
+      },
+      {
+        "name": "reader imports the expanded profile and renders all 32 checkpoint signatures",
+        "passed": true
+      },
+      {
+        "name": "reader imports the optional native Noir history-disclosure file",
+        "passed": true
+      },
+      {
+        "name": "reader invalidates altered text then accepts final whitespace",
+        "passed": true
+      },
+      {
+        "name": "native envelope registry link opens and verifies automatically",
+        "passed": true
+      },
+      {
+        "name": "full Noir writing-policy registry link verifies automatically",
+        "passed": true
+      },
+      {
+        "name": "shared exact text master and V4 proof download and verify in reader",
+        "passed": true
+      },
+      {
+        "name": "shared exact text master and V5 proof download and verify in reader",
+        "passed": true
+      },
+      {
+        "name": "shared exact text master and V5 expanded proof download and verify in reader",
+        "passed": true
+      },
+      {
+        "name": "shared audio master and membership proof verify exact downloaded bytes in reader",
+        "passed": true
+      }
+    ],
+    "sameOriginCSP": true,
+    "externalDNSDisabled": true,
+    "osNetworkDeny": false
+  },
+  "underFiveSeconds": false,
+  "tenThousandCharactersSupported": false,
+  "ownerHardwareAccepted": false,
+  "realR2Accepted": false,
+  "realCoinbaseAccepted": false,
+  "sourceSha256": {
+    "Sources/HumaCore/ExperimentalCompactCapture.swift": "a3d6fa0a4efa5c8c5b619be9f536e8959d332ef86100b6656e8a51affe10241a",
+    "Sources/HumaCore/ExperimentalCompactRecorder.swift": "43b9d931b1e3fcd66aff7cb501a80fecc24d85aaf0a7d139284487f1a053a434",
+    "Sources/HumaCore/NoirWritingProofService.swift": "832ec30a37531244d2b8caa1ee190ce5a6e2c63ded82127a28ad50c1f1a5d4de",
+    "experiments/noir-compact/native/src/assurance_capture.rs": "1d329a3c16d60db9d629f48e63c3c15f3155c818c4a43ac7b2543d4b2d2d65af",
+    "experiments/noir-compact/native/src/assurance_input.rs": "5cd5269c30e7ff4e9062e92063819f74182715dcde7cc883037bfe67d600b027",
+    "experiments/noir-compact/native/src/ffi.rs": "a0480d749e8af5126ed66f6711df19969dcf54d0d9a8a5ecc4b471b558da954f",
+    "experiments/noir-compact/capacity_cases.py": "248f53040a278fdfe64bd30f649a3fd5d9df25872bbac9ab07808aca2790b850",
+    "experiments/noir-compact/live-assurance.swift": "7c7a696ee1385e5ce53386a21fce4e6cd716ae1ebb3111e67e35fa9547877c06",
+    "experiments/noir-compact/browser/assurance-profile.mjs": "390fc3f5a26e0aee4fe6a2c155632e56f8773f0fc7fa1923d5c9389064209bd4",
+    "experiments/noir-compact/browser/assurance-core.mjs": "7bbd9dbec48c9353bd686e7af91ecde2aeed69e391728012ca81041572b408a1",
+    "experiments/noir-compact/browser/assurance-node.mjs": "04bf1f3ff799e53d107971a9d8e34722d826f594068b2c510da6d9e927b17743",
+    "experiments/noir-compact/browser/assurance-inline.mjs": "f5a5fb0ec3a39544c11962cfd872686897dc93dc7b8f6510cf69d8db5b07ec71",
+    "integrations/noir/package.py": "3be36cb0f89139abc06885b72d2808f508976bd16e84122115bf80befcbbcc8a",
+    "integrations/noir/worker.mjs": "a5d8cbfb917cfad2a652d92ee625d128075c544e0990f1ccef9a6aa9f542f855",
+    "integrations/noir/acceptance.swift": "59f6c57e9121ec115db34d0f965977d72cc182fbfb7779658197ed9a130b229f",
+    "web/pages/verify.mjs": "fb6ba2dfe3c56baca54089b473a94faaeafbc5a18b86007bfdab12eedada5f28",
+    "web/test/native-noir-publication.mjs": "e2c564002ec54c1f5e0b349033b643bd4a00f44019f2d3f3bafee33616dfaf94"
+  }
+}

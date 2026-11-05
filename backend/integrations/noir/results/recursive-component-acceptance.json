@@ -1,0 +1,179 @@
+{
+  "kind": "huma-recursive-component-acceptance-v1",
+  "softwareFixturesOnly": true,
+  "ownerKeysOrBiometricsUsed": false,
+  "appChanged": false,
+  "sdkProfileRegistered": false,
+  "completeHumaSessionProof": false,
+  "tenThousandCharactersSupported": false,
+  "singleChildSizing": {
+    "kind": "huma-recursive-component-sizing-v1",
+    "softwareFixturesOnly": true,
+    "ownerIdentityUsed": false,
+    "children": 1,
+    "innerVerifierKeyPinned": true,
+    "innerZeroKnowledge": true,
+    "outerZeroKnowledge": true,
+    "proofGenerated": false,
+    "witnessExecutionIsNotCryptographicVerification": true,
+    "completeHumaSessionProof": false,
+    "tenThousandCharactersSupported": false,
+    "witness": {
+      "wallMs": 202.88,
+      "peakSampledRSS": 0
+    },
+    "gates": {
+      "functions": [
+        {
+          "acir_opcodes": 110,
+          "circuit_size": 706771
+        }
+      ]
+    },
+    "gateTiming": {
+      "wallMs": 391.99,
+      "peakSampledRSS": 251854848
+    },
+    "wrapperSource": "https://raw.githubusercontent.com/AztecProtocol/aztec-packages/v5.2.1/barretenberg/noir/bb_proof_verification/src/lib.nr",
+    "wrapperSha256": "258cd5979844a2627688e6efcad07637b1e90624b3af77e0dc3e6ff45a9aa84c",
+    "sourceSha256": "4004b8955e8c965ab922750c1dbb0eb48022b2134a0da5c9e24ca46abfb43a16"
+  },
+  "twoChildSizing": {
+    "kind": "huma-recursive-component-sizing-v1",
+    "softwareFixturesOnly": true,
+    "ownerIdentityUsed": false,
+    "children": 2,
+    "innerVerifierKeyPinned": true,
+    "innerZeroKnowledge": true,
+    "outerZeroKnowledge": true,
+    "proofGenerated": false,
+    "witnessExecutionIsNotCryptographicVerification": true,
+    "completeHumaSessionProof": false,
+    "tenThousandCharactersSupported": false,
+    "witness": {
+      "wallMs": 197.94,
+      "peakSampledRSS": 0
+    },
+    "gates": {
+      "functions": [
+        {
+          "acir_opcodes": 111,
+          "circuit_size": 1475818
+        }
+      ]
+    },
+    "gateTiming": {
+      "wallMs": 818.46,
+      "peakSampledRSS": 886636544
+    },
+    "wrapperSource": "https://raw.githubusercontent.com/AztecProtocol/aztec-packages/v5.2.1/barretenberg/noir/bb_proof_verification/src/lib.nr",
+    "wrapperSha256": "258cd5979844a2627688e6efcad07637b1e90624b3af77e0dc3e6ff45a9aa84c",
+    "sourceSha256": "3e07a4efee9284c513eb1a3d581b6e6a7f61a88fd7db860da3dca018073586f5"
+  },
+  "nativeCryptographicChecks": {
+    "kind": "huma-recursive-component-proof-v1",
+    "softwareFixturesOnly": true,
+    "ownerIdentityUsed": false,
+    "completeHumaSessionProof": false,
+    "tenThousandCharactersSupported": false,
+    "appChanged": false,
+    "allCasesMatchExpected": true,
+    "artifactSha256": "0e5f0825fce3e21907deccbd3d54e233188e55f66edc27533a8b264932c29972",
+    "keySha256": "967c30dd70e3a0bb822e621cdf5269d0b3c1f4986468eb2ab27523e20dde94d8",
+    "setupMs": 2246.8305,
+    "threads": 2,
+    "nice": 10,
+    "cases": [
+      {
+        "name": "Valid",
+        "witnessAccepted": true,
+        "expectedFinalVerified": true,
+        "finalVerified": true,
+        "proofGenerated": true,
+        "backendExit": 0,
+        "verificationExit": 0,
+        "witness": {
+          "wallMs": 163.24,
+          "peakSampledRSS": 0
+        },
+        "proveMs": 6147.336667
+      },
+      {
+        "name": "BadInnerProof",
+        "witnessAccepted": true,
+        "expectedFinalVerified": false,
+        "finalVerified": false,
+        "proofGenerated": true,
+        "backendExit": 0,
+        "verificationExit": 1,
+        "witness": {
+          "wallMs": 119.13,
+          "peakSampledRSS": 0
+        },
+        "proveMs": 6562.159
+      },
+      {
+        "name": "BadInnerPublicInput",
+        "witnessAccepted": true,
+        "expectedFinalVerified": false,
+        "finalVerified": false,
+        "proofGenerated": true,
+        "backendExit": 0,
+        "verificationExit": 1,
+        "witness": {
+          "wallMs": 126.67,
+          "peakSampledRSS": 0
+        },
+        "proveMs": 6356.297875
+      }
+    ]
+  },
+  "independentWasmChecks": {
+    "kind": "huma-recursive-component-wasm-v1",
+    "softwareFixturesOnly": true,
+    "ownerIdentityUsed": false,
+    "completeHumaSessionProof": false,
+    "appChanged": false,
+    "profileSubstitutionRejected": true,
+    "cases": [
+      {
+        "name": "Valid",
+        "verified": true,
+        "expectedVerified": true,
+        "proofSha256": "66a92c4064fed29c623ce1eeaf49cfb4ac725def012d079eb3b6976ba941c5c2",
+        "publicInputsSha256": "2ef90b1c945c666761d7475b7a4f82c97b1863fca105d69a92f92c37d6489d25"
+      },
+      {
+        "name": "BadInnerProof",
+        "verified": false,
+        "expectedVerified": false,
+        "proofSha256": "eb9d6ee23d1fa02e747e4587998abac038c1419dad5360e2bb5777d90d9e6014",
+        "publicInputsSha256": "2ef90b1c945c666761d7475b7a4f82c97b1863fca105d69a92f92c37d6489d25"
+      },
+      {
+        "name": "BadInnerPublicInput",
+        "verified": false,
+        "expectedVerified": false,
+        "proofSha256": "8032474fd6468db6ab0845f4ef8dfb7e9ed71cf7f273fcb039e4bfe2cef2cdea",
+        "publicInputsSha256": "903e9f6174280b44ec568a95653580798554a47c64bda8d182ad42c21b379fb0"
+      }
+    ]
+  },
+  "decision": "Keep ordinary recursive wrapping out of the current Mac proving path; its measured single-child cost exceeds the five-second target.",
+  "remainingForLongSessions": [
+    "Replay state continuation, including the complete mutable text and cursor state.",
+    "Behavior, origin, presence and checkpoint state carried and authenticated across boundaries.",
+    "Every chunk linked to one session and to the exact final master.",
+    "A bounded portable proof/verification format and complete 10k-session benchmark."
+  ],
+  "sources": {
+    "noirRecursion": "https://noir-lang.org/docs/libraries/standard_library/recursion",
+    "pinnedBackendWrapper": "https://raw.githubusercontent.com/AztecProtocol/aztec-packages/v5.2.1/barretenberg/noir/bb_proof_verification/src/lib.nr",
+    "installedSdkRecursionHelper": "experiments/noir-compact/browser/node_modules/@aztec/bb.js/src/barretenberg/backend.ts:237"
+  },
+  "harnessSourceSha256": {
+    "experiments/noir-compact/aggregate_cases.py": "85569998f39b774bc798a1ee1953b469a9429c6d99b763128307549103823839",
+    "experiments/noir-compact/aggregate_prove.py": "3cfdcf323bd811a8e6efc137b947a1c863a99b73e33bf87e09b3a9cd2909387b",
+    "experiments/noir-compact/aggregate_verify.mjs": "70b6afbb38f6061da8dd419a6f57d7f33506fdcc3836a6c39270238291a395a5"
+  }
+}
