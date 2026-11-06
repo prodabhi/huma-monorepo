@@ -1,0 +1,57 @@
+/* ===================================================================
+   THEME TOKENS — edit ONLY this :root block to re-theme the whole deck.
+   The SAME token vocabulary as the `slides` (Slidev) and `webdeck` skills,
+   so a brand looks identical across all of them. The values below are a
+   "dark product" default — REPLACE them to match the brief or the brand.
+   =================================================================== */
+:root {
+  /* Surfaces — the landing page's paper (web/pages/foundation.css) */
+  --bg: #f6f4f3;
+  --bg-grad-1: transparent;
+  --bg-grad-2: transparent;
+  --surface: #f6f4f3;
+  --surface-2: #fbfaf9;
+
+  /* Ink */
+  --fg: #222222;
+  --fg-muted: #505050;
+  --fg-faint: #8c8c8c;
+
+  /* Hairlines */
+  --hair: rgba(34, 34, 34, 0.5);
+  --hair-2: rgba(34, 34, 34, 0.13);
+
+  /* Accent — ONE accent: the landing page's slate, used for data and figures */
+  --primary: #617689;
+  --accent: linear-gradient(115deg, #617689 0%, #617689 100%);
+  --accent-ink: #f6f4f3;
+
+  /* Radius — square, like print */
+  --radius: 2px;
+  --radius-sm: 2px;
+  --radius-lg: 2px;
+
+  /* Depth — none on paper */
+  --shadow: 0 0 0 transparent;
+  --glow: 0 0 0 transparent;
+
+  /* Type — Inter, with Geist Mono for small labels, as on the landing page */
+  --font-head: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Motion */
+  --dur: 0.4s;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Atmosphere — none */
+  --grain: 0;
+  --vignette: transparent;
+
+  /* Responsive gutter — fluid side / vertical padding */
+  --gutter: clamp(24px, 6vw, 112px);
+  --gutter-y: clamp(32px, 7vh, 80px);
+}
+
+
