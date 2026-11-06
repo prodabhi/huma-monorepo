@@ -12,10 +12,14 @@ import { configuredTurnstile, turnstileRoutes, TURNSTILE_SCRIPT_ORIGIN } from '.
 import { configuredEvents, eventRoutes } from './events.mjs';
 import { configuredWorldID, worldIDRoutes, BRIDGE_ORIGIN } from './worldid-verify.mjs';
 import { configuredOnchain, onchainRoutes } from './onchain.mjs';
-import { AVATAR_SEED, writerHandle } from './publication-contract.mjs';
+import { AVATAR_SEED, writerHandle, isPageLink } from './publication-contract.mjs';
 import { POINTS } from './write/pins.mjs';
 import { Avatar, Style } from '@dicebear/core';
 import dylan from '@dicebear/styles/dylan.json' with { type: 'json' };
+import { fail as failure } from './server-util.mjs';
+import { upgrade as upgradeSocket } from './websocket.mjs';
+import { clientAddress } from './sessions.mjs';
+import { POSTS, IMAGES } from './blog.mjs';
 
 // Writers' faces: DiceBear "Dylan" (Natalia Spivak, CC BY 4.0), the same face for the same seed.
 // Made once per seed and kept (at most a few thousand). Its metadata, which credits the artist and license, stays.
@@ -30,15 +34,12 @@ function face(seed) {
     faces.set(seed, svg);
     return svg;
 }
-// The Mac app version /download/Huma.dmg serves; scripts/upload-release.mjs uploads releases/Huma-<version>.dmg.
+// The Mac app version /download/Huma.dmg serves; backend/scripts/upload-release.mjs uploads releases/Huma-<version>.dmg.
 const HUMA_RELEASE = '0.1.10';
-let releaseCheck = null;
-// The landing page's hero video in R2 (backend/scripts/upload-media.mjs). Bump the name for a new video, so cached copies never go stale.
-const HERO_VIDEO = 'media/hero-v1.mp4';
-let heroCheck = null;
 // The Mac app's proving points (64 MB that don't compress), kept out of the installer; the app checks their fingerprint.
 const PROVING_SETUP = 'engine/bn254_g1_compressed-3e1ac096.dat';
-let setupCheck = null;
+// Whether each of these is in R2 yet, asked at most once a minute.
+const releaseChecks = new Map();
 // Writing in the browser (frontend/write, built into dist/write): its prover needs threads, so the page and everything it
 // loads are cross-origin isolated. Only these files, by name.
 const WRITE_ISOLATION = { 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Embedder-Policy': 'require-corp', 'Cross-Origin-Resource-Policy': 'same-origin' };
@@ -67,8 +68,6 @@ function provingPoints(log, publications) {
     })().catch(error => { points.delete(log); throw error; }));
     return points.get(log);
 }
-// The landing page may play media from R2 (the hero video redirects there), so its policy names the R2 host.
-const r2Media = (() => { try { return process.env.HUMA_STORAGE_BACKEND === 'r2' ? ' ' + new URL(process.env.R2_ENDPOINT).origin : ''; } catch { return ''; } })();
 
 const root = fileURLToPath(new URL('./', import.meta.url));
 // The research deck is built by Vite from deck/ into dist/deck, served read-only at /deck/.
@@ -81,7 +80,6 @@ const MAX_REJECTED_BODY_BYTES = MAX_UPLOAD_BYTES + 65536;
 const headers = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Cache-Control': 'no-store',
     'Strict-Transport-Security': 'max-age=31536000', 'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()', 'Content-Security-Policy': "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'" };
 const json = (res, status, data) => { res.writeHead(status, { ...headers, 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); };
-const failure = (status, message) => Object.assign(new Error(message), { status });
 /** An unexpected error as the server's log keeps it: its stack and what caused it, with Arkiv's access key (part of its
  *  RPC address, which the Arkiv SDK's errors quote) taken out. */
 const unexpected = error => [error?.stack ?? String(error), error?.cause?.shortMessage, error?.cause?.details].filter(Boolean).join('\n')
@@ -90,12 +88,21 @@ const unexpected = error => [error?.stack ?? String(error), error?.cause?.shortM
 // what did. Large text and WebAssembly files are brotli-compressed once, in the background, and sent that way to
 // browsers that accept it (the 10 MB proof checker becomes 2 MB); until that's done they go out as they are.
 const statics = new Map();
+// The site's pages share their nav and footer: a page's <!--#include footer--> is pages/partials/footer.html, put in
+// when the page is first sent and again whenever it or a partial changes.
+const PARTIALS = ['nav', 'footer', 'footer-compact', 'cta-short', 'cta-end'], INCLUDE = /<!--#include ([a-z-]+)-->/g;
 async function staticFile(file, type) {
-    const { mtimeMs } = await stat(file);
+    const parts = type === 'text/html' ? await Promise.all(PARTIALS.map(name => staticFile(path.join(root, 'pages/partials', name + '.html'), 'text/x-partial')
+        .then(part => [name, part], () => [name, null]))) : [];
+    const { mtimeMs } = await stat(file), stamp = [mtimeMs, ...parts.map(([, part]) => part?.mtimeMs)].join();
     let entry = statics.get(file);
-    if (entry?.mtimeMs === mtimeMs) return entry;
-    const body = await readFile(file);
-    entry = { mtimeMs, body, br: null, etag: 'W/"' + createHash('sha256').update(body).digest('base64url').slice(0, 22) + '"' };
+    if (entry?.stamp === stamp) return entry;
+    let body = await readFile(file);
+    if (parts.length) {
+        const found = Object.fromEntries(parts);
+        body = Buffer.from(body.toString('utf8').replace(INCLUDE, (marker, name) => found[name]?.body.toString('utf8') ?? marker));
+    }
+    entry = { mtimeMs, stamp, body, br: null, etag: 'W/"' + createHash('sha256').update(body).digest('base64url').slice(0, 22) + '"' };
     statics.set(file, entry);
     if (body.length >= 32768 && /^(text\/|application\/(wasm|json|xml)|image\/svg)/.test(type)) {
         brotliCompress(body, { params: { [zlib.BROTLI_PARAM_QUALITY]: 11, [zlib.BROTLI_PARAM_SIZE_HINT]: body.length } },
@@ -168,9 +175,10 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
     // On-chain verification (onchain.mjs): off unless the relayer and contract are configured (tests pass theirs).
     const chainCheck = onchainRoutes(publicationOptions.onchain ?? configuredOnchain());
     const visits = eventRoutes(publicationOptions.events ?? configuredEvents());
-    const heroInR2 = async () => {
-        if (!heroCheck || heroCheck.at < Date.now() - 60000) heroCheck = { at: Date.now(), ready: await publications.releaseExists(HERO_VIDEO) };
-        return heroCheck.ready;
+    const released = async key => {
+        let check = releaseChecks.get(key);
+        if (!check || check.at < Date.now() - 60000) releaseChecks.set(key, check = { at: Date.now(), ready: await publications.releaseExists(key) });
+        return check.ready;
     };
     const requests = createRequests({ objectStore: publications.objectStore, page: publications.requestPage, shortPage: publications.shortPage });
     const documents = createDocuments({ objectStore: publications.objectStore, deviceKey, deviceSigned, worldId: world });
@@ -207,7 +215,7 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
             if (await worldCheck(req, res, url.pathname, { json })) return;
             if (await chainCheck(req, res, url.pathname, { json })) return;
             if (await visits(req, res, url.pathname, { json })) return;
-            const files = { '/device-verifier.js': ['dist/device-verifier.js', 'text/javascript'], '/replay-worker.js': ['pages/replay-worker.mjs', 'text/javascript'], '/replay/huma_replay_browser.js': ['dist/replay/huma_replay_browser.js', 'text/javascript'], '/replay/huma_replay_browser_bg.wasm': ['dist/replay/huma_replay_browser_bg.wasm', 'application/wasm'], '/': ['pages/foundation.html', 'text/html'], '/verify': ['pages/verify.html', 'text/html'], '/site.css': ['pages/site.css', 'text/css'], '/brand/mark.svg': ['pages/brand/huma-mark.svg', 'image/svg+xml'], '/brand/huma-mark.svg': ['pages/brand/huma-mark.svg', 'image/svg+xml'], '/brand/icon-512.png': ['pages/brand/icon-512.png', 'image/png'], '/download': ['pages/download.html', 'text/html'], '/privacy': ['pages/privacy.html', 'text/html'], '/prove-you-didnt-use-ai': ['pages/guide-prove.html', 'text/html'], '/ai-detector-false-positive': ['pages/guide-detector.html', 'text/html'], '/robots.txt': ['pages/robots.txt', 'text/plain; charset=utf-8'], '/sitemap.xml': ['pages/sitemap.xml', 'application/xml'], '/llms.txt': ['pages/llms.txt', 'text/plain; charset=utf-8'], '/terms': ['pages/terms.html', 'text/html'], '/appcast.xml': ['pages/appcast.xml', 'application/xml'], '/download.js': ['pages/download.js', 'text/javascript'], '/ask': ['pages/ask.html', 'text/html'], '/ask.js': ['pages/ask.js', 'text/javascript'], '/fonts/inter.woff2': ['pages/fonts/inter.woff2', 'font/woff2'], '/fonts/newsreader-latin.woff2': ['pages/fonts/newsreader-latin.woff2', 'font/woff2'], '/fonts/newsreader-latin-ext.woff2': ['pages/fonts/newsreader-latin-ext.woff2', 'font/woff2'], '/fonts/NEWSREADER-OFL.txt': ['pages/fonts/NEWSREADER-OFL.txt', 'text/plain'], '/img/og-page.png': ['pages/img/og-page.png', 'image/png'], '/img/og-home.jpg': ['pages/img/og-home.jpg', 'image/jpeg'], '/fonts/OFL.txt': ['pages/fonts/OFL.txt', 'text/plain'], '/verify.js': ['pages/verify.mjs', 'text/javascript'], '/foundation-logo.svg': ['pages/foundation-logo.svg', 'image/svg+xml'], '/foundation.css': ['pages/foundation.css', 'text/css'], '/foundation.js': ['pages/foundation.js', 'text/javascript'], '/fonts/geist-mono.woff2': ['pages/fonts/geist-mono.woff2', 'font/woff2'], '/foundation-globe.js': ['pages/foundation-globe.js', 'text/javascript'], '/vendor/maplibre/maplibre-gl.mjs': ['pages/vendor/maplibre/maplibre-gl.mjs', 'text/javascript'], '/vendor/maplibre/maplibre-gl-worker.mjs': ['pages/vendor/maplibre/maplibre-gl-worker.mjs', 'text/javascript'], '/vendor/maplibre/maplibre-gl.css': ['pages/vendor/maplibre/maplibre-gl.css', 'text/css'], '/vendor/maplibre/LICENSE.txt': ['pages/vendor/maplibre/LICENSE.txt', 'text/plain'], '/fonts/GEIST-OFL.txt': ['pages/fonts/GEIST-OFL.txt', 'text/plain'], '/vendor/qr/qr.mjs': ['pages/vendor/qr/qr.mjs', 'text/javascript'], '/vendor/qr/LICENSE.txt': ['pages/vendor/qr/LICENSE.txt', 'text/plain'], '/vendor/pdf-lib/pdf-lib.mjs': ['pages/vendor/pdf-lib/pdf-lib.mjs', 'text/javascript'], '/vendor/pdf-lib/fontkit.js': ['pages/vendor/pdf-lib/fontkit.js', 'text/javascript'], '/vendor/pdf-lib/LICENSE-pdf-lib.txt': ['pages/vendor/pdf-lib/LICENSE-pdf-lib.txt', 'text/plain'], '/vendor/pdf-lib/LICENSE-fontkit.txt': ['pages/vendor/pdf-lib/LICENSE-fontkit.txt', 'text/plain'], '/report-pdf.mjs': ['pages/report-pdf.mjs', 'text/javascript'], '/fonts/tinos-report.ttf': ['pages/fonts/tinos-report.ttf', 'font/ttf'], '/fonts/tinos-bold-report.ttf': ['pages/fonts/tinos-bold-report.ttf', 'font/ttf'], '/fonts/TINOS-OFL.txt': ['pages/fonts/TINOS-OFL.txt', 'text/plain'] };
+            const files = { '/device-verifier.js': ['dist/device-verifier.js', 'text/javascript'], '/replay-worker.js': ['pages/replay-worker.mjs', 'text/javascript'], '/replay/huma_replay_browser.js': ['dist/replay/huma_replay_browser.js', 'text/javascript'], '/replay/huma_replay_browser_bg.wasm': ['dist/replay/huma_replay_browser_bg.wasm', 'application/wasm'], '/': ['pages/foundation.html', 'text/html'], '/verify': ['pages/verify.html', 'text/html'], '/site.css': ['pages/site.css', 'text/css'], '/brand/mark.svg': ['pages/brand/huma-mark.svg', 'image/svg+xml'], '/brand/huma-mark.svg': ['pages/brand/huma-mark.svg', 'image/svg+xml'], '/brand/icon-512.png': ['pages/brand/icon-512.png', 'image/png'], '/download': ['pages/download.html', 'text/html'], '/privacy': ['pages/privacy.html', 'text/html'], '/prove-you-didnt-use-ai': ['pages/guide-prove.html', 'text/html'], '/ai-detector-false-positive': ['pages/guide-detector.html', 'text/html'], '/robots.txt': ['pages/robots.txt', 'text/plain; charset=utf-8'], '/sitemap.xml': ['pages/sitemap.xml', 'application/xml'], '/llms.txt': ['pages/llms.txt', 'text/plain; charset=utf-8'], '/terms': ['pages/terms.html', 'text/html'], '/appcast.xml': ['pages/appcast.xml', 'application/xml'], '/download.js': ['pages/download.js', 'text/javascript'], '/ask': ['pages/ask.html', 'text/html'], '/ask.js': ['pages/ask.js', 'text/javascript'], '/fonts/inter.woff2': ['pages/fonts/inter.woff2', 'font/woff2'], '/fonts/newsreader-latin.woff2': ['pages/fonts/newsreader-latin.woff2', 'font/woff2'], '/fonts/newsreader-latin-ext.woff2': ['pages/fonts/newsreader-latin-ext.woff2', 'font/woff2'], '/fonts/NEWSREADER-OFL.txt': ['pages/fonts/NEWSREADER-OFL.txt', 'text/plain'], '/img/og-page.png': ['pages/img/og-page.png', 'image/png'], '/img/og-home.jpg': ['pages/img/og-home.jpg', 'image/jpeg'], '/fonts/OFL.txt': ['pages/fonts/OFL.txt', 'text/plain'], '/verify.js': ['pages/verify.mjs', 'text/javascript'], '/foundation-logo.svg': ['pages/foundation-logo.svg', 'image/svg+xml'], '/foundation.css': ['pages/foundation.css', 'text/css'], '/foundation.js': ['pages/foundation.js', 'text/javascript'], '/fonts/geist-mono.woff2': ['pages/fonts/geist-mono.woff2', 'font/woff2'], '/fonts/GEIST-OFL.txt': ['pages/fonts/GEIST-OFL.txt', 'text/plain'], '/vendor/qr/qr.mjs': ['pages/vendor/qr/qr.mjs', 'text/javascript'], '/vendor/qr/LICENSE.txt': ['pages/vendor/qr/LICENSE.txt', 'text/plain'], '/vendor/pdf-lib/pdf-lib.mjs': ['pages/vendor/pdf-lib/pdf-lib.mjs', 'text/javascript'], '/vendor/pdf-lib/fontkit.js': ['pages/vendor/pdf-lib/fontkit.js', 'text/javascript'], '/vendor/pdf-lib/LICENSE-pdf-lib.txt': ['pages/vendor/pdf-lib/LICENSE-pdf-lib.txt', 'text/plain'], '/vendor/pdf-lib/LICENSE-fontkit.txt': ['pages/vendor/pdf-lib/LICENSE-fontkit.txt', 'text/plain'], '/report-pdf.mjs': ['pages/report-pdf.mjs', 'text/javascript'], '/fonts/tinos-report.ttf': ['pages/fonts/tinos-report.ttf', 'font/ttf'], '/fonts/tinos-bold-report.ttf': ['pages/fonts/tinos-bold-report.ttf', 'font/ttf'], '/fonts/TINOS-OFL.txt': ['pages/fonts/TINOS-OFL.txt', 'text/plain'] };
             // Explicit reader assets only; never expose circuit witnesses or experiment sources.
             for (const file of ['compact-verifier.js', 'compact-worker.js', 'compact-inline.js', 'media-inline.js', 'assurance-inline.js', 'long-inline.js', 'assets/long-chunk.vk', 'assets/long-final1024.vk', 'assets/long-final4096.vk', 'assets/long-final10000.vk', 'assets/long2-final1024.vk', 'assets/long2-final4096.vk', 'assets/long2-final10000.vk', 'assets/long3-chunk1024.vk', 'assets/long3-final1024.vk', 'assets/long3-chunk4096.vk', 'assets/long3-final4096.vk', 'assets/long3-chunk10000.vk', 'assets/long3-final10000.vk', 'assets/assurance256.vk', 'assets/assurance256-v2.vk', 'assets/assurance256-cp32.vk', 'assets/assurance64.vk', 'assets/assurance128-cp32.vk', 'assets/assurance-abi.json', 'assets/assurance-cp32-abi.json', 'assets/media-membership.vk', 'assets/cast256.vk', 'assets/journal-abi.json', 'assets/g2.dat', 'assets/barretenberg.wasm', 'assets/barretenberg-threads.wasm']) {
                 const type = file.endsWith('.js') ? 'text/javascript' : file.endsWith('.wasm') ? 'application/wasm' : file.endsWith('.json') ? 'application/json' : 'application/octet-stream';
@@ -222,6 +230,9 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
             files['/writer.mjs'] = ['pages/writer.mjs', 'text/javascript'];
             files['/track.js'] = ['pages/track.mjs', 'text/javascript'];
             files['/visit.js'] = ['pages/visit.mjs', 'text/javascript'];
+            files['/blog'] = ['pages/blog/index.html', 'text/html'];
+            for (const post of POSTS) files['/blog/' + post] = ['pages/blog/' + post + '.html', 'text/html'];
+            for (const image of IMAGES) files['/blog/img/' + image] = ['pages/blog/img/' + image, 'image/webp'];
             // A writer's page, huma.social/@handle: the page asks /api/writers/<handle> for what to show (or says there's no such writer).
             const handle = req.method === 'GET' ? url.pathname.match(/^\/@([^/]{1,64})$/)?.[1] : undefined;
             if (handle !== undefined) { try { writerHandle(decodeURIComponent(handle)); files[url.pathname] = ['pages/writer.html', 'text/html']; } catch {} }
@@ -267,52 +278,22 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
                 res.end(body); return;
             }
             if (req.method === 'GET' && url.pathname === '/engine/proving-setup') {
-                if (!setupCheck || setupCheck.at < Date.now() - 60000) setupCheck = { at: Date.now(), ready: await publications.releaseExists(PROVING_SETUP) };
                 let location = null;
-                if (setupCheck.ready) try { location = publications.releaseURL(PROVING_SETUP); } catch {}
+                if (await released(PROVING_SETUP)) try { location = publications.releaseURL(PROVING_SETUP); } catch {}
                 if (!location) throw failure(404, 'Not found.');
                 res.writeHead(302, { ...headers, Location: location }); res.end(); return;
             }
             if (req.method === 'GET' && url.pathname === '/download/Huma.dmg') {
                 const key = `releases/Huma-${HUMA_RELEASE}.dmg`;
-                if (!releaseCheck || releaseCheck.at < Date.now() - 60000) releaseCheck = { at: Date.now(), ready: await publications.releaseExists(key) };
                 let location = null;
-                if (releaseCheck.ready) try { location = publications.releaseURL(key); } catch {}
+                if (await released(key)) try { location = publications.releaseURL(key); } catch {}
                 res.writeHead(302, { ...headers, Location: location ?? '/download#soon' }); res.end(); return;
             }
-            // Photos and video for the landing page, dropped into pages/foundation-media/ (the page falls back to generated art).
-            // The hero video lives in R2 once uploaded: the page still asks for hero.mp4 and is sent to R2 for it.
-            if (req.method === 'GET' && url.pathname === '/foundation-media/index.json') {
-                const names = (await readdir(path.join(root, 'pages/foundation-media')).catch(() => []))
-                    .filter(name => /^[a-z0-9-]+\.(jpg|jpeg|png|webp|mp4|webm|svg)$/.test(name));
-                if (!names.includes('hero.mp4') && await heroInR2()) names.push('hero.mp4');
-                json(res, 200, names); return;
-            }
-            const media = url.pathname.match(/^\/foundation-media\/([a-z0-9-]+\.(jpg|jpeg|png|webp|mp4|webm|svg))$/);
-            if (req.method === 'GET' && media?.[1] === 'hero.mp4' && await heroInR2()) {
-                // Signed from the start of the day for two days, so the link (and the browser's copy) stays the same all day.
-                // One minute past midnight: links from before the R2 CORS rule were signed at midnight, and browsers may
-                // still hold those copies without the permission header; a different link skips them.
-                const day = new Date(); day.setUTCHours(0, 1, 0, 0);
-                let location = null;
-                try { location = publications.releaseURL(HERO_VIDEO, 2 * 86400, day); } catch {}
-                if (location) { res.writeHead(302, { ...headers, Location: location, 'Cache-Control': 'public, max-age=3600' }); res.end(); return; }
-            }
+            // The landing page's picture (pages/foundation-media/), kept a day in the browser.
+            const media = url.pathname.match(/^\/foundation-media\/([a-z0-9-]+\.(jpg|webp))$/);
             if (req.method === 'GET' && media) {
                 const body = await readFile(path.join(root, 'pages/foundation-media', media[1])).catch(() => { throw failure(404, 'Not found.'); });
-                const type = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', mp4: 'video/mp4', webm: 'video/webm', svg: 'image/svg+xml' }[media[2]];
-                // Kept a day in the browser: the landing page's art doesn't change between visits.
-                const cached = { ...headers, 'Cache-Control': 'public, max-age=86400' };
-                // Byte ranges: Safari only plays video that it can request in parts.
-                const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range ?? '');
-                if (range && (range[1] || range[2])) {
-                    const start = range[1] ? Number(range[1]) : Math.max(0, body.length - Number(range[2]));
-                    const end = range[1] && range[2] ? Math.min(Number(range[2]), body.length - 1) : body.length - 1;
-                    if (start > end) { res.writeHead(416, { ...headers, 'Content-Range': `bytes */${body.length}` }); res.end(); return; }
-                    res.writeHead(206, { ...cached, 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Content-Range': `bytes ${start}-${end}/${body.length}`, 'Content-Length': end - start + 1 });
-                    res.end(body.subarray(start, end + 1)); return;
-                }
-                res.writeHead(200, { ...cached, 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Content-Length': body.length }); res.end(body); return;
+                res.writeHead(200, { ...headers, 'Content-Type': media[2] === 'jpg' ? 'image/jpeg' : 'image/webp', 'Cache-Control': 'public, max-age=86400', 'Content-Length': body.length }); res.end(body); return;
             }
             // The landing page used to live at /foundation.
             if (req.method === 'GET' && url.pathname === '/foundation') { res.writeHead(301, { ...headers, Location: '/' }); res.end(); return; }
@@ -326,8 +307,10 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
             }
             // A finished page to look at before writing one: the shared link set in HUMA_EXAMPLE_LINK (path and token).
             if (req.method === 'GET' && url.pathname === '/example') {
-                const example = process.env.HUMA_EXAMPLE_LINK ?? '';
-                res.writeHead(302, { ...headers, Location: /^\/original\/[a-f0-9]{64}(#[a-f0-9]{64})?$/.test(example) ? example : '/' }); res.end(); return;
+                // A shared page's link, full (/original/<id>#<token>) or short (/p/<code>#<key>), with or without the site
+                // it was copied from (only the path and key are kept); anything else goes home.
+                const example = (process.env.HUMA_EXAMPLE_LINK ?? '').trim().replace(/^https?:\/\/[^/]+/, '');
+                res.writeHead(302, { ...headers, Location: isPageLink(example) ? example : '/' }); res.end(); return;
             }
             // A shared page, by its full link or its short one (/p/<code>, publications.mjs). The page reads its id from
             // huma-page; the key after the # never reaches this server.
@@ -347,7 +330,7 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
                     // The checker's engine (2 MB compressed) starts downloading with the page; the check reuses it from the cache.
                     `<link rel="preload" href="/compact/assets/barretenberg.wasm" as="fetch" crossorigin="anonymous">`;
                 // Sent already in reader view, so the verification tool never flashes up before the script runs.
-                const body = Buffer.from((await readFile(path.join(root, 'pages/verify.html'), 'utf8')).replace(/<!-- tags:[^]*?<!-- \/tags -->/, () => tags)
+                const body = Buffer.from((await staticFile(path.join(root, 'pages/verify.html'), 'text/html')).body.toString('utf8').replace(/<!-- tags:[^]*?<!-- \/tags -->/, () => tags)
                     .replace('<body>', '<body class="reader">').replace('<h1 class="page-title">Verify a proof.</h1>', '<h1 class="page-title">Shared on Huma.</h1>')
                     .replace('<p class="page-lead">Runs in your browser. Nothing is uploaded.</p>', '<p class="page-lead">Your browser checks this page itself.</p>'));
                 res.writeHead(200, { ...headers, 'Content-Type': 'text/html', 'Content-Length': body.length }); res.end(body); return;
@@ -356,9 +339,9 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
                 const [file, type] = files[url.pathname];
                 // The landing page's globe draws CARTO's basemap (tiles, glyphs, sprites). MapLibre's worker takes its
                 // policy from its own script's response, so the vendor files carry the same one.
-                const csp = url.pathname === '/' || url.pathname.startsWith('/vendor/maplibre/') ? { 'Content-Security-Policy': `default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self'${r2Media}; connect-src 'self' https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com; base-uri 'none'; frame-ancestors 'none'` } : {};
-                // Fonts and the vendored map library rarely change, so browsers may keep them for a week.
-                const cache = /^\/(fonts|vendor)\//.test(url.pathname) ? { 'Cache-Control': 'public, max-age=604800' } : {};
+                const csp = url.pathname === '/' ? { 'Content-Security-Policy': `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'` } : {};
+                // Fonts, the vendored libraries and the blog's pictures rarely change, so browsers may keep them for a week.
+                const cache = /^\/(fonts|vendor|blog\/img)\//.test(url.pathname) ? { 'Cache-Control': 'public, max-age=604800' } : {};
                 sendStatic(req, res, await staticFile(path.join(root, file), type), { ...csp, ...cache, 'Content-Type': type }); return;
             }
             const lookupID = url.pathname.match(/^\/api\/proofs\/([a-f0-9]{64})$/)?.[1];
@@ -372,8 +355,6 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
             // approved master+proof flow and its durable uploader quotas.
             // Only isolated compatibility harnesses opt into the retired API.
             if (!allowLegacyUploads) throw failure(410, 'Proof-only uploads are retired. Share the master and proof together.');
-            const origin = req.headers.origin;
-            if (origin && origin !== `http://${req.headers.host}` && origin !== `https://${req.headers.host}`) throw failure(403, 'Origin not allowed.');
             if (!(req.headers['content-type'] ?? '').startsWith('application/json')) throw failure(415, 'JSON required.');
             if (Number(req.headers['content-length'] ?? 0) > MAX_REJECTED_BODY_BYTES) throw failure(413, 'Payload exceeds 2 MB.');
             if (admitted >= 2) throw failure(429, 'Verifier busy; retry later.');
@@ -386,7 +367,7 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
         } catch (error) {
             // A person who follows a wrong link in a browser gets a page, not an error object.
             if (error.status === 404 && req.method === 'GET' && !req.url.startsWith('/api/') && /text\/html/.test(req.headers.accept ?? '') && !res.headersSent) {
-                const page = await readFile(path.join(root, 'pages/notfound.html')).catch(() => null);
+                const page = (await staticFile(path.join(root, 'pages/notfound.html'), 'text/html').catch(() => null))?.body;
                 if (page) { res.writeHead(404, { ...headers, 'Content-Type': 'text/html; charset=utf-8' }); res.end(page); return; }
             }
             // An error no handler expected (no status) is logged here, never sent: it may quote private input.
@@ -397,8 +378,17 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
             } else res.end();
         } finally { if (reserved) admitted--; }
     });
+    // The editor's event stream (detection/stream.mjs): a WebSocket from the write page, same origin only.
+    server.on('upgrade', (req, socket, head) => {
+        const origin = req.headers.origin, host = req.headers.host;
+        const pathname = (() => { try { return new URL(req.url, 'http://localhost').pathname; } catch { return null; } })();
+        if (pathname !== '/api/sessions/stream' || !origin || !host || (origin !== `http://${host}` && origin !== `https://${host}`)) { socket.destroy(); return; }
+        const connection = upgradeSocket(req, socket, head);
+        if (connection) publications.streams.accept(connection, clientAddress(req));
+    });
     server.requestTimeout = 60000; server.headersTimeout = 10000;
     server.once('close', () => { publications.close(); });
+    server.streams = publications.streams;
     return server;
 }
 export const server = await createRegistry();
