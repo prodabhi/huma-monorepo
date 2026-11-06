@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash, randomBytes } from 'node:crypto';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { createSessions } from '../sessions.mjs';
 import { ArkivObjectStore, CHUNK_BYTES, TX_BYTES, seal, open } from '../arkiv-store.mjs';
 import { LocalObjectStore, configuredObjectStore } from '../object-store.mjs';
 import { createRegistry } from '../registry.mjs';
@@ -137,7 +138,7 @@ test('changeable state is replaced by compare-and-swap, one writer at a time', a
   assert.deepEqual(chain.writes.at(-1), { creates: 1, deletes: 1 });
   assert.equal([...chain.entities.values()].filter(e => e.k === key).length, 1);
   // Ten callers adding to one list at once: every one of them lands.
-  const counter = 'sessions/' + id('counter');
+  const counter = 'listed/' + id('counter');
   const add = async () => {
     for (let attempt = 0; attempt < 50; attempt++) {
       const read = await store.quotaRead(counter), n = read ? JSON.parse(read.bytes) : 0;
@@ -159,6 +160,18 @@ test('the daily upload counters stay in the local folder, never on Arkiv', async
   assert.equal(chain.writes.length, 0);
   assert.equal(chain.entities.size, 0);
   assert.equal((await readFile(path.join(directory, key))).toString(), '{"n":1}');
+});
+
+test('browser sessions’ nonces stay in the local folder too, so Start doesn’t wait on a transaction', async t => {
+  const { store, chain, directory } = await running(t);
+  const sessions = createSessions({ objectStore: store });
+  const { nonce } = await sessions.issue('203.0.113.7');
+  assert.match(nonce, /^[a-f0-9]{32}$/);
+  assert.equal(chain.writes.length, 0);
+  assert.equal(chain.entities.size, 0);
+  assert.ok((await readdir(path.join(directory, 'sessions'))).length > 0);
+  // And it's confirmed from there when the page is shared.
+  assert.equal(typeof await sessions.confirm({ nonce, claimed: 0 }, 'a'.repeat(64)), 'number');
 });
 
 test('half a write is ignored, and the next write of that key clears it away', async t => {

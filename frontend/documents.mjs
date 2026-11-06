@@ -1,13 +1,12 @@
 // A writer's documents, kept under their account so they open on any device after sign-in: drafts as they're written,
 // and finished ones with their proof and view link. Requests come from /write signed by that browser's publishing key,
 // which the account's wallet linked to it at sign-in (publications.mjs, /api/publications/signin), as a Mac is linked.
-import { createHash, createPublicKey } from 'node:crypto';
+import { createPublicKey } from 'node:crypto';
 import { documentRequestMessage, writerProfile, writerHandle, writerLevel, isPageLink, TIER_ORDER } from './publication-contract.mjs';
 import { clientIP } from './client-ip.mjs';
 import { accountSignal, publicWorldID, NOT_VERIFIED, WORLD_ID_LIMIT, WORLD_ID_TAKEN } from './worldid-verify.mjs';
+import { sha256Hex as hash, fail, isHash, parseJSON } from './server-util.mjs';
 
-const hash = value => createHash('sha256').update(value).digest('hex');
-const fail = (status, message) => Object.assign(new Error(message), { status });
 // A signed request is good for five minutes, and only once.
 const WINDOW = 5 * 60 * 1000;
 export const DOCUMENT_LIMIT = 4 * 1024 * 1024, DOCUMENTS_PER_ACCOUNT = 500, PASSKEYS_PER_ACCOUNT = 10;
@@ -78,7 +77,7 @@ function entry(record) {
     status: record.status === 'proved' ? 'proved' : 'draft', score: Number.isInteger(record.score) ? record.score : null,
     created: Number(record.created) || 0, updated: Number(record.updated) || 0,
     ...(isPageLink(record.shared) ? { shared: record.shared } : {}),
-    ...(/^[a-f0-9]{64}$/.test(record.publication ?? '') ? { publication: record.publication } : {}) };
+    ...(isHash(record.publication) ? { publication: record.publication } : {}) };
 }
 
 const P256_SPKI = Buffer.from('3059301306072a8648ce3d020106082a8648ce3d030107034200', 'hex');
@@ -96,11 +95,12 @@ export function passkeyEntry(value) {
   return { id, publicKey, rpId };
 }
 
+// Each account has one list (changed by compare-and-swap) of its documents, each pointing at its current version;
+// a version is written once under the account and its own hash, and the one it replaces is deleted.
+const listKey = owner => 'documents/' + hash('huma-documents-v1\0' + owner);
+
 export function createDocuments({ objectStore, deviceKey, deviceSigned, worldId = null, now = Date.now }) {
   const seen = new Map();
-  // Each account has one list (changed by compare-and-swap) of its documents, each pointing at its current version;
-  // a version is written once under the account and its own hash, and the one it replaces is deleted.
-  const listKey = owner => 'documents/' + hash('huma-documents-v1\0' + owner);
   const versionKey = (owner, bytes) => 'documents/' + hash('huma-document-version-v1\0' + owner + '\0' + hash(bytes));
   const passkeysKey = owner => 'documents/' + hash('huma-passkeys-v1\0' + owner);
   const read = (key, empty) => readState(objectStore, key, empty), change = (key, empty, update) => changeState(objectStore, key, empty, update);
@@ -120,7 +120,7 @@ export function createDocuments({ objectStore, deviceKey, deviceSigned, worldId 
     if (signature.length > 200 || Buffer.from(signature, 'base64').toString('base64') !== signature) throw fail(401, MISMATCH);
     if (Math.abs(now() - time) > WINDOW) throw fail(401, 'This computer’s clock is off. Check its time and try again.');
     const binding = await deviceOwner(objectStore, publicKey);
-    if (!binding || typeof binding.owner !== 'string' || !/^[a-f0-9]{64}$/.test(binding.owner)) throw fail(401, SIGN_IN);
+    if (!binding || !isHash(binding.owner)) throw fail(401, SIGN_IN);
     return { publicKey, time, signature, owner: binding.owner };
   }
   /** The account behind a signed request, or a 401. Once only: kept by key and the message signed (never by the
@@ -168,7 +168,7 @@ export function createDocuments({ objectStore, deviceKey, deviceSigned, worldId 
       let handle;
       try { handle = writerHandle(decodeURIComponent(writer[1])); } catch { throw none(); }
       const owner = (await read(handleKey(handle), null)).value?.owner;
-      if (typeof owner !== 'string' || !/^[a-f0-9]{64}$/.test(owner)) throw none();
+      if (!isHash(owner)) throw none();
       const [{ value: index }, { value: stored }, human] = await Promise.all([read(writersIndexKey(owner), []), read(profileKey(owner), null),
         worldId?.enabled ? accountWorldID(objectStore, owner, worldId.environment) : null]);
       let profile = null;
@@ -185,7 +185,7 @@ export function createDocuments({ objectStore, deviceKey, deviceSigned, worldId 
       if (req.method === 'GET') { json(res, 200, { profile: await current() }); return true; }
       if (req.method !== 'POST') throw fail(405, 'Method not allowed.');
       let value;
-      try { value = JSON.parse(body.toString('utf8')); } catch { throw fail(400, 'JSON required.'); }
+      value = parseJSON(body);
       if (!value || typeof value !== 'object') throw fail(400, 'Choose a name up to 40 characters.');
       // The profile is replaced only at the version this request read (compare-and-swap), and the handle it names is
       // claimed just before: racing requests can't leave one account holding handles its profile doesn't show.
@@ -250,7 +250,7 @@ export function createDocuments({ objectStore, deviceKey, deviceSigned, worldId 
       }
       if (req.method !== 'POST') throw fail(405, 'Method not allowed.');
       let value;
-      try { value = JSON.parse(body.toString('utf8')); } catch { throw fail(400, 'JSON required.'); }
+      value = parseJSON(body);
       const passkey = passkeyEntry(value);
       if (!passkey) throw fail(400, 'Invalid passkey.');
       const { after } = await change(passkeysKey(owner), [], list => {
@@ -278,7 +278,7 @@ export function createDocuments({ objectStore, deviceKey, deviceSigned, worldId 
       json(res, 200, { status: 'deleted' }); return true;
     }
     let value;
-    try { value = JSON.parse(body.toString('utf8')); } catch { throw fail(400, 'JSON required.'); }
+    value = parseJSON(body);
     if (!value || typeof value !== 'object' || value.id !== id || !value.doc || typeof value.doc !== 'object') throw fail(400, 'Invalid document.');
     // Kept as sent: the text and its formatting, and for a finished document what it proved (never the keystrokes).
     const record = { ...entry(value), doc: value.doc,

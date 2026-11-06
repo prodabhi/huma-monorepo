@@ -1,11 +1,11 @@
-import { createHash, createHmac } from 'node:crypto';
+import { createHmac } from 'node:crypto';
 import { mkdir, open, readdir, rename, unlink, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { ArkivObjectStore } from './arkiv-store.mjs';
 import { S3Client, PutObjectCommand, GetObjectCommand, HeadObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { sha256Hex as sha256 } from './server-util.mjs';
 
-const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 export function objectKey(key) {
   if (typeof key !== 'string' || key.match(/^(?:objects|records|quotas|devices|removed|requests|short|replays|writers|owners|documents|handles|writers-index|listed|sessions)\/[a-f0-9]{64}$/)?.[0] !== key) throw new Error('Invalid object key.');
   return key;
@@ -16,11 +16,9 @@ export function checked(bytes, key, limit) {
 }
 export const QUOTA_STATE_LIMIT = 512 * 1024;
 const RELEASE_KEY = /^releases\/Huma-\d+\.\d+\.\d+\.dmg$/;
-// The landing page's video, kept in R2 so it doesn't come from this server (backend/scripts/upload-media.mjs).
-const MEDIA_KEY = /^media\/[a-z0-9-]+\.(?:mp4|webm)$/;
-// The Mac app's proving points, downloaded once on first use (HumaCore ProvingSetup; scripts/upload-engine.mjs).
+// The Mac app's proving points, downloaded once on first use (HumaCore ProvingSetup; backend/scripts/upload-engine.mjs).
 const ENGINE_KEY = /^engine\/[a-z0-9_-]+\.dat$/;
-const servable = key => RELEASE_KEY.test(key) || MEDIA_KEY.test(key) || ENGINE_KEY.test(key);
+const servable = key => RELEASE_KEY.test(key) || ENGINE_KEY.test(key);
 export function quotaKey(key) {
   objectKey(key);
   // Changeable state: upload quotas, writing requests (requests.mjs) and whether a page shows its replay
@@ -45,17 +43,11 @@ async function localRead(file, limit) {
     return bytes;
   } finally { await handle.close(); }
 }
-const requestSignal = signal => signal ? AbortSignal.any([signal, AbortSignal.timeout(20000)]) : AbortSignal.timeout(20000);
-// Windows refuses to replace a file another handle has open (EPERM/EBUSY/EACCES); a reader holds it only for a moment.
-async function renameOver(from, to) {
-  for (let attempt = 0; ; attempt++) {
-    try { return await rename(from, to); }
-    catch (error) {
-      if (!['EPERM', 'EBUSY', 'EACCES'].includes(error.code) || attempt >= 40) throw error;
-      await new Promise(resolve => setTimeout(resolve, 5 + attempt));
-    }
-  }
+/** Only page files, documents and their licensed copies can be deleted; everything else is written once. */
+function removable(key) {
+  if (!/^(objects|documents|dataset)\//.test(objectKey(key))) throw new Error('Only page files and documents can be removed.');
 }
+const requestSignal = signal => signal ? AbortSignal.any([signal, AbortSignal.timeout(20000)]) : AbortSignal.timeout(20000);
 export class LocalObjectStore {
   constructor(directory) { this.directory = directory; this.kind = 'local'; }
   async put(key, bytes) {
@@ -77,7 +69,7 @@ export class LocalObjectStore {
   }
   /** Deletes a shared page's file when its writer removes the link. Only page files can be deleted. */
   async remove(key) {
-    if (!/^(objects|documents)\//.test(objectKey(key))) throw new Error('Only page files and documents can be removed.');
+    removable(key);
     await unlink(path.join(this.directory, key)).catch(error => { if (error.code !== 'ENOENT') throw error; });
   }
   async quotaRead(key, signal) {
@@ -98,7 +90,7 @@ export class LocalObjectStore {
       if ((await this.quotaRead(key, signal))?.version !== (version ?? undefined)) return false;
       const output = await open(temporary, 'wx', 0o600);
       try { await output.writeFile(bytes); await output.sync(); } finally { await output.close(); }
-      signal?.throwIfAborted(); await renameOver(temporary, file);
+      signal?.throwIfAborted(); await rename(temporary, file);
       return true;
     } finally {
       await lock.close(); await unlink(file + '.lock'); await unlink(temporary).catch(() => {});
@@ -126,7 +118,7 @@ export class R2ObjectStore {
     checked(bytes, key, bytes.length);
     try {
       await this.client.send(new PutObjectCommand({ Bucket: this.bucket, Key: key, Body: bytes,
-        ContentType: 'application/octet-stream', ContentLength: bytes.length, IfNoneMatch: '*' }), { abortSignal: AbortSignal.timeout(20000) });
+        ContentType: 'application/octet-stream', ContentLength: bytes.length, IfNoneMatch: '*' }), { abortSignal: requestSignal() });
     } catch (error) {
       if (error.$metadata?.httpStatusCode !== 412 && error.name !== 'PreconditionFailed') throw new Error('R2 upload failed.');
       if (!(await this.get(key, bytes.length)).equals(Buffer.from(bytes))) throw new Error('Immutable R2 object differs.');
@@ -151,15 +143,15 @@ export class R2ObjectStore {
     const ids = []; let ContinuationToken;
     do {
       const page = await this.client.send(new ListObjectsV2Command({ Bucket: this.bucket, Prefix: 'records/', ContinuationToken }),
-        { abortSignal: AbortSignal.timeout(20000) });
+        { abortSignal: requestSignal() });
       for (const item of page.Contents ?? []) if (/^records\/[a-f0-9]{64}$/.test(item.Key)) ids.push(item.Key.slice(8));
       ContinuationToken = page.IsTruncated ? page.NextContinuationToken : undefined;
     } while (ContinuationToken);
     return ids;
   }
   async remove(key) {
-    if (!/^(objects|documents)\//.test(objectKey(key))) throw new Error('Only page files and documents can be removed.');
-    await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: key }), { abortSignal: AbortSignal.timeout(20000) });
+    removable(key);
+    await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: key }), { abortSignal: requestSignal() });
   }
   async quotaRead(key, signal) {
     quotaKey(key);

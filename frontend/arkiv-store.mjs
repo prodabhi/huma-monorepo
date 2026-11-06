@@ -21,7 +21,9 @@
 //   No CAS.     Compare-and-swap (changeable state: documents, handles, sessions...) is done here, under a lock per
 //               key and with the version checked before the replacing batch (old chunks deleted, new ones created in
 //               one transaction). That is exact for one server writing; two servers on one wallet could race.
-//   Quotas.     The daily upload counters (quotas/) change on every upload, so they stay in the local folder.
+//   Local.      The daily upload counters (quotas/) change on every upload, and browser sessions' nonces (sessions/)
+//               on every Start: a transaction each would keep a writer waiting seconds to begin, for state that
+//               lapses within a day. Both stay in the local folder.
 //
 // The chain itself is behind a small interface (list, listKeys, write) so tests use an in-memory one; createArkivChain
 // is the real one, on the Arkiv SDK, and needs ARKIV_ACCESS_KEY and a funded ARKIV_PRIVATE_KEY.
@@ -37,6 +39,8 @@ const CACHE_ENTRIES = 256, CACHE_BYTES = 1024 * 1024, GONE_MS = 60000;
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const notFound = key => Object.assign(new Error('Stored object not found: ' + key), { code: 'ENOENT', name: 'NoSuchKey', $metadata: { httpStatusCode: 404 } });
 const kindOf = key => key.slice(0, key.indexOf('/'));
+/** State kept in the local folder rather than on Arkiv: the daily counters and browser sessions' nonces. */
+const staysLocal = key => key.startsWith('quotas/') || key.startsWith('sessions/');
 const DAY = 86400000;
 /** When a write was made, from its write ID (g starts with the time in base 36, ms). */
 const writtenAt = g => parseInt(g.slice(0, 10), 36);
@@ -62,11 +66,11 @@ export function open(secret, key, sealed) {
 
 export class ArkivObjectStore {
   /**
-   * `local`: where the daily counters (quotas/) stay. `chain`: the Arkiv connection (tests pass an in-memory one; else
+   * `local`: where the daily counters (quotas/) and session nonces (sessions/) stay. `chain`: the Arkiv connection (tests pass an in-memory one; else
    * createArkivChain(env), on first use). `env`: ARKIV_ENCRYPTION_KEY (64 hex digits), ARKIV_EXPIRY_DAYS.
    */
   constructor({ local, chain = null, env = process.env, now = Date.now } = {}) {
-    if (!local) throw new Error('Arkiv storage needs a local store for the daily counters.');
+    if (!local) throw new Error('Arkiv storage needs a local store for the daily counters and session nonces.');
     const hex = env.ARKIV_ENCRYPTION_KEY ?? '';
     if (!/^[0-9a-fA-F]{64}$/.test(hex)) throw new Error('Set ARKIV_ENCRYPTION_KEY to 64 hex digits (node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"): Arkiv data is public, so it is stored encrypted.');
     this.secret = Buffer.from(hex, 'hex'); this.local = local; this.chain = chain; this.env = env; this.now = now; this.kind = 'arkiv';
@@ -122,8 +126,9 @@ export class ArkivObjectStore {
   async #write(key, bytes, replace = []) {
     const chain = await this.#connection();
     const sealed = seal(this.secret, key, bytes), version = sha256(bytes);
-    const g = this.now().toString(36).padStart(10, '0') + '-' + randomBytes(6).toString('hex'), n = Math.max(1, Math.ceil(sealed.length / CHUNK_BYTES));
-    const at = this.now(), owner = ownerOf(key, bytes), plainSize = bytes.length;
+    // One reading of the clock: the write's id starts with the same time as its `at`, which a restart reads back from it.
+    const at = this.now(), g = at.toString(36).padStart(10, '0') + '-' + randomBytes(6).toString('hex'), n = Math.max(1, Math.ceil(sealed.length / CHUNK_BYTES));
+    const owner = ownerOf(key, bytes), plainSize = bytes.length;
     const creates = Array.from({ length: n }, (_, i) => ({ k: key, p: kindOf(key), g, v: version, i, n, at, size: plainSize, ...(owner ? { owner } : {}), body: sealed.subarray(i * CHUNK_BYTES, (i + 1) * CHUNK_BYTES) }));
     // As many chunks to a transaction as the payload limit allows (usually one: a chunk is nearly the limit).
     const transactions = []; let current = [], size = 0;
@@ -220,13 +225,13 @@ export class ArkivObjectStore {
     });
   }
   async quotaRead(key, signal) {
-    if (key.startsWith('quotas/')) return this.local.quotaRead(key, signal);
+    if (staysLocal(key)) return this.local.quotaRead(key, signal);
     quotaKey(key); signal?.throwIfAborted();
     const current = await this.#locked(key, () => this.#read(key));
     return current?.bytes ? { bytes: current.bytes, version: current.version } : null;
   }
   async quotaCAS(key, version, bytes, signal) {
-    if (key.startsWith('quotas/')) return this.local.quotaCAS(key, version, bytes, signal);
+    if (staysLocal(key)) return this.local.quotaCAS(key, version, bytes, signal);
     quotaWrite(key, version, bytes); signal?.throwIfAborted();
     return this.#locked(key, async () => {
       const current = await this.#read(key);
