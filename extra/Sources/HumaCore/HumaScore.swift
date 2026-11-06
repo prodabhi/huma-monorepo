@@ -1,13 +1,14 @@
 import Foundation
 
 /// A page's Huma score, 0 to 100, worked out the same way here and by readers (humaScore in
-/// web/publication-contract.mjs, from the page proof and the replay they check):
+/// frontend/publication-contract.mjs, from the page proof and the replay they check):
 /// - typed (70): the share of the final text typed by hand. Typing while a non-Apple keyboard was plugged in counts
 ///   at 60%, because Huma can't tell it from a device typing by itself; pasted text and other edits count nothing.
 ///   Without the replay, a reader only knows the share of edits that were typing, counted at 60%.
 /// - typing checks (20): the proof's seven typing rules (time, key presses, rhythm, holds, pauses and speed).
 /// - Touch ID (10): the share of Touch ID checks answered within 10 seconds (all of it when none were asked).
-/// A page whose key timing, holds, rhythm or speed looked like no person's (rules 4, 5, 6 and 8) scores at most 50.
+/// A page whose key timing, holds, rhythm or speed looked like no person's (rules 4, 5, 6 and 8) scores at most 50,
+/// and so does one the host's typing analysis found automated (`held`, from the verdict kept with its link).
 public struct HumaScore: Equatable, Sendable {
     public static let externalWeight = 0.6
     public static let humanTypingRules = [4, 5, 6, 8], typingCap = 50.0
@@ -27,7 +28,7 @@ public struct HumaScore: Equatable, Sendable {
     public var presenceCount: Int
     public var points: Points
 
-    public init(composition: TextProvenance.Composition?, typingEdits: Int, edits: Int, rules: [Bool], presenceCount: Int, onTime: Int) {
+    public init(composition: TextProvenance.Composition?, typingEdits: Int, edits: Int, rules: [Bool], presenceCount: Int, onTime: Int, held: Bool = false) {
         if let composition {
             typedShare = composition.total == 0 ? 0
                 : (Double(composition.typed) + Self.externalWeight * Double(composition.external)) / Double(composition.total)
@@ -40,7 +41,7 @@ public struct HumaScore: Equatable, Sendable {
         checksMet = rules.count == 9 ? rules[2...8].filter { $0 }.count : 0
         self.presenceCount = presenceCount; presenceOnTime = min(onTime, presenceCount)
         let touch = presenceCount == 0 ? 1 : Double(presenceOnTime) / Double(presenceCount)
-        capped = rules.count == 9 && Self.humanTypingRules.contains { !rules[$0] }
+        capped = (rules.count == 9 && Self.humanTypingRules.contains { !rules[$0] }) || held
         var raw = [70 * typedShare, 20 * Double(checksMet) / 7, 10 * touch]
         // Capped, each part shrinks alike, so the parts still add up to the score.
         let sum = raw.reduce(0, +)
@@ -97,7 +98,7 @@ public struct PageProofSummary: Equatable, Sendable {
         guard let encoded = object["finalInputs"] as? String, let inputs = Data(base64Encoded: encoded) else { return nil }
         self.init(finalInputs: inputs)
     }
-    public func score(composition: TextProvenance.Composition?) -> HumaScore {
-        HumaScore(composition: composition, typingEdits: typingEdits, edits: edits, rules: rules, presenceCount: presenceCount, onTime: onTime)
+    public func score(composition: TextProvenance.Composition?, held: Bool = false) -> HumaScore {
+        HumaScore(composition: composition, typingEdits: typingEdits, edits: edits, rules: rules, presenceCount: presenceCount, onTime: onTime, held: held)
     }
 }

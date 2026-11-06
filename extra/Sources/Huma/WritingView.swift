@@ -33,12 +33,20 @@ struct WritingView: View {
     /// Why Touch ID is about to ask. Shown first, so the fingerprint prompt never comes unexplained.
     @State private var touchPrompt: TouchPrompt?
     @State private var publicationTask: Task<Void, Never>?
+    /// The host's confirmation of this recording's Start World ID, sent while the writer is already typing: true once
+    /// the host keeps it, false if it refused (nil: none was asked). Get Link waits for it.
+    @State private var startConfirmation: Task<Bool, Never>?
+    /// The host refused this recording's Start World ID: a recording that starts after that is stopped at once.
+    @State private var startRefused = false
     @State private var publicationStatus = ""
     @State private var versionStatus: [String: String] = [:]
     @State private var notice: String?
     /// Briefly true after processing succeeds, so the popup can show "Verified" before closing.
     @State private var copied = false
     @State private var textCopied = false
+    /// The PDF report is being made; set to the saved file once it's in Downloads.
+    @State private var reportSaving = false
+    @State private var reportSaved: URL?
     /// Processing estimate: share already done and expected seconds for the rest.
     @State private var proofPlan: (base: Double, seconds: Double)?
     @State private var provingRemotely = false
@@ -114,7 +122,11 @@ struct WritingView: View {
         .onChange(of: document.draft.replayProof) { _, proof in
             if let proof, proof != verifiedReplayProof { verifyReplayProof(proof) }
             else if proof == nil { verifiedReplayProof = nil }
+            reportSaved = nil
         }
+        // A new link or replay choice changes what the report says, so it's downloaded again.
+        .onChange(of: shareLink) { _, _ in reportSaved = nil }
+        .onChange(of: readersSeeReplay) { _, _ in reportSaved = nil }
         .onChange(of: status, initial: true) { _, status in
             store.prepareToLeave = { prepareToLeave() }
             store.leaveBlocker = status == .processing ? "This page is still processing. It takes a few seconds." : nil
@@ -264,6 +276,7 @@ struct WritingView: View {
         case .verified, .shared:
             Image(systemName: "checkmark.seal.fill").foregroundStyle(Theme.success)
             headline(status == .shared ? "Verified and published" : "Verified", verificationSummary)
+            downloadReportButton
         case .edited:
             Image(systemName: "exclamationmark.circle").foregroundStyle(Theme.warning)
             headline("Changed after finishing"); newPageButton
@@ -288,6 +301,18 @@ struct WritingView: View {
     }
     private var newPageButton: some View {
         QuietButton(title: "New Page", icon: "square.and.pencil") { store.newPage() }.disabled(busy)
+    }
+    /// The PDF report, saved to Downloads from here, so no one needs the browser for it. Once saved it shows the file.
+    @ViewBuilder private var downloadReportButton: some View {
+        if draft.replayProof != nil {
+            if let reportSaved = savedReport {
+                QuietButton(title: "Show Report", icon: "doc.text.magnifyingglass") { NSWorkspace.shared.activateFileViewerSelecting([reportSaved]) }
+                    .help(reportSaved.lastPathComponent)
+            } else {
+                QuietButton(title: reportSaving ? "Saving Report…" : "Download Report", icon: "arrow.down.doc") { downloadReport() }
+                    .disabled(reportSaving).help("Save the page’s PDF report, with its proof inside, to Downloads")
+            }
+        }
     }
     /// How much of the page is processed. Parts proved while writing count as they finish;
     /// during the final step the meter follows the measured time estimate.
@@ -477,8 +502,10 @@ struct WritingView: View {
                 .padding(.top, 10)
             }
             // The score readers will see: with the replay they can check every character; without it, typing counts at 60%.
+            // A page the host's typing analysis holds at 50 says so, with what the host found.
             if let score = pageScore(withReplay: readersSeeReplay) {
-                ScoreRow(score: score, note: readersSeeReplay || pageScore(withReplay: true) == score ? nil
+                ScoreRow(score: score, note: draft.publicProof?.hostVerdict?.holdsScore == true ? draft.publicProof?.hostVerdict?.line
+                         : readersSeeReplay || pageScore(withReplay: true) == score ? nil
                          : "With the replay on, readers would see \(pageScore(withReplay: true)?.value ?? score.value).")
                     .padding(.top, 10)
             }
@@ -491,6 +518,17 @@ struct WritingView: View {
                 Spacer()
                 if let proofLink {
                     Button("Done") { showShare = false }.humaButton()
+                    if let reportSaved = savedReport {
+                        Button { NSWorkspace.shared.activateFileViewerSelecting([reportSaved]) } label: {
+                            Label("Show Report", systemImage: "doc.text.magnifyingglass").fixedSize()
+                        }
+                        .humaButton().help(reportSaved.lastPathComponent)
+                    } else {
+                        Button { downloadReport() } label: {
+                            Label(reportSaving ? "Saving…" : "Download Report", systemImage: "arrow.down.doc").fixedSize()
+                        }
+                        .humaButton().disabled(reportSaving).help("Save the page’s PDF report, with its proof inside, to Downloads")
+                    }
                     Button { NSWorkspace.shared.open(shareLink ?? proofLink) } label: { Label("Open Link", systemImage: "arrow.up.right").fixedSize() }
                         .humaButton(.primary).keyboardShortcut(.defaultAction)
                 } else if sharing {
@@ -695,7 +733,8 @@ struct WritingView: View {
     private var readersSeeReplay: Bool { proofLink == nil ? shareReplay : (draft.publicProof?.replayShared ?? shareReplay) }
     private func pageScore(withReplay: Bool) -> HumaScore? {
         guard let proof = draft.replayProof, let summary = PageProofSummary(proof: proof) else { return nil }
-        return summary.score(composition: withReplay ? TextProvenance(session: draft.session).composition : nil)
+        return summary.score(composition: withReplay ? TextProvenance(session: draft.session).composition : nil,
+                             held: draft.publicProof?.hostVerdict?.holdsScore == true)
     }
 
     // MARK: Versions (timeline panel)
@@ -801,6 +840,56 @@ struct WritingView: View {
     private var onboarded: Bool { touchIDIntroSeen && settings.account != nil }
     /// Opens the host's sign-in page and waits (up to ten minutes) for the browser to finish. The wallet also
     /// authorizes this Mac's publishing key there, so this is the only time sharing needs the browser.
+    /// Start Recording with World ID, where the host requires it: a writing session from the host, then a World ID
+    /// scanned in Huma's World ID window, made for that session and this Mac's key. Returns the session's nonce (16
+    /// bytes) for the recording as soon as World App answers, or nil where the host has World ID off; the host
+    /// confirms the scan meanwhile (confirmStart, which also signs this Mac in), and a refusal stops the recording.
+    private func startWithWorldID() async throws -> Data? {
+        startConfirmation = nil; startRefused = false
+        let client = try HostedPublicationClient(url: settings.registryURL)
+        let required: Bool
+        do { required = try await client.worldIDRequired() }
+        catch { throw HumaError.configuration("Huma couldn’t reach \(client.site.host() ?? "its host") to start. Pages are started with World ID there; check your connection and try again.") }
+        guard required else { return nil }
+        let nonce = try await client.sessionNonce(), publishingKey = try PublishingKey.publicKeyHex()
+        let page = client.signInPage(publishingKey: publishingKey, sessionNonce: nonce)
+        guard let done = await WorldIDWindow.scan(page.url), let proof = WorldIDWindow.proof(in: done) else {
+            throw HumaError.configuration("World ID wasn’t completed, so recording didn’t start. Press Start Recording to try again.")
+        }
+        startConfirmation = Task { await confirmStart(client, code: page.code, publishingKey: publishingKey, nonce: nonce, proof: proof) }
+        return Data(stride(from: 0, to: nonce.count, by: 2).compactMap {
+            UInt8(nonce[nonce.index(nonce.startIndex, offsetBy: $0)..<nonce.index(nonce.startIndex, offsetBy: $0 + 2)], radix: 16) })
+    }
+    /// Sends this recording's Start World ID to the host while the writer types: a dropped connection or a busy host is
+    /// tried again a few times, a refusal isn't. Kept, this Mac is signed in to that World ID's account. Refused, the
+    /// recording stops and the page stays view-only, as it can't be shared.
+    private func confirmStart(_ client: HostedPublicationClient, code: String, publishingKey: String, nonce: String, proof: Data) async -> Bool {
+        for attempt in 1...4 {
+            do {
+                let result = try await client.confirmStart(code: code, publishingKey: publishingKey, sessionNonce: nonce, proof: proof)
+                guard result.macLinked, let wallet = result.wallet else { throw HumaError.invalidResponse }
+                settings.account = result.account; settings.linkedWallet = wallet
+                return true
+            } catch let refusal as HostedPublicationClient.Refusal where refusal.status < 500 {
+                return refuseStart(refusal.reason)
+            } catch {
+                if attempt == 4 { return refuseStart(error.localizedDescription) }
+                try? await Task.sleep(for: .seconds(1.5 * Double(attempt)))
+            }
+        }
+        return false
+    }
+    /// The host didn't keep this recording's Start World ID: the recording stops (view-only, as stopRecording leaves it,
+    /// even while Huma is busy), and the writer is told why.
+    private func refuseStart(_ reason: String) -> Bool {
+        startRefused = true
+        if captureSigner.recording {
+            if draft.text.isEmpty { captureSigner.cancel() }
+            else { try? captureSigner.checkpoint(draft: &document.draft, force: true); captureSigner.cancel() }
+        }
+        errorMessage = "World ID couldn’t be confirmed (\(reason)), so this page can’t be shared. Start a new page."
+        return false
+    }
     private func signInFromOnboarding() async throws -> String {
         let client = try HostedPublicationClient(url: settings.registryURL)
         let page = client.signInPage(publishingKey: try? PublishingKey.publicKeyHex())
@@ -832,11 +921,16 @@ struct WritingView: View {
         authorizingRecording = true; busy = true
         Task {
             defer { authorizingRecording = false; busy = false; hideTouchPrompt() }
+            // Every page is started by a verified human, where the host asks for it: World ID for this session first.
+            let sessionNonce: Data?
+            do { sessionNonce = try await startWithWorldID() } catch { errorMessage = error.localizedDescription; return }
             await explainTouchID(.start)
             do {
                 let context = try await TouchIDCaptureKey.authorize(reason: TouchPrompt.start.reason)
                 guard sameCapture(as: snapshot) else { throw HumaError.invalidSession }
-                try captureSigner.start(draft: &document.draft, context: context)
+                try captureSigner.start(draft: &document.draft, context: context, sessionNonce: sessionNonce)
+                // Refused while Touch ID was asked: this page can't be shared, so it doesn't record.
+                if startRefused { captureSigner.cancel() }
                 // Undo can't bring back text from before this session (such as imported or pasted text).
                 commands.editor?.undoManager?.removeAllActions()
                 captureSummary = nil; replayStatus = ""
@@ -1105,20 +1199,43 @@ struct WritingView: View {
     }
     /// Saves the finished page's PDF report (PageReport), the same as a reader's, with the page's proof inside.
     private func exportReport() {
-        guard let proof = draft.replayProof, let summary = PageProofSummary(proof: proof) else { return }
-        // A page without a title goes by its first line, as on the shared page's report.
-        let line = draft.text.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: "\n").first.map { $0.trimmingCharacters(in: .whitespaces) } ?? ""
-        let title = !draft.title.isEmpty ? draft.title : line.count <= 140 ? line : String(line.prefix(140))
-        let file = title.count <= 60 ? title : String(title.prefix(60)).replacingOccurrences(of: "\\s+\\S*$", with: "", options: .regularExpression)
-        let panel = NSSavePanel(); panel.nameFieldStringValue = (file.isEmpty ? "Untitled" : file) + " – Huma report.pdf"
+        guard draft.replayProof != nil else { return }
+        let panel = NSSavePanel(); panel.nameFieldStringValue = reportFileName
         panel.allowedContentTypes = [.pdf]
         guard panel.runModal() == .OK, let url = panel.url else { return }
-        let snapshot = draft, provenance = TextProvenance(session: draft.session)
+        saveReport(to: url)
+    }
+    /// The report saved from here, while it's still where it was saved.
+    private var savedReport: URL? { reportSaved.flatMap { FileManager.default.fileExists(atPath: $0.path) ? $0 : nil } }
+    /// Download Report: straight into Downloads, no dialog, under a name that doesn't replace an older report.
+    private func downloadReport() {
+        guard draft.replayProof != nil, !reportSaving,
+              let downloads = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else { return }
+        let base = (reportFileName as NSString).deletingPathExtension
+        var url = downloads.appendingPathComponent(reportFileName), copy = 2
+        while FileManager.default.fileExists(atPath: url.path) { url = downloads.appendingPathComponent("\(base) \(copy).pdf"); copy += 1 }
+        saveReport(to: url)
+    }
+    /// A page without a title goes by its first line, as on the shared page's report.
+    private var reportTitle: String {
+        let line = draft.text.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: "\n").first.map { $0.trimmingCharacters(in: .whitespaces) } ?? ""
+        return !draft.title.isEmpty ? draft.title : line.count <= 140 ? line : String(line.prefix(140))
+    }
+    private var reportFileName: String {
+        let title = reportTitle
+        let file = title.count <= 60 ? title : String(title.prefix(60)).replacingOccurrences(of: "\\s+\\S*$", with: "", options: .regularExpression)
+        // Slashes and colons can't be in a file name.
+        return (file.isEmpty ? "Untitled" : file.replacingOccurrences(of: "[/:]", with: "-", options: .regularExpression)) + " – Huma report.pdf"
+    }
+    private func saveReport(to url: URL) {
+        guard let proof = draft.replayProof, let summary = PageProofSummary(proof: proof) else { return }
+        let snapshot = draft, title = reportTitle, provenance = TextProvenance(session: draft.session)
         // What readers see: the make-up of the text when the replay goes with the link (or will), and the score from it.
         let composition = readersSeeReplay ? provenance.composition : nil
         let name = Profile.shared.name.trimmingCharacters(in: .whitespacesAndNewlines)
-        show("Saving the report…")
+        show("Saving the report…"); reportSaving = true
         Task {
+            defer { reportSaving = false }
             do {
                 // The evidence file readers download goes inside, so the PDF alone can be checked again.
                 let evidence = try await ReplayProofService.evidenceEnvelope(draft: snapshot, proof: proof).encoded()
@@ -1126,7 +1243,8 @@ struct WritingView: View {
                     summary: summary, score: summary.score(composition: composition), composition: composition, link: shareLink,
                     proof: proof, evidence: evidence))
                 try data.write(to: url, options: .atomic)
-                notice = nil
+                reportSaved = url
+                show("Report saved to \(url.deletingLastPathComponent().lastPathComponent).")
                 NSWorkspace.shared.activateFileViewerSelecting([url])
             } catch { notice = nil; errorMessage = error.localizedDescription }
         }
@@ -1169,6 +1287,22 @@ struct WritingView: View {
     /// at sign-in, so there's no browser. Without a linked Mac, sign in once first.
     private func finishShare(_ proof: Data) {
         guard publicationTask == nil else { return }
+        // A Start World ID the host is still confirming (it also links this Mac, the first time): wait for it first.
+        if let confirming = startConfirmation {
+            busy = true; publicationStatus = "Confirming your World ID."
+            publicationTask = Task {
+                let kept = await confirming.value
+                busy = false; publicationTask = nil
+                guard kept else {
+                    publicationStatus = ""
+                    errorMessage = "World ID couldn’t be confirmed when this page started, so it can’t be shared. Start a new page."
+                    return
+                }
+                startConfirmation = nil
+                finishShare(proof)
+            }
+            return
+        }
         guard let wallet = settings.linkedWallet else { linkThenShare(proof); return }
         let snapshot = draft; busy = true; publicationStatus = "Uploading your page."
         publicationTask = Task {
@@ -1177,8 +1311,19 @@ struct WritingView: View {
                 let client = try HostedPublicationClient(url: settings.registryURL)
                 let envelope = try await ReplayProofService.evidenceEnvelope(draft: snapshot, proof: proof), replay = replay(of: snapshot)
                 let pending = try await client.prepare(text: snapshot.text, envelope: envelope, replay: replay)
+                // Finished by the same human who started it: World ID again, made for this page's text and proof, sent
+                // with the share itself.
+                var finished: Data?
+                if try await client.worldIDRequired() {
+                    publicationStatus = "Verify you’re human with World ID to finish."
+                    guard let done = await WorldIDWindow.scan(client.finishPage(pending)), let scanned = WorldIDWindow.proof(in: done) else {
+                        throw HumaError.configuration("World ID wasn’t completed, so your page wasn’t shared. Press Get Link to try again.")
+                    }
+                    finished = scanned
+                    publicationStatus = "Uploading your page."
+                }
                 let download = try await client.publishFromThisMac(pending, wallet: wallet, publicKey: try PublishingKey.publicKeyHex(),
-                                                                   profile: Profile.shared.shared, sign: PublishingKey.sign)
+                                                                   profile: Profile.shared.shared, worldId: finished, sign: PublishingKey.sign)
                 try await adopt(download, snapshot: snapshot, proof: proof, sent: envelope, replayShared: replay != nil)
                 publicationStatus = "Your link is ready to copy."
                 Notifier.post("Your link is ready", "“\(pageTitle)” is shared. Copy the link in Huma.", page: fileURL)
@@ -1226,6 +1371,7 @@ struct WritingView: View {
         guard sameCapture(as: snapshot), draft.replayProof == proof else { throw CancellationError() }
         document.draft.publicProof = PublicProofLink(url: download.url, proof: proof, draft: snapshot)
         document.draft.publicProof?.replayShared = replayShared
+        document.draft.publicProof?.hostVerdict = download.verdict
         showShare = true
     }
     private func shareMaster(_ proof: Data) {

@@ -7,7 +7,7 @@ import Foundation
 /// lets the engine run. Development builds still carry them inside the engine and use those.
 public actor ProvingSetup {
     public static let shared = ProvingSetup()
-    /// SHA-256 of the points integrations/noir/package.py takes (the first 2^21 of the published setup).
+    /// SHA-256 of the points backend/integrations/noir/package.py takes (the first 2^21 of the published setup).
     public static let sha256 = "3e1ac09652ee9df779a4955fb8f7050620c7b1ee7f18566581bd00326b06be37"
     public static let byteCount = (1 << 21) * 32
     /// huma.social sends this on to a short-lived signed R2 link (frontend/registry.mjs, /engine/proving-setup).

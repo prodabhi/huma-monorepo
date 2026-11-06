@@ -3,7 +3,7 @@ import XCTest
 @testable import HumaCore
 
 final class HumaScoreTests: XCTestCase {
-    // The same cases as web/test/score.test.mjs, so the Mac and readers agree on every page's score.
+    // The same cases as frontend/test/score.test.mjs, so the Mac and readers agree on every page's score.
     func testTheScoreWeighsTypedTextTypingChecksAndTouchID() {
         let all = Array(repeating: true, count: 9)
         typealias Parts = TextProvenance.Composition
@@ -21,8 +21,27 @@ final class HumaScoreTests: XCTestCase {
         XCTAssertEqual(score(Parts(typed: 100), rules: plain, onTime: 1), 89)
         XCTAssertEqual(score(Parts(typed: 100), presence: 0, onTime: 0), 100)
         XCTAssertEqual(score(Parts(pasted: 100), rules: Array(repeating: false, count: 9), presence: 3, onTime: 0), 0)
+        // The host's typing analysis found it automated: held at 50, as humaScore's `automated` does for readers.
+        let held = HumaScore(composition: Parts(typed: 100), typingEdits: 0, edits: 0, rules: all, presenceCount: 2, onTime: 2, held: true)
+        XCTAssertEqual(held.value, 50); XCTAssertTrue(held.capped)
+        XCTAssertEqual(held.points.typed + held.points.checks + held.points.touch, 50)
     }
-    // The same cases as "the score splits into whole points…" in web/test/score.test.mjs.
+    // The host's verdict (frontend/detection/judge.mjs publicDetection), as the app reads and shows it.
+    func testTheHostsVerdictSaysWhenItHoldsThePageAndWhy() throws {
+        let json = """
+        {"humanProbability":0.04,"band":"likely_automated","integrity":"pass","modality":"physical_keyboard","modelVersion":"rules-2026-11-07a+features-1","platform":"mac","enforced":true,
+         "reasons":[{"feature":"word_onset_ratio","direction":"automated","detail":"the first letter of a word took 1.01× the time of letters inside words"},{"feature":"bigram_corr","direction":"automated","detail":"letter pairs took the times a hand takes (correlation -0.02)"}]}
+        """
+        let verdict = try JSONDecoder().decode(HostVerdict.self, from: Data(json.utf8))
+        XCTAssertTrue(verdict.holdsScore)
+        XCTAssertEqual(verdict.line, "huma.social’s typing analysis: the writing looked like software’s (4% likely a person): the first letter of a word took 1.01× the time of letters inside words; letter pairs took the times a hand takes (correlation -0.02).")
+        // A Mac page is held only when likely automated; a browser page unless likely a person with its stream intact.
+        XCTAssertFalse(HostVerdict(band: "uncertain", humanProbability: 0.5, integrity: "pass", enforced: true, platform: "mac").holdsScore)
+        XCTAssertTrue(HostVerdict(band: "uncertain", humanProbability: 0.5, integrity: "fail", enforced: true, platform: "web").holdsScore)
+        XCTAssertFalse(HostVerdict(band: "likely_automated", humanProbability: 0.1, integrity: "pass", enforced: false, platform: "mac").holdsScore)
+        XCTAssertEqual(HostVerdict(band: "likely_human", humanProbability: 0.9, integrity: "pass", enforced: true).line, "huma.social’s typing analysis: the writing looked like a person’s (90% likely a person).")
+    }
+    // The same cases as "the score splits into whole points…" in frontend/test/score.test.mjs.
     func testTheScoreSplitsIntoWholePointsAndOnePlainLine() {
         typealias Parts = TextProvenance.Composition
         let all = Array(repeating: true, count: 9)

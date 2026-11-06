@@ -51,6 +51,8 @@ public struct HostedPublicationClient: Sendable {
         public let url: URL
         public let master: Data
         public let envelope: EvidenceEnvelope
+        /// The host's verdict on the page's typing (frontend/detection/judge.mjs), when it judged it.
+        public let verdict: HostVerdict?
     }
     private static let session: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral
@@ -84,7 +86,8 @@ public struct HostedPublicationClient: Sendable {
             for try await byte in bytes { guard reply.count < 4096 else { break }; reply.append(byte) }
             struct Failure: Decodable { let error: String }
             let reason = (try? JSONDecoder().decode(Failure.self, from: reply))?.error.prefix(300)
-            throw HumaError.configuration(reason.map(String.init) ?? "The sharing host could not complete this request (\(response.statusCode)). Try again.")
+            throw Refusal(status: response.statusCode,
+                          reason: reason.map(String.init) ?? "The sharing host could not complete this request (\(response.statusCode)). Try again.")
         }
         var data = Data()
         for try await byte in bytes {
@@ -92,6 +95,13 @@ public struct HostedPublicationClient: Sendable {
             guard data.count < limit else { throw HumaError.invalidResponse }; data.append(byte)
         }
         return data
+    }
+    /// A host's answer other than the one asked for: its status, and its own reason (its JSON "error"), shown as is. A
+    /// status under 500 is a refusal; 500 and up, a host that couldn't answer now.
+    public struct Refusal: LocalizedError, Sendable {
+        public let status: Int
+        public let reason: String
+        public var errorDescription: String? { reason }
     }
     /// `replay` is the page's writing replay (SessionLog.replayExport), shared only when the writer chose to.
     public func prepare(text: String, envelope: EvidenceEnvelope, access: String = "link", replay: Data? = nil) async throws -> Prepared {
@@ -124,7 +134,7 @@ public struct HostedPublicationClient: Sendable {
     /// Waits only for the user's browser approval. It never signs in, creates a
     /// wallet, approves publication or submits a transaction on their behalf.
     public func waitForApproval(_ prepared: Prepared) async throws -> Download {
-        struct Status: Decodable { let status: String; let path: String?; let approvalError: String? }
+        struct Status: Decodable { let status: String; let path: String?; let approvalError: String?; let detection: HostVerdict? }
         while Date.now < prepared.expiresAt {
             try Task.checkCancellation()
             let value = try JSONDecoder().decode(Status.self, from: await request(path: "api/publications/pending/" + prepared.id,
@@ -146,7 +156,7 @@ public struct HostedPublicationClient: Sendable {
                 var url = URLComponents(url: site.appendingPathComponent("original/" + id), resolvingAgainstBaseURL: false)!
                 url.fragment = token
                 guard let link = url.url else { throw HumaError.invalidResponse }
-                return Download(url: link, master: master, envelope: envelope)
+                return Download(url: link, master: master, envelope: envelope, verdict: value.detection)
             }
             guard value.status == "awaiting-approval" else { throw HumaError.invalidResponse }
             if value.approvalError == "daily-limit" {
@@ -155,6 +165,38 @@ public struct HostedPublicationClient: Sendable {
             try await Task.sleep(for: .seconds(2))
         }
         throw HumaError.configuration("The sharing request expired. Start again when you are ready to approve it.")
+    }
+}
+
+/// The host's verdict on a page's typing, from its analysis of the writing replay (and, for a browser page, its live
+/// event stream): frontend/detection/judge.mjs publicDetection. Kept with the link, so the app can say when the host holds
+/// the page's score at 50 (HumaScore `held`).
+public struct HostVerdict: Codable, Sendable, Equatable {
+    public struct Reason: Codable, Sendable, Equatable {
+        public var feature: String
+        public var direction: String
+        public var detail: String
+    }
+    public var band: String
+    public var humanProbability: Double
+    public var integrity: String
+    public var enforced: Bool
+    public var platform: String?
+    public var reasons: [Reason]
+    public init(band: String, humanProbability: Double, integrity: String, enforced: Bool, platform: String? = nil, reasons: [Reason] = []) {
+        self.band = band; self.humanProbability = humanProbability; self.integrity = integrity; self.enforced = enforced
+        self.platform = platform; self.reasons = reasons
+    }
+    /// Whether the host holds the page's score at 50 (holdsScore in judge.mjs): a Mac page only when its replay looked
+    /// automated; a browser page unless it was likely a person's with its live stream intact.
+    public var holdsScore: Bool {
+        enforced && (platform == "mac" ? band == "likely_automated" : !(band == "likely_human" && integrity == "pass"))
+    }
+    /// One line for the writer: what the host found, and its first reasons.
+    public var line: String {
+        let found = integrity == "fail" ? "couldn’t be verified" : band == "likely_human" ? "looked like a person’s" : band == "likely_automated" ? "looked like software’s" : "wasn’t clear either way"
+        let why = reasons.prefix(2).map(\.detail).filter { !$0.isEmpty }.joined(separator: "; ")
+        return "huma.social’s typing analysis: the writing \(found) (\(Int((humanProbability * 100).rounded()))% likely a person)" + (why.isEmpty ? "." : ": \(why).")
     }
 }
 
@@ -171,13 +213,51 @@ extension HostedPublicationClient {
         return String(pieces[1])
     }
     /// Onboarding sign-in: a fresh secret code, and the host's sign-in page that carries it (and this Mac's
-    /// publishing key, which the wallet then authorizes) in its fragment.
-    public func signInPage(publishingKey: String? = nil) -> (code: String, url: URL) {
+    /// publishing key, which the wallet then authorizes) in its fragment. With `sessionNonce` (Start Recording), the
+    /// World ID scanned there is made for that writing session too, and the host keeps it with the session.
+    public func signInPage(publishingKey: String? = nil, sessionNonce: String? = nil) -> (code: String, url: URL) {
         var generator = SystemRandomNumberGenerator()
         let code = (0..<32).map { _ in String(format: "%02x", UInt8.random(in: 0...255, using: &generator)) }.joined()
         var components = URLComponents(url: site.appendingPathComponent("share/signin"), resolvingAgainstBaseURL: false)!
-        components.fragment = publishingKey.map { code + "." + $0 } ?? code
+        components.fragment = ([code] + [publishingKey, publishingKey == nil ? nil : sessionNonce].compactMap { $0 }).joined(separator: ".")
         return (code, components.url!)
+    }
+    /// The host's page for the World ID that finishes `prepared`: made for its text and proof, and kept with it there.
+    public func finishPage(_ prepared: Prepared) -> URL {
+        var components = URLComponents(url: site.appendingPathComponent("share/signin"), resolvingAgainstBaseURL: false)!
+        components.fragment = "finish." + prepared.id + "." + prepared.ticket
+        return components.url!
+    }
+    /// Sends the World ID scanned at Start Recording, which Huma's World ID window handed back (`proof`: IDKit's result
+    /// as JSON), for session `sessionNonce` and this Mac's `publishingKey`, with the sign-in page's `code`. The host
+    /// checks it with World, keeps it with the session, and links this Mac to that World ID's account, as the page
+    /// would have. Returns who signed in; throws Refusal when the host refuses.
+    public func confirmStart(code: String, publishingKey: String, sessionNonce: String, proof: Data) async throws -> SignedIn {
+        guard let scanned = try? JSONSerialization.jsonObject(with: proof), scanned is [String: Any] else { throw HumaError.invalidResponse }
+        let body = try JSONSerialization.data(withJSONObject: ["publicKey": publishingKey, "nonce": sessionNonce, "worldId": scanned])
+        struct Body: Decodable { let status: String; let account: String?; let wallet: String?; let device: Bool? }
+        let reply = try JSONDecoder().decode(Body.self, from: try await request(path: "api/publications/signin", body: body,
+            headers: ["X-Huma-Signin": code], limit: 4096))
+        let wallet = reply.wallet.flatMap { $0.range(of: "^0x[0-9a-fA-F]{40}$", options: .regularExpression) != nil ? $0 : nil }
+        guard reply.status == "signed-in" else { throw HumaError.invalidResponse }
+        return SignedIn(account: reply.account.flatMap { $0.isEmpty || $0.count > 200 ? nil : $0 } ?? "your account",
+                        wallet: wallet, macLinked: reply.device == true && wallet != nil)
+    }
+    /// Whether the host requires World ID to start and finish a page (it does when its World ID keys are set).
+    public func worldIDRequired() async throws -> Bool {
+        struct Config: Decodable { let required: Bool?; let missing: Bool? }
+        let config = try JSONDecoder().decode(Config.self, from: await request(path: "api/worldid", limit: 4096))
+        // A production host without its World ID keys shares nothing: said now, before any typing, rather than at Finish.
+        if config.missing == true { throw HumaError.configuration("This host isn’t set up for World ID, so pages can’t be shared from it.") }
+        return config.required == true
+    }
+    /// A fresh writing session from the host (32 hex characters): the page's public nonce, so the host can check the
+    /// World ID scanned at Start belongs to the page shared at Finish.
+    public func sessionNonce() async throws -> String {
+        struct Session: Decodable { let nonce: String }
+        let nonce = try JSONDecoder().decode(Session.self, from: await request(path: "api/sessions", body: Data("{}".utf8), limit: 4096)).nonce
+        guard nonce.range(of: "^[0-9a-f]{32}$", options: .regularExpression) != nil else { throw HumaError.invalidResponse }
+        return nonce
     }
     public struct SignedIn: Sendable { public let account: String; public let wallet: String?; public let macLinked: Bool }
     /// Who signed in with `code` (email or username, wallet, and whether this Mac may now share), or nil while waiting.
@@ -192,8 +272,9 @@ extension HostedPublicationClient {
     /// Shares a prepared page without the browser: this Mac's publishing key signs the same statement the
     /// wallet would, and the host accepts it because the wallet authorized that key at sign-in.
     /// `profile` is the writer's name and face seed shown on the page ({"name", "avatar"}), if they chose one.
+    /// `worldId` is the World ID scanned at Finish for this page (IDKit's result as JSON), which the host checks with it.
     public func publishFromThisMac(_ prepared: Prepared, wallet: String, publicKey: String, profile: [String: String]? = nil,
-                                   sign: (String) throws -> String) async throws -> Download {
+                                   worldId: Data? = nil, sign: (String) throws -> String) async throws -> Download {
         struct Pending: Decodable { struct Manifest: Decodable { struct Master: Decodable { let hash: String }; let statementHash: String; let master: Master; let publicationNonce: String; let access: String }; let manifest: Manifest }
         let manifest = try JSONDecoder().decode(Pending.self, from: try await request(path: "api/publications/pending/" + prepared.id,
             token: prepared.ticket, limit: 128 * 1024)).manifest
@@ -202,6 +283,10 @@ extension HostedPublicationClient {
         let message = "Huma publication v2\nstatement \(manifest.statementHash)\nmaster \(manifest.master.hash)\nnonce \(manifest.publicationNonce)\naccess \(manifest.access)"
         var fields: [String: Any] = ["wallet": wallet, "publicKey": publicKey, "signature": try sign(message)]
         if let profile { fields["profile"] = profile }
+        if let worldId {
+            guard let scanned = try? JSONSerialization.jsonObject(with: worldId), scanned is [String: Any] else { throw HumaError.invalidResponse }
+            fields["worldId"] = scanned
+        }
         let body = try JSONSerialization.data(withJSONObject: fields)
         _ = try await request(path: "api/publications/pending/" + prepared.id + "/publish-device", body: body,
             headers: ["X-Huma-Ticket": prepared.ticket], limit: 128 * 1024)

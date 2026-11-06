@@ -16,6 +16,8 @@ public struct PublicProofLink: Codable, Sendable, Equatable {
     public var signer: String?
     /// Whether readers got the writing replay with the link (nil for links shared before this was kept).
     public var replayShared: Bool?
+    /// The host's verdict on the page's typing when it was shared (nil for links shared before it was kept).
+    public var hostVerdict: HostVerdict?
     public var proofHash: String
     public var textHash: String
     public var sessionID: String
