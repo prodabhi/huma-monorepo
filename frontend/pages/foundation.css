@@ -86,19 +86,25 @@ body.is-loading .nav { opacity: 0; }
 /* Sticky stages: a full-viewport canvas pinned while the track scrolls over it. */
 [data-stage] { position: relative; }
 .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-.stage_canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.stage_canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .5s; }
+.stage_canvas.is-ready { opacity: 1; }
+.hero .stage { --wash: rgba(223, 221, 217, .92); --clear: rgba(223, 221, 217, 0);
+  background: linear-gradient(to right, var(--wash) 6%, var(--clear) 50%), url(/foundation-media/hero-art.webp) 50% 50% / cover no-repeat; }
+/* the same wash the shader draws: behind the text on the left, or the lower half on narrow screens */
+@media (max-aspect-ratio: 9/10) { .hero .stage { background: linear-gradient(to top, var(--wash) 42%, var(--clear) 80%), url(/foundation-media/hero-art.webp) 75% 50% / cover no-repeat; } }
 .track { position: relative; margin-top: -100vh; }
 
 /* Hero */
-.hero { height: 250vh; background: #000; color: #fff; transition: color .6s; }
-.hero.has-media { color: var(--ink); }
-/* With the video the figure fills the right, so the small columns move under the headings. */
+/* The hero's picture shows from the first paint (preloaded, as the stage's background); the WebGL canvas fades in
+   over it once the picture is on the GPU. */
+.hero { height: 250vh; background: #dfddd9; color: var(--ink); }
+/* The figure fills the right, so the small columns sit under the headings. */
 @media (min-width: 861px) {
-  .hero.has-media .hero_one { grid-template-rows: auto auto auto; }
-  .hero.has-media .hero_col.a { grid-column: 1 / span 2; grid-row: 3; }
-  .hero.has-media .hero_two { row-gap: 28px; }
-  .hero.has-media .hero_kicker { grid-column: 1 / span 2; }
-  .hero.has-media .hero_more { grid-column: 1 / span 3; grid-row: 3; margin-top: 4px; }
+  .hero .hero_one { grid-template-rows: auto auto auto; }
+  .hero .hero_col.a { grid-column: 1 / span 2; grid-row: 3; }
+  .hero .hero_two { row-gap: 28px; }
+  .hero .hero_kicker { grid-column: 1 / span 2; }
+  .hero .hero_more { grid-column: 1 / span 3; grid-row: 3; margin-top: 4px; }
 }
 .hero_white { position: absolute; inset: 0; pointer-events: none; --w: -40%;
   background: linear-gradient(to top, var(--paper) 0%, var(--paper) var(--w), rgba(246, 244, 243, 0) calc(var(--w) + 40%)); }
@@ -113,74 +119,6 @@ body.is-loading .nav { opacity: 0; }
 .hero_more { grid-column: 11 / span 2; grid-row: 2; align-self: start; margin-top: -14px; }
 .hero_title .ln { display: block; transition: opacity 1.2s var(--out), transform 1.2s var(--out); }
 body.is-intro .hero_title .ln { opacity: 0; transform: translateY(14px); }
-
-/* Particle figures */
-.feel { height: 440vh; background: var(--paper); color: var(--grey); }
-.feel .track { padding-top: 55vh; }
-.feel_title { padding: 0 var(--m); max-width: 1000px; }
-.feel_tag { margin: 175vh 0 0 var(--m); color: var(--ink); min-height: 45px; }
-
-/* Join */
-
-/* Media cards: your photo or video if present, otherwise a generated stand-in. */
-.card_media { position: relative; overflow: hidden; background: #333; }
-.card_media > img, .card_media > video { position: absolute; inset: -8% 0; width: 100%; height: 116%; object-fit: cover; transform: translateY(var(--py, 0)); will-change: transform; }
-/* Stand-ins until you add photos: grainy colour fields, not pictures. */
-.card_media[data-fallback="meadow"] { background: repeating-linear-gradient(100deg, rgba(255,255,255,.05) 0 2px, transparent 2px 7px), linear-gradient(172deg, #0e221f 0%, #1c3833 30%, #5d4b4e 52%, #a07f7c 68%, #b8958a 80%, #6b5848 100%); }
-.card_media[data-fallback="sky"] { background: radial-gradient(90% 16% at 60% 28%, rgba(240,244,248,.8), transparent 70%), linear-gradient(190deg, #3a62a4 0%, #7ea2d3 42%, #c9d2d6 60%, #7b8a52 74%, #3c4729 100%); }
-.card_media[data-fallback="dusk"] { background: radial-gradient(90% 18% at 35% 32%, rgba(246,226,206,.75), transparent 70%), linear-gradient(180deg, #557eb2 0%, #9cb4d1 42%, #e1c3a3 60%, #5b5f3c 80%, #2e331f 100%); }
-.card_media::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .18; mix-blend-mode: overlay;
-  background-image: repeating-radial-gradient(circle at 30% 30%, rgba(255,255,255,.5) 0 1px, transparent 1px 3px); }
-.card_media.has-media::after { display: none; }
-
-/* Code wall: banded gradient from paper into blue, slow code, a drifting mark. */
-.wall { position: relative; overflow: hidden; padding: 30vh 0 0; background: var(--blue); }
-.wall_bands { position: absolute; inset: 0; }
-.wall_code { position: relative; padding: 0 var(--m); text-transform: none; font-size: 12.5px; line-height: 15px; white-space: pre;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, .42) 60%, rgba(255, 255, 255, .5) 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent; will-change: transform; padding-bottom: 8vh; }
-.wall_mark { position: absolute; right: -2px; top: 62%; width: 400px; height: 190px; color: rgba(246, 244, 243, .95); will-change: transform; }
-
-/* Bloom (blue) */
-.bloom { height: 470vh; background: var(--blue); color: #fff; }
-.bloom .track { padding-top: 0; }
-.bloom_contact { height: 70vh; align-content: start; padding-top: 24vh; grid-template-rows: auto; }
-.contact_title { grid-column: 1 / span 5; max-width: 560px; }
-.contact_link { grid-column: 9 / span 2; align-self: start; margin-top: 6px; }
-.contact_note { grid-column: 11 / span 2; align-self: start; margin-top: 4px; }
-.bloom_white, .summit_top, .summit_bottom { position: absolute; left: 0; right: 0; pointer-events: none; height: 200%; will-change: transform; }
-.bloom_white { top: 0; transform: translateY(100%); }
-.summit_top { top: 0; transform: translateY(-50%); }
-.summit_bottom { top: 0; transform: translateY(100%); }
-
-/* Summit */
-.summit { position: relative; z-index: 1; height: 270vh; background: var(--paper); color: #fff; }
-.summit_code { position: absolute; left: 0; top: 34vh; padding: 0 var(--m); background: none; color: rgba(255, 255, 255, .42); -webkit-background-clip: border-box; background-clip: border-box; mix-blend-mode: soft-light; }
-.summit .track { padding-top: 80vh; }
-.summit_info { align-items: start; }
-.event { grid-column: 10 / span 3; position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 196px; padding: 18px 10px 8px; }
-.event::before, .event::after { content: ''; position: absolute; top: 0; bottom: 0; width: 7px; border: 1px solid rgba(255,255,255,.85); }
-.event::before { left: 0; border-right: 0; } .event::after { right: 0; border-left: 0; }
-.event_head { display: flex; justify-content: space-between; align-items: flex-start; }
-.event h3 { font-size: 20px; line-height: 24px; font-weight: 450; }
-.event p { font-size: 15px; line-height: 17px; max-width: 400px; }
-.summit_title { padding: 0 var(--m); margin-top: 36vh; color: var(--ink); }
-
-/* News */
-.news { padding: 6vh 0 0; background: var(--paper); color: var(--ink); }
-.news { padding-bottom: 4vh; }
-/* One quiet block that opens the research deck: a drawn line, a big question and one button. */
-.research { position: relative; padding-top: 37px; padding-bottom: 12vh; align-items: start; color: inherit; text-decoration: none; }
-.research::before { content: ''; position: absolute; top: 0; left: var(--m); right: var(--m); height: 1px; background: var(--ink); transform: scaleX(var(--s, 0)); transform-origin: left; transition: transform 1.4s var(--out); }
-.research.is-in { --s: 1; }
-.research > * { opacity: 0; transform: translateY(18px); transition: opacity 1s var(--out), transform 1s var(--out); }
-.research.is-in > * { opacity: 1; transform: none; }
-.research.is-in > :nth-child(2) { transition-delay: .06s; } .research.is-in > :nth-child(3) { transition-delay: .12s; } .research.is-in > :nth-child(4) { transition-delay: .18s; }
-.research_kicker { grid-column: 1 / span 3; margin-top: 10px; }
-.research_title { grid-column: 4 / span 7; max-width: 900px; }
-.research_body { grid-column: 4 / span 5; margin-top: 28px; font-size: 15px; line-height: 19px; max-width: 420px; color: #50606e; }
-.research_cta { grid-column: 4 / span 4; justify-self: start; margin-top: 36px; background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.research:hover .research_cta { background: transparent; color: var(--ink); }
 
 /* What Huma does, in plain words: rows like the research note's, each a label, a title and a short list. */
 .plain { position: relative; background: var(--paper); color: var(--ink); padding: 2vh 0 2vh; }
@@ -253,16 +191,13 @@ body.is-intro .hero_title .ln { opacity: 0; transform: translateY(14px); }
   .hero_col { grid-row: auto !important; }
   .hero_two { row-gap: 40px; }
   .hero_more, .hero_kicker { grid-row: auto !important; margin: 0; }
-  .wall_mark { width: 220px; height: 105px; }
-  .bloom_contact { row-gap: 20px; }
-  .research { padding-bottom: 8vh; } .research_title, .research_body, .research_cta, .research_kicker { margin-top: 0; } .research { row-gap: 18px; }
   .footer_menu { row-gap: 28px; } .footer_menu > div { grid-column: span 6 !important; margin: 0 !important; }
   .footer_brand { row-gap: 24px; } .footer_logo, .footer_tag, .footer_lang, .footer_social { grid-row: auto !important; }
   .footer_logo svg { width: 120px; height: 57px; } .footer_logo span { font-size: 24px; }
 }
 @media (max-width: 860px) { .footer_menu > div { grid-column: span 6 / span 6 !important; } }
 @media (prefers-reduced-motion: reduce) {
-  .hero_title .ln, .research > * { transition: none !important; }
+  .hero_title .ln { transition: none !important; }
 }
 
 /* ---------- Huma content ---------- */
@@ -281,101 +216,17 @@ body.is-intro .hero_title .ln { opacity: 0; transform: translateY(14px); }
 .loader_skip { position: absolute; right: var(--m); bottom: 22px; color: rgba(255,255,255,.55); opacity: 0; transition: opacity .4s, color .3s; }
 .loader_skip.is-on { opacity: 1; } .loader_skip:hover { color: #fff; }
 
-/* Bot mark: the visor blinks and the caret types. */
-.feel_bot, .globe_key svg { color: #c4664a; --bot-ink: var(--paper); }
-.bot_eyes { transform-box: fill-box; transform-origin: center; animation: bot-blink 4.2s infinite; }
-.bot_mouth { transform-box: fill-box; transform-origin: center; animation: bot-talk .9s ease-in-out infinite; }
-@keyframes bot-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.15); } }
-@keyframes bot-talk { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.45); } }
-
-/* Story captions */
-.feel { height: 1100vh; }
-/* Each scene's line sits top left, large: the count (and the bot mark once bots arrive) above the sentence. */
-.feel_caption { position: absolute; left: var(--m); top: 120px; display: grid; grid-template-columns: max-content 1fr; justify-content: start; align-items: center;
-  column-gap: 12px; row-gap: 14px; max-width: min(1120px, calc(100vw - 2 * var(--m))); color: var(--ink); }
-.feel_caption p { grid-column: 1 / -1; grid-row: 2; font: 450 clamp(28px, 2.8vw, 46px)/1.08 var(--sans); letter-spacing: -.02em; text-transform: none; }
-.feel_count { color: #8c8c8c; }
-.feel_bot { justify-self: start; width: 22px; height: 22px; opacity: 0; transform: scale(.6); transition: opacity .4s, transform .5s var(--out); }
-.feel_caption.is-bot .feel_bot { opacity: 1; transform: none; }
-.feel_dark { position: absolute; left: 0; right: 0; top: 0; height: 200%; pointer-events: none; transform: translateY(100%); will-change: transform; }
-
-/* Globe */
-.globe { position: relative; z-index: 1; height: 280vh; background: #0b0f14; color: #f6f4f3; }
-.globe .stage { background: radial-gradient(60% 70% at 62% 50%, #121a24 0%, #0b0f14 70%); }
-.globe_stars { position: absolute; inset: 0; width: 100%; height: 100%; }
-.globe_halo { position: absolute; left: 62%; top: 50%; width: 600px; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
-  background: radial-gradient(circle, rgba(120,170,230,.0) 52%, rgba(120,170,230,.16) 60%, rgba(120,170,230,.05) 68%, rgba(120,170,230,0) 74%); }
-.globe_map { position: absolute; top: 0; bottom: 0; left: 24%; right: 0; }
-.globe_map .maplibregl-canvas { outline: none; }
-.globe_map .maplibregl-ctrl-attrib { background: rgba(11,15,20,.6); color: #8b97a3; font: 10px/1.3 var(--sans); }
-.globe_map .maplibregl-ctrl-attrib a { color: #b7c2cc; }
-.globe_key { position: absolute; right: var(--m); bottom: 44px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; color: #c9d1d8; z-index: 2; }
-.globe_key span { display: inline-flex; align-items: center; gap: 8px; }
-.globe_key i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
-.globe_key .k_person { background: #dfe6ee; } .globe_key .k_verified { background: #8fd3a8; }
-.globe_key svg { width: 12px; height: 12px; }
-.globe_key em { font-style: normal; color: #7d8995; margin-top: 4px; }
-.globe .track { padding-top: 40vh; pointer-events: none; }
-.globe_step { width: min(440px, 36vw); margin: 0 0 45vh var(--m); display: flex; flex-direction: column; gap: 16px; }
-.globe_step p.mono { color: #9fb1c2; }
-.globe_body { font-size: 17px; line-height: 1.35; color: #c9d1d8; max-width: 34ch; }
-.globe_stat { display: flex; flex-direction: column; gap: 6px; }
-.globe_stat b { font: 500 clamp(64px, 7vw, 112px)/.9 var(--sans); letter-spacing: -.04em; color: #e0675c; }
-.globe_stat span { font-size: 17px; line-height: 1.3; color: #e8edf1; max-width: 28ch; }
-.globe_cite { font-size: 12px; color: #8b97a3; text-decoration: underline; text-decoration-color: rgba(255,255,255,.2); text-underline-offset: 3px; pointer-events: auto; }
-.globe_cite:hover { color: #e8edf1; }
-
-
-/* Bloom text steps */
-.bloom_step { height: 110vh; align-content: center; grid-template-rows: auto auto auto; row-gap: 14px; }
-.bloom_step > * { grid-column: 1 / span 4; }
-.bloom_step.is-people > * { grid-column: 9 / span 4; }
-.bloom_step p.mono { color: #dbe3ea; }
-.bloom_body { font-size: 17px; line-height: 1.35; color: #e8edf1; max-width: 32ch; }
-.bloom .track { padding-bottom: 0; }
-.bloom { height: 440vh; }
-
-/* Calls to action: pill buttons. On the summit they sit in one solid card so they read over the terrain. */
+/* Calls to action: pill buttons. */
 .cta { height: 38px; padding: 0 16px; display: inline-flex; align-items: center; border: 1px solid currentColor; border-radius: 999px; font: 400 12.5px/1 var(--mono); text-transform: uppercase; white-space: nowrap; transition: background .3s, color .3s, border-color .3s; }
 .hero_cta { grid-column: 1 / span 5; display: flex; gap: 10px; flex-wrap: wrap; }
 .cta[hidden] { display: none; }
-.hero .cta.is-solid { background: #fff; border-color: #fff; color: var(--ink); }
-.hero.has-media .cta.is-solid { background: var(--ink); border-color: var(--ink); color: #fff; }
+.hero .cta.is-solid { background: var(--ink); border-color: var(--ink); color: #fff; }
 .hero .cta:not(.is-solid):hover { background: color-mix(in srgb, currentColor 12%, transparent); }
-.event { grid-column: 9 / span 4; min-height: 0; gap: 16px; padding: 22px 22px 20px; border-radius: 14px; background: rgba(11, 15, 20, .66); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); color: #fff; }
-.event::before, .event::after { display: none; }
-.event_actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
-.event .cta { border-color: rgba(255, 255, 255, .8); }
-.event .cta.is-solid { background: #fff; border-color: #fff; color: var(--ink); }
-.event .cta:hover { background: #fff; color: var(--ink); } .event .cta.is-solid:hover { background: transparent; color: #fff; }
-@media (min-width: 861px) { .hero.has-media .hero_cta { grid-row: 4; } .hero:not(.has-media) .hero_cta { grid-row: 3; } }
-@media (max-width: 860px) { .hero_cta { grid-row: auto; } .event { grid-column: 1 / -1 !important; } }
-.wall_mark { width: 151px; height: 260px; right: 4vw; }
+@media (min-width: 861px) { .hero_cta { grid-row: 4; } }
+@media (max-width: 860px) { .hero_cta { grid-row: auto; } }
 
 @media (max-width: 860px) {
   .nav_logo { gap: 4px; } .nav_logo svg { width: 13px; height: 22px; } .nav_logo span { font-size: 16px; }
-  .globe_map { left: 0; top: 30vh; }
-  .globe_halo { left: 50%; top: 62%; width: 90vw; }
-  .globe_step { width: auto; margin-right: var(--m); padding: 16px; border-radius: 14px; background: rgba(11, 15, 20, .62); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-  .globe_key { bottom: 40px; } /* clear of the map credit line */
-  .feel_caption { top: 96px; } .feel_caption p { font-size: 28px; }
-  .bloom_step.is-people > * { grid-column: 1 / -1 !important; }
-  .bloom_step { align-content: start; padding-top: 14vh; }
   .footer_logo span { font-size: 40px; } .footer_logo svg { width: 34px; height: 58px; }
-  .wall_code { z-index: 1; } .wall_mark { width: 87px; height: 150px; opacity: .4; }
 }
-.feel_count { white-space: nowrap; }
 
-/* Where the browser can, it ties these to the scroll itself rather than to script, so on phones they move
-   in step with the finger instead of a frame behind. foundation.js leaves them alone when this applies.
-   Holding: while a section scrolls in, its scene stays at the top of the screen. Curtains: the bands that
-   close a section over its last stretch. */
-@supports (animation-timeline: view()) {
-  .feel, .globe, .summit, .bloom { view-timeline: --section block; }
-  .feel .stage, .summit .stage { animation: hold linear; animation-timeline: --section; animation-range: entry 0% entry 100%; }
-  .globe .stage { animation: hold-fade linear; animation-timeline: --section; animation-range: entry 0% entry 100%; }
-  .feel_dark, .bloom_white, .summit_bottom { animation: curtain linear both; animation-timeline: --section; animation-range: contain 86% contain 100%; }
-}
-@keyframes hold { from { transform: translateY(-100%); } to { transform: none; } }
-@keyframes hold-fade { from { transform: translateY(-100%); opacity: 0; } 35% { opacity: 1; } to { transform: none; opacity: 1; } }
-@keyframes curtain { from { transform: translateY(100%); } to { transform: translateY(-50%); } }
