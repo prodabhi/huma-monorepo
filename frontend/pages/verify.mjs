@@ -861,9 +861,9 @@ function showStored(stored, manifest) {
     chip.append(summary, body);
     label.append(chip);
 }
-/** "Verified on-chain" under the writer, when this page's proofs were checked by HumaPagesV3 (onchain.mjs, backend/onchain):
- *  the contract on Base checked every zero-knowledge proof and recorded the page's statement, which this page has just
- *  checked itself. Asked of the host, with a command to ask the chain directly. Nothing shows when it isn't on-chain. */
+/** "Verified on-chain" under the writer, when this page was checked by HumaPagesV4 (onchain.mjs, backend/onchain): the
+ *  contract on Base checked every zero-knowledge proof, the writer key's signature of every event, the event digest and
+ *  the session's binding to that key, and recorded the page's statement, which this page has just checked itself. Asked of the host, with a command to ask the chain directly. Nothing shows when it isn't on-chain. */
 async function showOnchain(source) {
     try {
         const config = await (await fetch('/api/onchain', { redirect: 'error', signal: AbortSignal.timeout(10000) })).json();
@@ -882,8 +882,9 @@ async function showOnchain(source) {
         const note = document.createElement('p');
         const link = (href, text) => { const a = document.createElement('a'); a.href = href; a.textContent = text; a.target = '_blank'; a.rel = 'noopener noreferrer'; return a; };
         const site = value => typeof value === 'string' && /^https:\/\/[a-z0-9.-]+$/.test(value);
-        note.append('HumaPagesV3 checked every zero-knowledge proof of this page on ' + String(config.network).slice(0, 40) + ' and recorded it at block '
-            + record.block.toLocaleString() + ' (' + record.parts + ' parts and the final proof).');
+        note.append('A contract on ' + String(config.network).slice(0, 40) + ' checked every zero-knowledge proof of this page (' + record.parts
+            + ' parts and the final proof), the writer’s signature on each of its ' + (Number(record.events) || 'signed') + ' events'
+            + (record.passkey ? ', the passkey approvals' : '') + ' and that the session belongs to that key, and recorded it at block ' + record.block.toLocaleString() + '.');
         if (site(config.explorer) && /^0x[0-9a-fA-F]{64}$/.test(record.tx ?? '')) note.append(' ', link(config.explorer + '/tx/' + record.tx, 'View transaction'), '.');
         body.append(note);
         if (/^0x[0-9a-fA-F]{40}$/.test(config.contract)) {
