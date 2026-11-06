@@ -3,7 +3,7 @@
 # from there, so only short commands cross the (slow) ssh link; then the server rebuilds and restarts the container.
 # Settings: .env.deploy (server, key, example page) and .env.local (R2). backend/scripts/ship.sh runs this.
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 set -a; source .env.deploy; set +a
 TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
 SSH=(ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=8 -i "${HUMA_DEPLOY_KEY/#\~/$HOME}" -o IdentitiesOnly=yes "$HUMA_DEPLOY_SSH")
@@ -39,7 +39,7 @@ fi
 sudo rm -rf /opt/huma/app && sudo mkdir -p /opt/huma/app && sudo tar -C /opt/huma/app -xzf /tmp/host.tgz 2>/dev/null; rm /tmp/host.tgz
 cd /opt/huma/app && sudo docker build -q -t huma-host . >/dev/null
 sudo docker rm -f huma >/dev/null
-sudo docker run -d --name huma --restart unless-stopped --env-file /opt/huma/.env -p 127.0.0.1:4318:4318 -v huma-data:/app/web/data huma-host >/dev/null
+sudo docker run -d --name huma --restart unless-stopped --env-file /opt/huma/.env -p 127.0.0.1:4318:4318 -v huma-data:/app/frontend/data huma-host >/dev/null
 sleep 4 && echo DEPLOYED' < <(cat "$TMP/host-url.txt"; echo "$EXAMPLE"; echo "$TURNSTILE_SITE"; echo "$TURNSTILE_SECRET"; echo "$POSTHOG_KEY"; echo "$POSTHOG_HOST")
 (cd frontend && node --env-file=../.env.local --input-type=module -e '
 const { S3Client, DeleteObjectCommand } = await import("@aws-sdk/client-s3");

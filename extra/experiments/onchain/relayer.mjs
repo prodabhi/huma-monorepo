@@ -1,9 +1,12 @@
 // HumaPages on Base: sends page proofs made on writers' Macs from a relayer wallet the host funds,
 // and reads page records. Each proof names its owner wallet inside the proof, so the relayer can
 // only send it as is; it can't change whose page is recorded. Every call is simulated first.
-import { createPublicClient, createWalletClient, http, parseAbi, getAddress, keccak256, concat } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
-import { base, baseSepolia } from 'viem/chains';
+import { createRequire } from 'node:module';
+
+const require = createRequire(new URL('../../../frontend/package.json', import.meta.url));
+const { createPublicClient, createWalletClient, http, parseAbi, getAddress, keccak256, concat } = require('viem');
+const { privateKeyToAccount } = require('viem/accounts');
+const { base, baseSepolia } = require('viem/chains');
 
 export const NETWORKS = {
   'base-sepolia': { chain: baseSepolia, rpc: 'https://sepolia.base.org', explorer: 'https://sepolia.basescan.org' },

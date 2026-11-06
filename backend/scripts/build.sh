@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 CONFIG="${HUMA_CONFIG:-debug}"
-swift build -c "$CONFIG" --jobs 2
-BIN_DIR="$(swift build -c "$CONFIG" --jobs 2 --show-bin-path)"
+swift build --package-path extra --scratch-path .build -c "$CONFIG" --jobs 2
+BIN_DIR="$(swift build --package-path extra --scratch-path .build -c "$CONFIG" --jobs 2 --show-bin-path)"
 # Ad-hoc by default. A Developer ID (HUMA_SIGN_IDENTITY) adds the hardened runtime and a
 # timestamp, which notarization requires.
 IDENTITY="${HUMA_SIGN_IDENTITY:--}"
@@ -55,7 +55,7 @@ fi
 # Grammar suggestions: Harper (Apache-2.0), built from backend/integrations/grammar with its pinned Rust. Without it the app
 # still suggests fixes with the Mac's own checker and the on-device model.
 if command -v cargo >/dev/null; then
-    (cd backend/integrations/grammar && cargo build --release --quiet --target-dir "$PWD/../../build/grammar-target")
+    cargo build --release --quiet --manifest-path backend/integrations/grammar/Cargo.toml --target-dir "$PWD/build/grammar-target"
 fi
 GRAMMAR_LIBRARY="$PWD/build/grammar-target/release/libhuma_grammar.dylib"
 if [ -f "$GRAMMAR_LIBRARY" ]; then
@@ -67,7 +67,7 @@ else
     rm -rf "$APP_DIR/Contents/Resources/Grammar"
 fi
 # Witnesses: Noir's own solver, built natively from its pinned release (backend/integrations/noir/witness).
-(cd backend/integrations/noir/witness && cargo build --release --quiet --locked --target-dir "$PWD/../../../build/witness-target")
+cargo build --release --quiet --locked --manifest-path backend/integrations/noir/witness/Cargo.toml --target-dir "$PWD/build/witness-target"
 # The engine runs its JavaScript on macOS's own JavaScriptCore through HumaScriptHost (no bundled Node.js).
 HUMA_SCRIPT_HOST="$BIN_DIR/HumaScriptHost" python3 backend/integrations/noir/package.py "$APP_DIR/Contents/Resources/NoirEngine"
 # JavaScriptCore compiles the engine's JavaScript just in time, so its host may use JIT memory (and nothing broader).

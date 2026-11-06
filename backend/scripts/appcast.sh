@@ -3,7 +3,7 @@
 # Sparkle key in this Mac's Keychain. Installed copies of Huma read it to find and verify updates.
 # Optional: HUMA_RELEASE_NOTES="<li>…</li><li>…</li>"
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 DMG=build/release/Huma.dmg
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" extra/Resources/Info.plist)
 BUILD=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" extra/Resources/Info.plist)

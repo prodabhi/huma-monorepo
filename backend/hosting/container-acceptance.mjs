@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import { createHash } from 'node:crypto';
 import { S3Client } from '@aws-sdk/client-s3';
-import { R2ObjectStore } from './web/object-store.mjs';
-import { createRegistry } from './web/registry.mjs';
-import { checkDownloadedPublication, expectedMaster } from './web/publication-contract.mjs';
-import { verify } from './web/verify-core/node.mjs';
-import { shareAssetFiles } from './web/share-assets.mjs';
+import { R2ObjectStore } from './frontend/object-store.mjs';
+import { createRegistry } from './frontend/registry.mjs';
+import { checkDownloadedPublication, expectedMaster } from './frontend/publication-contract.mjs';
+import { verify } from './frontend/verify-core/node.mjs';
+import { shareAssetFiles } from './frontend/share-assets.mjs';
 
 const chunks = []; for await (const chunk of process.stdin) chunks.push(chunk);
 const fixtures = JSON.parse(Buffer.concat(chunks)).fixtures;
@@ -35,7 +35,7 @@ const objectStore = new R2ObjectStore({ bucket: 'fixture-bucket', client: new S3
   credentials: { accessKeyId: 'fixture-access-id', secretAccessKey: 'fixture-secret-value' },
   requestChecksumCalculation: 'WHEN_REQUIRED', responseChecksumValidation: 'WHEN_REQUIRED',
 }) });
-const server = await createRegistry({ store: '/app/web/data', publicationOptions: { objectStore,
+const server = await createRegistry({ store: '/app/frontend/data', publicationOptions: { objectStore,
   authenticate: async token => {
     if (token !== 'fixture-owner') throw Object.assign(Error('Fixture authorization required.'), { status: 401 });
     return hash('fixture-owner');
@@ -47,7 +47,7 @@ try {
   const base = 'http://127.0.0.1:' + server.address().port;
   const request = (route, options) => fetch(base + route, options);
   assert.equal((await request('/api/proofs', { method: 'POST', body: '{}' })).status, 410);
-  for (const name of (await shareAssetFiles('/app/web')).filter(name => name.startsWith('assets/'))) {
+  for (const name of (await shareAssetFiles('/app/frontend')).filter(name => name.startsWith('assets/'))) {
     assert.equal((await request('/share/' + name)).status, 200, name);
   }
   for (const fixture of fixtures) {

@@ -7,8 +7,8 @@
     "node": ">=24.22.1"
   },
   "scripts": {
-    "start": "node web/registry.mjs",
-    "check:publication": "node web/deployment-check.mjs"
+    "start": "node frontend/registry.mjs",
+    "check:publication": "node frontend/deployment-check.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1156.0",

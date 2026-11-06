@@ -13,7 +13,7 @@ import sys
 import time
 import protocol
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT/'extra/experiments/noir-replay'))
 import fixture as toml_fixture

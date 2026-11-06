@@ -11,7 +11,7 @@ import check
 import run
 import algebraic_replay
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
 
 

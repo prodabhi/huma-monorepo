@@ -13,7 +13,7 @@ import tempfile
 import time
 import fixture
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 TOOLS = ROOT / "build/research/noir-tools"
 ENV = dict(os.environ, RAYON_NUM_THREADS="2", HARDWARE_CONCURRENCY="2")

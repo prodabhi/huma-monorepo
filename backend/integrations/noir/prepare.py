@@ -2,7 +2,7 @@
 """Download the pinned official Node runtime locally; no global installation."""
 import hashlib,tarfile,urllib.request
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 VERSION='24.22.1'
 ARCHIVE=f'node-v{VERSION}-darwin-arm64.tar.gz'
 SHA256='89c682593d76cd44233fa53b1563264e7de9cbb189cad169135c5b4fadfbc0a7'

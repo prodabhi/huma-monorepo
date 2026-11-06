@@ -8,7 +8,7 @@ import statistics
 import subprocess
 import time
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 BASE = ROOT / "build/research"
 NARGO = BASE / "noir-tools/noir/nargo"

@@ -8,7 +8,7 @@ import subprocess
 import time
 import fixture
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 WORK = ROOT / "build/research/noir-replay"
 NARGO = ROOT / "build/research/noir-tools/noir/nargo"
 ENV = dict(os.environ, RAYON_NUM_THREADS="2")

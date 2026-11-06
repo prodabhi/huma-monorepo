@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 BB=ROOT/'build/research/noir-tools/bb/bb'
 NATIVE=ROOT/'build/research/noir-compact-native-target/release/huma-compact-experiment'
 MODULUS=21888242871839275222246405745257275088548364400416034343698204186575808495617

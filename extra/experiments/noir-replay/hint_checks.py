@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import fixture
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 SOURCE = Path(__file__).resolve().parent / "src/bytes.nr"
 WORK = ROOT / "build/research/noir-decimal-hint-tests"
 NARGO = ROOT / "build/research/noir-tools/noir/nargo"

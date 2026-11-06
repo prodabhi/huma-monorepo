@@ -26,7 +26,7 @@ for (const [kind, extension, mediaType] of [['image', 'png', 'image/png'], ['aud
 const script = await readFile(new URL('./container-acceptance.mjs', import.meta.url), 'utf8');
 const child = spawn('docker', ['run', '--name', name, '--network', 'none', '--read-only', '--cap-drop', 'ALL',
   '--security-opt', 'no-new-privileges=true', '--cpus', '2', '--memory', '768m',
-  '--tmpfs', '/app/web/data:uid=1000,gid=1000,mode=0700', '--tmpfs', '/tmp:uid=1000,gid=1000,mode=0700',
+  '--tmpfs', '/app/frontend/data:uid=1000,gid=1000,mode=0700', '--tmpfs', '/tmp:uid=1000,gid=1000,mode=0700',
   '-e', 'HUMA_STORAGE_BACKEND=local', '-i', image, 'node', '--input-type=module', '-e', script], { stdio: ['pipe', 'pipe', 'pipe'] });
 let stdout = '', stderr = '', timer;
 child.stdout.on('data', chunk => { if (stdout.length < 65536) stdout += chunk; });

@@ -11,7 +11,7 @@ import time
 import fixture
 import verify
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 WORK = ROOT / "build/research/noir-replay"
 TOOLS = ROOT / "build/research/noir-tools"
@@ -68,8 +68,8 @@ if __name__ == "__main__":
     manifest = (HERE / "Nargo.toml").read_text().replace('../../../build/research/noir-sha256', '../noir-sha256')
     (WORK / "Nargo.toml").write_text(manifest)
     # Compile the worker driver against the current app's core resource controls.
-    subprocess.run(["swift", "build", "--target", "HumaCore", "--jobs", "2"], cwd=ROOT, check=True, env=env)
-    bin_dir = Path(subprocess.check_output(["swift", "build", "--show-bin-path"], cwd=ROOT, text=True).strip())
+    subprocess.run(["swift", "build", "--package-path", "extra", "--scratch-path", ".build", "--target", "HumaCore", "--jobs", "2"], cwd=ROOT, check=True, env=env)
+    bin_dir = Path(subprocess.check_output(["swift", "build", "--package-path", "extra", "--scratch-path", ".build", "--show-bin-path"], cwd=ROOT, text=True).strip())
     subprocess.run(["swiftc", "-parse-as-library", "-module-cache-path", str(ROOT / "build/module-cache"),
                     "-I", str(bin_dir), str(HERE / "WorkerBench.swift"), str(bin_dir / "HumaCore.o"), "-o", str(DRIVER)],
                    cwd=ROOT, check=True, env=env)

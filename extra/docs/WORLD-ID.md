@@ -29,19 +29,19 @@ earn the badge.
 ## How it works
 
 1. **Sign In** (or **Finish**, signed out) opens the World ID dialog. Privy sign-in is off for now, on the web and the
-   Mac; its code is kept, commented out, in `web/write/account.mjs` and `web/share/src/main.jsx` (`Approval.jsx`).
+   Mac; its code is kept, commented out, in `frontend/write/account.mjs` and `frontend/share/src/main.jsx` (`Approval.jsx`).
 2. The page asks the server for a signed request (`POST /api/worldid/context`). The signing key never leaves the server
-   (`web/worldid-verify.mjs`).
-3. IDKit (`@worldcoin/idkit-core`, in `web/write/worldid.mjs`) shows a QR and an *Open World App* link. The proof's
+   (`frontend/worldid-verify.mjs`).
+3. IDKit (`@worldcoin/idkit-core`, in `frontend/write/worldid.mjs`) shows a QR and an *Open World App* link. The proof's
    **signal** is `huma-account:<this browser's publishing key>`, so it can sign in only this browser.
 4. The page sends the proof to `POST /api/worldid/signin`, signed by its publishing key. The **server** checks the
    environment, action, credential and signal, then asks World's verify endpoint (`/api/v4/verify/{rp_id}`). The
    browser's answer is never trusted by itself.
-5. The account is made from the World ID's nullifier (`worldIDAccount` in `web/publications.mjs`), so the same person
+5. The account is made from the World ID's nullifier (`worldIDAccount` in `frontend/publications.mjs`), so the same person
    gets the same account on every browser, and the browser's publishing key is linked to it, as a Privy sign-in linked
-   it. The account keeps the verified record (`web/documents.mjs`). Signing in is once per browser; Finish then goes
+   it. The account keeps the verified record (`frontend/documents.mjs`). Signing in is once per browser; Finish then goes
    straight through.
-6. When a page is shared, the server adds the account's record to it (`web/publications.mjs`). Readers get a short
+6. When a page is shared, the server adds the account's record to it (`frontend/publications.mjs`). Readers get a short
    fingerprint of the nullifier (`GET /api/publications/<id>/receipt`, and `GET /api/writers/<handle>`) and, with the
    page's link, the full proof (`GET /api/publications/<id>/worldid`) plus the `curl` command to re-check it with World.
 
@@ -54,7 +54,7 @@ A proof made at a share for that page alone (signal `huma-page:<master hash>:<pr
   document isn't finished**: the writer keeps writing and is told World ID is required. Nothing is stored. With
   `HUMA_WORLD_REQUIRED=false` it is only a badge: *Finish Without It* finishes the page without one.
 - **Taken:** a World ID already linked to another account can't be linked again.
-- **The Mac app** signs in with World ID too: **Sign In** in Huma opens `/share/signin` (`web/share/src/WorldSignIn.jsx`)
+- **The Mac app** signs in with World ID too: **Sign In** in Huma opens `/share/signin` (`frontend/share/src/WorldSignIn.jsx`)
   with a secret code and the Mac's publishing key. After checking the code matches, the person scans with World App;
   the proof is made for the Mac's key (`huma-account:<key>`) and posted with the code to `/api/publications/signin`,
   which links the key to the World ID's account. Huma reads it back with the code, as it did with Privy, so the Mac app
@@ -72,7 +72,7 @@ turns the requirement into an optional badge. Use
 
 ## Tests
 
-`cd web && node --test test/worldid.test.mjs` — the verifier, the signing, the badge data, the routes, linking an
+`cd frontend && node --test test/worldid.test.mjs` — the verifier, the signing, the badge data, the routes, linking an
 account (one World ID per account) and the share path end to end against the real registry (World's endpoint stubbed, the page's own proof check replaced by a made-up
 page so it runs without the Rust and Noir tools).
 

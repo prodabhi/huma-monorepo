@@ -12,7 +12,7 @@ import time
 import run
 import verify
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT/'extra/experiments/noir-replay'))
 import fixture
 import size

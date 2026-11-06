@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import verify
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 VK_HASH = '149d13f114a80bc03df8966aa5b716ba86acc383c48c620e0bdb1afb09f4b600'
 ABI_HASH = 'd3ac50086728791ab41503666e4f5454b9bfe30000abf2ddfefd624a7c21c952'
 

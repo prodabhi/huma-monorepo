@@ -11,7 +11,7 @@ import sys
 import time
 import assurance_cases as assurance
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
 TRUSTED=ROOT/'build/research/noir-assurance/assurance-typed250-v1'
 TOOLS=ROOT/'build/research/noir-tools'

@@ -8,7 +8,7 @@ import plistlib
 import subprocess
 import sys
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 parser = argparse.ArgumentParser()
 cached = parser.add_mutually_exclusive_group()
 cached.add_argument('--reuse-proof', action='store_true')
@@ -23,7 +23,7 @@ options = parser.parse_args()
 PROFILE = '(version 1)(allow default)(deny network-outbound)(allow network-outbound (remote ip "localhost:*"))'
 APP = options.app.resolve()
 assert (APP / "Contents/Resources/ReplayEngine/huma-replay").is_file(), "Stage Huma-next.app first"
-bin_dir = Path(subprocess.check_output(["swift", "build", "--show-bin-path"], cwd=ROOT, text=True).strip())
+bin_dir = Path(subprocess.check_output(["swift", "build", "--package-path", "extra", "--scratch-path", ".build", "--show-bin-path"], cwd=ROOT, text=True).strip())
 probe = options.probe.resolve()
 exe = probe / "Contents/MacOS/HumaReplayProbe"
 exe.parent.mkdir(parents=True, exist_ok=True)

@@ -3,7 +3,7 @@
 import hashlib,json,os,subprocess
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 def main():
     os.umask(0o077)
     env=dict(os.environ,DEVELOPER_DIR='/Library/Developer/CommandLineTools',
@@ -13,7 +13,7 @@ def main():
         '--bin','huma-compact-experiment','--example','bucket_boundaries','--locked','--jobs','2'])
     capture=ROOT/'build/research/noir-assurance-native/live-v4-short-v2/document.huma'
     if not capture.is_file():
-        bin_dir=Path(subprocess.check_output(['swift','build','--show-bin-path'],cwd=ROOT,env=env,text=True).strip())
+        bin_dir=Path(subprocess.check_output(['swift','build','--package-path','extra','--scratch-path','.build','--show-bin-path'],cwd=ROOT,env=env,text=True).strip())
         tool=ROOT/'build/research/noir-tools/live-assurance'
         run(['swiftc','-parse-as-library','-I',bin_dir,'extra/experiments/noir-compact/live-assurance.swift',bin_dir/'HumaCore.o','-o',tool])
         capture.parent.mkdir(parents=True,mode=0o700,exist_ok=True)

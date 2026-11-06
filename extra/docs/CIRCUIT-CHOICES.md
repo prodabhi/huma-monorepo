@@ -1,7 +1,7 @@
 # Circuit choices
 
 Every choice in Huma's page proof, what it costs, and why. Measured 29 October 2026 on the v3 circuits
-(`integrations/noir/long3/prover.nr`), bb 5.2.1, Noir 1.0.0-beta.25, MacBook Pro M4 Max.
+(`backend/integrations/noir/long3/prover.nr`), bb 5.2.1, Noir 1.0.0-beta.25, MacBook Pro M4 Max.
 
 ## What the proof has to do
 
@@ -26,7 +26,7 @@ A part proof costs about `63,000 + 18.7 × capacity + 608 × operations` gates. 
 
 Inside a 600-operation part (1,024 tier): the replay machine is 63% of gates, the typing checks 22% and Poseidon2
 hashing 14%. The largest single line is the typing-speed ring's `downs % 20`, at 22,332 gates
-(`experiments/noir-compact/src/assurance.nr:57`).
+(`extra/experiments/noir-compact/src/assurance.nr:57`).
 
 A typed character costs 5 operations: key down, begin edit, insert, end edit, key up (1,500-character case: 7,516
 operations).
@@ -48,7 +48,7 @@ operations).
 | 11 | Every part proof is published; the reader checks each one | 14.6 KB a part | **Folding works, for v4** (Chonk, below): up to 34 parts in one 23 KB proof. Not for 0.2: the fold can't survive an app restart and Chonk has no external audit yet. |
 | 12 | Proofs stored as JSON with base64 | A third bigger than raw | **Done:** pages are saved compressed (4.4× smaller on the Mac). Downloads to be served gzip, which measured within 3% of raw bytes. |
 | 13 | 2^21-point proving setup (64 MB) | First-run download | **Revisit in v4.** Without the 2^20 final step, 2^19 (16 MB) may do, which matters for the web version. |
-| 14 | Witnesses were built in JavaScript (noir_js) inside JavaScriptCore, through `HumaScriptHost` | JavaScriptCore fell off a cliff at 2^19: 44 s for a 600-operation part, against 1.5 s in Node, and stayed slow afterwards. A 588-character page took 315 s. | **Done: native.** `integrations/noir/witness` runs Noir's own solver (v1.0.0-beta.25) as a 2 MB tool. Its witnesses are byte-identical to noir_js for all six programs, in 0.6 s a part (1.5 s for the 10,000 final step). The engine dropped its 3.6 MB of WebAssembly; Node (116 MB) was not needed. |
+| 14 | Witnesses were built in JavaScript (noir_js) inside JavaScriptCore, through `HumaScriptHost` | JavaScriptCore fell off a cliff at 2^19: 44 s for a 600-operation part, against 1.5 s in Node, and stayed slow afterwards. A 588-character page took 315 s. | **Done: native.** `backend/integrations/noir/witness` runs Noir's own solver (v1.0.0-beta.25) as a 2 MB tool. Its witnesses are byte-identical to noir_js for all six programs, in 0.6 s a part (1.5 s for the 10,000 final step). The engine dropped its 3.6 MB of WebAssembly; Node (116 MB) was not needed. |
 
 ## Proving time in the app, measured end to end
 
@@ -113,8 +113,8 @@ Verdict: worth it for v4, where block text makes parts cheaper to fold. Folding 
 
 ## Proving in a browser (huma.social/write)
 
-The same circuits, proved in the browser with no server: the recorder (`experiments/noir-compact/native/src/web.rs`) and
-the witness solver (`integrations/noir/witness`) are the Mac's Rust compiled to WebAssembly; bb.js 5.2.1 proves on
+The same circuits, proved in the browser with no server: the recorder (`extra/experiments/noir-compact/native/src/web.rs`) and
+the witness solver (`backend/integrations/noir/witness`) are the Mac's Rust compiled to WebAssembly; bb.js 5.2.1 proves on
 several threads. Measured in Chrome on this Mac while it was busy (load average 10 to 30):
 
 | | Chrome | Mac app (native) |
@@ -130,13 +130,13 @@ evidence file. Every browser proof checked with native `bb verify`.
 Readers now tell browser pages apart from the proof alone: no key press carries the Mac's input origin
 (`origin_present` is 0). Such a page reads "Typed in Huma" (one product name everywhere, no "browser" or "Mac" labels), never
 "Typed by a person", and scores at half weight
-(35 typed, 10 typing checks, 5 check-ins), so at most 50 (`humaScore` in `web/publication-contract.mjs`). This holds
+(35 typed, 10 typing checks, 5 check-ins), so at most 50 (`humaScore` in `frontend/publication-contract.mjs`). This holds
 only for honest pages: a forger who rebuilds the recorder can claim Mac origins, and nothing proves a page came from
 the real Mac app until App Attest or DeviceCheck evidence is in the proof.
 
 ## Typing checks (huma.social/write)
 
-`web/write/typing.mjs` judges key presses as they arrive and stops the recording when typing is impossible for a
+`frontend/write/typing.mjs` judges key presses as they arrive and stops the recording when typing is impossible for a
 person (keys released within 12 ms, presses within 12 ms, a rhythm within 3 ms, identical holds), or, after 250 keys,
 when its rhythm follows neither words nor hands (Mann-Whitney z below 1 for both: word starts slower than inside
 words, one hand slower than two). Pointer jumps to every click and `navigator.webdriver` stop it too.
@@ -144,7 +144,7 @@ words, one hand slower than two). Pointer jumps to every click and `navigator.we
 | | Result |
 | --- | --- |
 | Claude in Chrome typing (keys 0.1 ms apart) | stopped after 20 keys |
-| Delays drawn at random, ~1,000-key page | 95% stopped, mostly at key 250 (`web/test/typing.test.mjs`) |
+| Delays drawn at random, ~1,000-key page | 95% stopped, mostly at key 250 (`frontend/test/typing.test.mjs`) |
 | Simulated people with weaker patterns than either real page | 0% stopped |
 | Two real Mac pages (Swayam, 177 and 194 keys) | all signals natural; word starts z 2.7 and 1.1, hands z 2.3 and 3.4 |
 | Delays modelled on people (word starts, hands, rollover) | passes: timing alone can't tell |

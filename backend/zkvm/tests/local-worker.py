@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import time
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 WORKER = ROOT / "backend/zkvm/target/release/huma-replay"
 ENV = os.environ.copy()
 ENV["HUMA_R0VM"] = str(ROOT / "build/toolchains/risc0/bin/r0vm")

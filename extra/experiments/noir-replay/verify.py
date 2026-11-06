@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 WORK = ROOT / "build/research/noir-replay"
 BB = ROOT / "build/research/noir-tools/bb/bb"
 

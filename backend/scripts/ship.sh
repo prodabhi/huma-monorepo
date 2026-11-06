@@ -6,7 +6,7 @@
 #   backend/scripts/ship.sh --web                                the website only
 # Needs .env.local (R2) and .env.deploy (server). Every upload is checked; anything already uploaded is left as it is.
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 MODE=${1:-}
 if [[ ! $MODE =~ ^([0-9]+\.[0-9]+\.[0-9]+|--built|--web)$ ]]; then
     echo 'Usage: backend/scripts/ship.sh <version> "note" … | --built | --web'; exit 64
@@ -17,20 +17,20 @@ if [[ $MODE =~ ^[0-9] ]]; then
     shift
     [ $# -gt 0 ] || { echo "Add at least one release note, e.g. backend/scripts/ship.sh $MODE \"Faster proofs.\""; exit 64; }
     step "Tests"
-    swift test 2>&1 | grep -E "Executed [0-9]+ tests" | tail -1
+    swift test --package-path extra --scratch-path .build 2>&1 | grep -E "Executed [0-9]+ tests" | tail -1
     (cd frontend && npm test 2>&1 | grep -E "^ℹ (pass|fail)")
     step "Version $MODE"
     BUILD=$(( $(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" extra/Resources/Info.plist) + 1 ))
     /usr/libexec/PlistBuddy -c "Set CFBundleShortVersionString $MODE" -c "Set CFBundleVersion $BUILD" extra/Resources/Info.plist
     sed -i '' "s/^const HUMA_RELEASE = '[0-9.]*';/const HUMA_RELEASE = '$MODE';/" frontend/registry.mjs
     step "Signed, notarized installer (a few minutes)"
-    ./scripts/release.sh
+    ./backend/scripts/release.sh
     NOTES=""
     for NOTE in "$@"; do
         NOTE=${NOTE//&/&amp;}; NOTE=${NOTE//</&lt;}; NOTE=${NOTE//>/&gt;}
         NOTES+="<li>$NOTE</li>"
     done
-    HUMA_RELEASE_NOTES="$NOTES" ./scripts/appcast.sh
+    HUMA_RELEASE_NOTES="$NOTES" ./backend/scripts/appcast.sh
 fi
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" extra/Resources/Info.plist)
 if [ "$MODE" != "--web" ]; then
@@ -55,7 +55,7 @@ if [ "$MODE" != "--web" ]; then
 fi
 cd ..
 step "Website"
-./scripts/deploy-web.sh
+./backend/scripts/deploy-web.sh
 if [ "$MODE" != "--web" ]; then
     step "Removing older installers"
     (cd frontend && HUMA_KEEP="releases/Huma-$VERSION.dmg" node --env-file=../.env.local --input-type=module -e '

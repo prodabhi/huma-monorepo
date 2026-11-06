@@ -24,7 +24,7 @@ const chainId = await publicClient.getChainId();
 if (chainId !== 31337 && !process.argv.includes('--yes')) throw new Error(`Chain ${chainId} is not local: pass --yes to submit there.`);
 const chain = { id: chainId, name: 'chain-' + chainId, nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: { default: { http: [rpc] } } };
 const walletClient = createWalletClient({ account, chain, transport });
-const { abi } = JSON.parse(readFileSync(path.join(here, 'foundry/out/HumaPagesV3.sol/HumaPagesV3.json'), 'utf8'));
+const { abi } = JSON.parse(readFileSync(path.join(here, 'out/HumaPagesV3.sol/HumaPagesV3.json'), 'utf8'));
 
 const words = buffer => Array.from({ length: buffer.length / 32 }, (_, i) => toHex(buffer.subarray(i * 32, i * 32 + 32)));
 const read = name => ({ proof: toHex(readFileSync(path.join(dir, name, 'proof'))), inputs: words(readFileSync(path.join(dir, name, 'public_inputs'))) });

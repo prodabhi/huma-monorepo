@@ -14,11 +14,12 @@ deployment. Proof validity comes from cryptographic checks, not the host's verdi
 Read the numbered questions in order. The implementation details at the end are
 for anyone who wants to build or inspect it.
 
-**Where this is going:** [VISION.md](VISION.md) reframes Huma from an app that
+**Where this is going:** [VISION.md](extra/docs/VISION.md) reframes Huma from an app that
 proves one document into a network where people build a verified human track
 record from everyday creation, checked where content is read, with physical
 co-presence between users as the moat. The mechanisms are in
-[HUMAN-PRESENCE.md](HUMAN-PRESENCE.md) and [MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md).
+[HUMAN-PRESENCE.md](extra/docs/HUMAN-PRESENCE.md) and
+[MEDIA-PROVENANCE.md](extra/docs/MEDIA-PROVENANCE.md).
 
 The long-term vision includes capture clients on **Mac, iPhone, iPad and Android**,
 an open evidence format, feed integrations and a verification SDK. Each content
@@ -445,13 +446,13 @@ scalars, 132 key events, eight checkpoints), `assurance128-cp32-v1` (756 operati
 operations, 256 scalars, 516 key events, 32 checkpoints). Each allows eight presence
 responses and four UTF-8 bytes per scalar. A small draft with more checkpoints
 uses a larger circuit. The largest profile retains the ten-second checkpoint
-cadence. [Current app acceptance](integrations/noir/results/adaptive-app-acceptance.json).
+cadence. [Current app acceptance](backend/integrations/noir/results/adaptive-app-acceptance.json).
 
 The five-second complete-service target is met by the short fixture. Larger
 sessions and 10k-character support remain open. A separate capacity-profiling
 attack measured 14–36% fewer gates by right-sizing each profile to its actual
 session; those tighter profiles are research candidates, not the shipped baseline.
-See [PROVER-PERFORMANCE.md](PROVER-PERFORMANCE.md). Earlier measurements follow as
+See [PROVER-PERFORMANCE.md](extra/docs/PROVER-PERFORMANCE.md). Earlier measurements follow as
 research history, rather than the current app baseline.
 
 The previous eight-slot V5 profile remains supported. On its saved 250-character
@@ -472,10 +473,10 @@ the circuit or download a prover when you click Create Proof. A fresh capture
 that exceeds the short profile keeps its writing and full signed history; it
 cannot silently truncate history or start a long fallback proof.
 
-[Optimized app acceptance](integrations/noir/results/optimized-app-acceptance.json)
+[Optimized app acceptance](backend/integrations/noir/results/optimized-app-acceptance.json)
 records this result, the rejected candidates and the remaining bottleneck.
 The earlier V4 app pipeline measured 11.267 seconds for witness/prove/verification;
-[its report](integrations/noir/results/native-app-acceptance.json) remains historical
+[its report](backend/integrations/noir/results/native-app-acceptance.json) remains historical
 evidence. Earlier compact-profile measurements follow for comparison.
 
 The eight-slot V5 circuit reduces 1,041,574 to 926,956 gates by expressing equivalent
@@ -496,7 +497,7 @@ The selected small circuits use 260,386 and 522,977 gates. The initial
 desired prover size buckets. The selected circuits retain the established replay
 arithmetic and change only fixed capacities. Forty-two policy/tamper witnesses,
 ten Unicode/deletion boundary witnesses and seven independent WASM proof checks
-cover the small circuits. [Research evidence](integrations/noir/results/short-bucket-sizing.json).
+cover the small circuits. [Research evidence](backend/integrations/noir/results/short-bucket-sizing.json).
 
 A compact-format prototype uses one reusable circuit for different sessions.
 On the development M4 Max, with eight proving threads and prepared assets:
@@ -553,7 +554,7 @@ The original signatures and challenge nonces are retained. Proving took
 **8.093 seconds** on two threads; witness generation, proving and native
 verification took **10.545 seconds**. Capture/signing took 360 ms. This uses a
 disposable software key and simulated events/times, so it does not exercise
-Touch ID. [The measured report](experiments/noir-compact/results/live-assurance-acceptance.json)
+Touch ID. [The measured report](extra/experiments/noir-compact/results/live-assurance-acceptance.json)
 separates that harness test from the newer native app acceptance above.
 
 The fixed circuit has 1,041,574 gates and the same 256-scalar/1,536-operation
@@ -580,10 +581,10 @@ encoded-to-decoded association is signed, not ZK-decoded. Fixtures use generic
 decoded-byte chunks and local test challenges; they do not implement the final
 tile/audio-block sampling geometry. The browser/Node SDK exposes these missing
 layers explicitly. This is the first measured layer of the media design in
-[MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md), with further policies still to build.
+[MEDIA-PROVENANCE.md](extra/docs/MEDIA-PROVENANCE.md), with further policies still to build.
 
-Independent entry points are `web/verify-core/node.mjs` and
-`web/verify-core/browser.mjs`. Call `verify(source, readerPolicy, expectedContent)`
+Independent entry points are `frontend/verify-core/node.mjs` and
+`frontend/verify-core/browser.mjs`. Call `verify(source, readerPolicy, expectedContent)`
 with displayed text for writing proofs or a `Uint8Array` of exact encoded master
 bytes for media. `envelope(...)` exports the same checked statement contract.
 Keys/programs are pinned by the reader. V4 and V5 writing exports also import into the
@@ -841,8 +842,8 @@ The attack benchmark needs physical HID injectors, adaptive timing generators,
 replayed real traces and a person tapping while automation types. We will measure
 accepted fakes, operator attention and honest-user friction. The local challenge
 schedule is reported as local, without claiming an independent source of randomness.
-[HUMAN-PRESENCE.md](HUMAN-PRESENCE.md) describes the design and build order.
-[MEDIA-PROVENANCE.md](MEDIA-PROVENANCE.md) does the same for images, audio and
+[HUMAN-PRESENCE.md](extra/docs/HUMAN-PRESENCE.md) describes the design and build order.
+[MEDIA-PROVENANCE.md](extra/docs/MEDIA-PROVENANCE.md) does the same for images, audio and
 video: multi-sensor capture, physical challenges and policies that can later be
 proved privately. Under the new plan, authenticated collector reports come first;
 ZK upgrades the assurance about computation. Co-presence witnesses and an opt-in
@@ -1002,7 +1003,8 @@ this does not add camera/microphone capture to the app.
 pass, including signed S3 requests to a local test server. R2 credentials are not
 configured, and no real Coinbase sign-in or public R2 upload has been accepted.
 No Base transaction is submitted by this sharing flow. Base anchoring remains the
-separate milestone in [VISION §5](VISION.md#5-portable-proofs-stored-anywhere-public-record-on-base).
+separate milestone in
+[VISION §5](extra/docs/VISION.md#5-portable-proofs-stored-anywhere-public-record-on-base).
 
 ## Current issues and how you can help
 
@@ -1046,9 +1048,9 @@ was used in this acceptance test. Your device's recording flow and a provisioned
 Apple evidence adapter still need acceptance; Noir exports currently reject
 unsupported manufacturer attachments rather than borrowing legacy evidence.
 
-Evidence: [CaptureSigner.swift](Sources/Huma/CaptureSigner.swift),
-[ExperimentalCompactRecorder.swift](Sources/HumaCore/ExperimentalCompactRecorder.swift),
-[ReplayProofService.swift](Sources/Huma/ReplayProofService.swift).
+Evidence: [CaptureSigner.swift](extra/Sources/Huma/CaptureSigner.swift),
+[ExperimentalCompactRecorder.swift](extra/Sources/HumaCore/ExperimentalCompactRecorder.swift),
+[ReplayProofService.swift](extra/Sources/Huma/ReplayProofService.swift).
 
 ### 2. Faster proofs and the remaining latency work
 
@@ -1063,7 +1065,7 @@ compilation and verification-key setup happen during preparation; the app ships
 those assets. Runtime witness generation and proving remain measured costs.
 These software-fixture results are not a guarantee across Macs or workloads.
 
-Evidence: [current Mac service measurements](integrations/noir/results/adaptive-app-acceptance.json).
+Evidence: [current Mac service measurements](backend/integrations/noir/results/adaptive-app-acceptance.json).
 
 ### 3. A 10k draft needs more than a larger text buffer
 
@@ -1091,7 +1093,7 @@ All three chunks of a smaller Unicode revision trace are also proved and linked.
 The tests reject changed state, forged starting state, ambiguous packed scalars,
 altered proofs and altered public capture roots. Unicode and long starting-draft
 cases pass witness checks too. This first component remains outside the app.
-[Continuation measurements](integrations/noir/results/continuation-component-acceptance.json).
+[Continuation measurements](backend/integrations/noir/results/continuation-component-acceptance.json).
 
 The next component carries the existing behavioral policy and input-origin chain
 alongside replay. Held keys, the rate window, pauses and counters survive chunk
@@ -1113,7 +1115,7 @@ Presence and original checkpoint signatures, the exact final-text commitment,
 all-chunk 10k proving and native integration remain before this can replace the
 app's current prover. The component reader explicitly reports that those broader
 claims are unverified, and the current Huma SDK rejects this unfinished format.
-[Combined-component measurements](integrations/noir/results/interaction-component-acceptance.json).
+[Combined-component measurements](backend/integrations/noir/results/interaction-component-acceptance.json).
 
 **Larger chunks and the final-text step (October 23).** A gate sweep at 10k
 capacity shows each chunk costs about 217k fixed gates plus 574 per operation,
@@ -1127,7 +1129,7 @@ and 30 altered statements plus empty/whitespace-only text are rejected. The
 reader recomputes both commitments from the master bytes; only trailing ASCII
 space/tab may differ. Still outside the app; signatures and incremental native
 proving remain.
-[Chunking and finalization measurements](integrations/noir/results/chunking-finalization-acceptance.json).
+[Chunking and finalization measurements](backend/integrations/noir/results/chunking-finalization-acceptance.json).
 
 A recursive-verification experiment now verifies an existing proof inside a new
 proof, with its verifier key fixed by the circuit. The valid case passes native
@@ -1135,7 +1137,7 @@ and WASM verification; altered inner proofs and statements fail the final check.
 Wrapping one proof took **6.15 seconds**, and the two-proof wrapper has **1,475,818
 gates**. This adds too much work for the current speed target, so it remains an
 isolated component. It does not establish chunk continuity or complete 10k-session
-support. [Measured results](integrations/noir/results/recursive-component-acceptance.json).
+support. [Measured results](backend/integrations/noir/results/recursive-component-acceptance.json).
 
 The test also confirms why witness generation alone cannot validate recursive
 proofs: both altered cases produced witnesses and outer proof files, then failed
@@ -1171,8 +1173,8 @@ followed by an owner-run enrollment test. Private signing keys or account passwo
 do not belong in chat. Direct proof-file verification remains useful without
 manufacturer attestation; its report must state which evidence was actually checked.
 
-Evidence: [AppAttestClient.swift](Sources/Huma/AppAttestClient.swift),
-[build script](scripts/build.sh).
+Evidence: [AppAttestClient.swift](extra/Sources/Huma/AppAttestClient.swift),
+[build script](backend/scripts/build.sh).
 
 ### 6. Proving typing rules is implemented; validating the detector remains
 
@@ -1225,21 +1227,23 @@ the Mac master-and-proof workflow.
 
 The sections below preserve the setup and protocol details in this same document.
 They describe development tools, not steps an ordinary writer should need.
+This is a polyglot repository rather than one package-manager workspace; run
+`make help` from the repository root to list its install, build and test entry points.
 
 ### A. Where is the code?
 
 | Location | Responsibility |
 | --- | --- |
-| [Sources/Huma](Sources/Huma) | Native editor, signed capture, proof creation, saving and verification UI |
-| [Sources/HumaCore](Sources/HumaCore) | Documents, sessions, text policy, signing/key storage and service clients |
-| [zkvm](zkvm) | RISC Zero replay program, local worker and shared native/WASM verification |
-| [web](web) | Website, browser reader, local registry and research deck |
-| [web/verify-core](web/verify-core) | Shared statement contract, DOM-free verification API and bounded browser/Node workers |
-| [integrations/attestation](integrations/attestation) | Apple checks, portable evidence and optional service |
-| [experiments/noir-compact](experiments/noir-compact) | Compact-format and reusable-profile research |
-| [experiments/noir-replay](experiments/noir-replay) | Small complete V2 circuit and scaling fixtures |
-| [experiments/noir-prover](experiments/noir-prover) | Narrow signature/hash microbenchmarks |
-| [PROVER-PERFORMANCE.md](PROVER-PERFORMANCE.md) | Prover profiling, right-sized profile measurements and thread scaling |
+| [extra/Sources/Huma](extra/Sources/Huma) | Native editor, signed capture, proof creation, saving and verification UI |
+| [extra/Sources/HumaCore](extra/Sources/HumaCore) | Documents, sessions, text policy, signing/key storage and service clients |
+| [backend/zkvm](backend/zkvm) | RISC Zero replay program, local worker and shared native/WASM verification |
+| [frontend](frontend) | Website, browser reader, local registry and research deck |
+| [frontend/verify-core](frontend/verify-core) | Shared statement contract, DOM-free verification API and bounded browser/Node workers |
+| [backend/integrations/attestation](backend/integrations/attestation) | Apple checks, portable evidence and optional service |
+| [extra/experiments/noir-compact](extra/experiments/noir-compact) | Compact-format and reusable-profile research |
+| [extra/experiments/noir-replay](extra/experiments/noir-replay) | Small complete V2 circuit and scaling fixtures |
+| [extra/experiments/noir-prover](extra/experiments/noir-prover) | Narrow signature/hash microbenchmarks |
+| [extra/docs/PROVER-PERFORMANCE.md](extra/docs/PROVER-PERFORMANCE.md) | Prover profiling, right-sized profile measurements and thread scaling |
 
 Source and machine-readable results are retained. Superseded standalone project
 documents have been consolidated here. Third-party license notices are retained.
@@ -1254,35 +1258,35 @@ Rust/WASM preparation scripts.
 After preparing those tools:
 
 ```sh
-npm ci --prefix integrations/attestation --ignore-scripts
-npm ci --prefix experiments/noir-replay/runtime --ignore-scripts
-python3 integrations/noir/prepare.py
-python3 experiments/noir-prover/prepare.py
-swift build --jobs 2
-BIN_DIR="$(swift build --show-bin-path)"
-swiftc -parse-as-library -I "$BIN_DIR" experiments/noir-replay/WorkerBench.swift \
+npm ci --prefix backend/integrations/attestation --ignore-scripts
+npm ci --prefix extra/experiments/noir-replay/runtime --ignore-scripts
+python3 backend/integrations/noir/prepare.py
+python3 extra/experiments/noir-prover/prepare.py
+swift build --package-path extra --jobs 2
+BIN_DIR="$(swift build --package-path extra --show-bin-path)"
+swiftc -parse-as-library -I "$BIN_DIR" extra/experiments/noir-replay/WorkerBench.swift \
   "$BIN_DIR/HumaCore.o" -o build/research/noir-tools/worker-bench
 DEVELOPER_DIR=/Library/Developer/CommandLineTools \
   CARGO_TARGET_DIR="$PWD/build/research/noir-compact-native-target" \
-  cargo build --release --manifest-path experiments/noir-compact/native/Cargo.toml --locked --jobs 2
+  cargo build --release --manifest-path extra/experiments/noir-compact/native/Cargo.toml --locked --jobs 2
 if [ ! -f build/research/noir-assurance/assurance-typed250-v1/public.json ]; then
-  python3 experiments/noir-compact/assurance_cases.py \
+  python3 extra/experiments/noir-compact/assurance_cases.py \
     --case typed250 --name assurance-typed250-v1 --profile cast256 --threads 2 --prove
 fi
 LIVE_DIR="$PWD/build/research/noir-assurance-native/live-v4-250-v2"
 mkdir -p "$LIVE_DIR"
-swiftc -parse-as-library -I "$BIN_DIR" experiments/noir-compact/live-assurance.swift \
+swiftc -parse-as-library -I "$BIN_DIR" extra/experiments/noir-compact/live-assurance.swift \
   "$BIN_DIR/HumaCore.o" -o build/research/noir-tools/live-assurance
 if [ ! -f "$LIVE_DIR/document.huma" ]; then
   build/research/noir-tools/live-assurance \
     "$PWD/build/research/noir-compact-native-target/release/libhuma_compact_experiment.dylib" "$LIVE_DIR"
 fi
 if [ ! -f build/research/noir-publictext/algebraic-v1/public.json ]; then
-  python3 experiments/noir-compact/public_text_cases.py \
+  python3 extra/experiments/noir-compact/public_text_cases.py \
     --name algebraic-v1 --relation algebraic --prove
 fi
 if [ ! -f build/research/noir-capacity/cp32-pres8-v1/target/huma_compact_experiment.json ]; then
-  python3 experiments/noir-compact/capacity_cases.py \
+  python3 extra/experiments/noir-compact/capacity_cases.py \
     --name cp32-pres8-v1 --checkpoints 32 --presence 8
 fi
 if [ ! -f build/research/noir-capacity/cp32-pres8-v1/target/setup/vk ]; then
@@ -1293,8 +1297,8 @@ if [ ! -f build/research/noir-capacity/cp32-pres8-v1/target/setup/vk ]; then
     -o build/research/noir-capacity/cp32-pres8-v1/target/setup \
     -t noir-recursive -c build/research/noir-crs
 fi
-python3 integrations/noir/prepare-profiles.py
-bash scripts/build.sh
+python3 backend/integrations/noir/prepare-profiles.py
+bash backend/scripts/build.sh
 open build/Huma.app
 ```
 
@@ -1317,8 +1321,8 @@ installed command-line SDK can be selected with
 For the website and local registry:
 
 ```sh
-npm ci --prefix web --ignore-scripts
-node web/registry.mjs
+npm ci --prefix frontend --ignore-scripts
+node frontend/registry.mjs
 ```
 
 Open `http://127.0.0.1:4318`, `/verify` or `/download`. The loopback registry has no
@@ -1326,21 +1330,21 @@ account requirement for verification; hosting uses the installed storage SDK.
 The optional React research deck has its own build:
 
 ```sh
-npm ci --prefix web
-npm run build --prefix web
-npm run typecheck --prefix web
+npm ci --prefix frontend
+npm run build --prefix frontend
+npm run typecheck --prefix frontend
 ```
 
-The deck is served at `/deck`; `web/dist` contains generated assets.
+The deck is served at `/deck`; `frontend/dist` contains generated assets.
 
 ### C. Verify a downloaded proof independently
 
 After building/preparing the trusted local verifier assets:
 
 ```sh
-node zkvm/scripts/verify-file.mjs Huma-evidence.json
-node zkvm/scripts/verify-file.mjs Huma-replay-proof.json --text received-text.txt
-node zkvm/scripts/verify-file.mjs Huma-replay-proof.json \
+node backend/zkvm/scripts/verify-file.mjs Huma-evidence.json
+node backend/zkvm/scripts/verify-file.mjs Huma-replay-proof.json --text received-text.txt
+node backend/zkvm/scripts/verify-file.mjs Huma-replay-proof.json \
   --expected-key <64-lowercase-hex-digits>
 ```
 
@@ -1388,14 +1392,14 @@ bytes; the two identifiers have different purposes.
 
 For hosted originals, configure [`.env.example`](.env.example)'s server-only R2
 and CDP variables in the existing `.env.local`; keep the R2 bucket private. From
-`web/`, run `npm run build:share` and `npm run start:configured`. The server defaults
+`frontend/`, run `npm run build:share` and `npm run start:configured`. The server defaults
 to localhost. An HTTPS deployment must preserve the API paths and allow its origin
 in the CDP project. R2 uses the S3 endpoint and `auto` region described in
 [Cloudflare's documentation](https://developers.cloudflare.com/r2/get-started/s3/).
 Coinbase access tokens are checked server-side with
 [CDP's validation API](https://docs.cdp.coinbase.com/api-reference/v2/rest-api/end-user-accounts/validate-end-user-access-token).
 
-Before starting the live host, run from `web/`:
+Before starting the live host, run from `frontend/`:
 
 ```sh
 npm run check:publication -- --origin https://your-host.example
@@ -1412,7 +1416,7 @@ approval assets. It uses an explicit runtime file list, includes a hash manifest
 and leaves out credentials, private drafts, witnesses and native proving tools:
 
 ```sh
-node scripts/package-publication.mjs build/HumaPublicationHost-release
+node backend/scripts/package-publication.mjs build/HumaPublicationHost-release
 docker build -t huma-publication-host:release build/HumaPublicationHost-release
 ```
 
@@ -1431,7 +1435,7 @@ docker run -d --name huma-publications --restart unless-stopped \
   -e HUMA_STORAGE_BACKEND=r2 -e HUMA_REGISTRY_HOST=0.0.0.0 -e HUMA_REGISTRY_PORT=4318 \
   --read-only --cap-drop ALL --security-opt no-new-privileges=true \
   --cpus 2 --memory 1g \
-  --tmpfs /app/web/data:uid=1000,gid=1000,mode=0700 \
+  --tmpfs /app/frontend/data:uid=1000,gid=1000,mode=0700 \
   --tmpfs /tmp:uid=1000,gid=1000,mode=0700 \
   huma-publication-host:release
 ```
@@ -1484,7 +1488,7 @@ private history, including nested fields.
 Portable Apple evidence can be checked separately:
 
 ```sh
-node zkvm/scripts/verify-file.mjs Huma-replay-proof.json \
+node backend/zkvm/scripts/verify-file.mjs Huma-replay-proof.json \
   --device-evidence Huma-device-evidence.json \
   --device-policy reader-app-policy.json
 ```
@@ -1501,7 +1505,7 @@ identity and `huma-app-attest-assert-v2`; legacy bindings retain their byte-hash
 semantics and V1 domain. No silent downgrade is permitted.
 
 For provisioned testing, select the actual Apple account/profile and correct
-`Resources/Huma.AppAttest.{development,production}.entitlements`. The local service
+`extra/Resources/Huma.AppAttest.{development,production}.entitlements`. The local service
 uses explicit configuration:
 
 ```sh
@@ -1509,7 +1513,7 @@ HUMA_APP_ID_PREFIX=YOURPREFIX \
 HUMA_SIGNING_IDENTIFIER=dev.swayam.huma \
 HUMA_ATTEST_ENVIRONMENT=development \
 HUMA_BUNDLE_VERSIONS=1 \
-node integrations/attestation/server.mjs
+node backend/integrations/attestation/server.mjs
 ```
 
 `YOURPREFIX` is a placeholder. The service defaults to loopback port 4319 and
@@ -1530,15 +1534,15 @@ shared storage, account/device binding, revocation and independent review.
 Preparation downloads pinned official binaries and immutable library sources:
 
 ```sh
-python3 experiments/noir-prover/prepare.py
-python3 experiments/noir-replay/typing_profile.py
-python3 experiments/noir-compact/run.py \
+python3 extra/experiments/noir-prover/prepare.py
+python3 extra/experiments/noir-replay/typing_profile.py
+python3 extra/experiments/noir-compact/run.py \
   --fixture build/research/noir-typing-fixtures/typing-250-current.json \
   --name cast256 --candidate bounded-checkpoints --profile cast256 \
   --prove --threads 8
-python3 experiments/noir-compact/bucket_cases.py --threads 8
-python3 experiments/noir-compact/check.py cast256 --threads 8
-python3 experiments/noir-compact/semantics.py --candidate bounded-checkpoints
+python3 extra/experiments/noir-compact/bucket_cases.py --threads 8
+python3 extra/experiments/noir-compact/check.py cast256 --threads 8
+python3 extra/experiments/noir-compact/semantics.py --candidate bounded-checkpoints
 ```
 
 Use `--overflow-control` only for its deliberately weakened constraint test; it
@@ -1547,7 +1551,7 @@ creates no proof or verification key and must never become a reader build.
 The compact composite reader can be invoked directly:
 
 ```sh
-python3 experiments/noir-compact/verify.py \
+python3 extra/experiments/noir-compact/verify.py \
   --trusted-build build/research/noir-compact/cast256 \
   --proof-dir build/research/noir-compact/cast256/target/proof-8-threads \
   --capsule build/research/noir-compact/cast256/capsule.json
@@ -1561,7 +1565,7 @@ journal is compared and all signatures checked.
 For an already captured and signed V4 session, the local acceptance runner is:
 
 ```sh
-python3 experiments/noir-compact/live_assurance_cases.py \
+python3 extra/experiments/noir-compact/live_assurance_cases.py \
   build/research/noir-assurance-native/live-v4-250-v2 --prove
 ```
 
@@ -1572,17 +1576,17 @@ then generates and verifies a proof. Cryptographic child processes cannot make
 outbound connections. The external monitor enforces witness memory/deadline
 limits; the app's worker harness enforces proving cancellation/deadline/CPU limits.
 An existing proof directory is never overwritten. Public fixture verification
-can be repeated without proving using `npm test --prefix web`.
+can be repeated without proving using `npm test --prefix frontend`.
 
 Build the browser reader without installing any Noir compiler or proving SRS:
 
 ```sh
-npm ci --prefix experiments/noir-compact/browser --ignore-scripts
-node experiments/noir-compact/browser/build.mjs --web
-npm test --prefix experiments/noir-compact/browser
+npm ci --prefix extra/experiments/noir-compact/browser --ignore-scripts
+node extra/experiments/noir-compact/browser/build.mjs --web
+npm test --prefix extra/experiments/noir-compact/browser
 ```
 
-The build writes generated reader assets to `web/dist/compact`. Restart your own
+The build writes generated reader assets to `frontend/dist/compact`. Restart your own
 local registry after server changes, then open `/verify`. Both supported proof
 formats can be loaded from a local file or through Advanced → Paste proof JSON.
 Compact proof files are capped at 512 KiB. The public software-key fixtures under
@@ -1591,11 +1595,11 @@ Compact proof files are capped at 512 KiB. The public software-key fixtures unde
 Export an already generated compact proof after native composite verification:
 
 ```sh
-python3 experiments/noir-compact/export.py \
+python3 extra/experiments/noir-compact/export.py \
   --proof-dir build/research/noir-compact/cast256/target/Bucket250-8-threads \
   --capsule build/research/noir-compact/cast256/Bucket250-capsule.json \
   --output build/research/public-compact-proof.json
-node experiments/noir-compact/browser/verify-file.mjs \
+node extra/experiments/noir-compact/browser/verify-file.mjs \
   build/research/public-compact-proof.json --text received-text.txt
 ```
 
@@ -1611,9 +1615,9 @@ bytes and statement identity remain unchanged.
 For a standalone loopback-only browser acceptance page:
 
 ```sh
-node experiments/noir-compact/browser/build.mjs
-python3 experiments/noir-compact/browser/prepare-fixtures.py
-node experiments/noir-compact/browser/serve.mjs
+node extra/experiments/noir-compact/browser/build.mjs
+python3 extra/experiments/noir-compact/browser/prepare-fixtures.py
+node extra/experiments/noir-compact/browser/serve.mjs
 ```
 
 Open `http://127.0.0.1:4324` and run the checks. Preparation requires the previously
@@ -1629,13 +1633,13 @@ prefix into the signed capsule journal. Every active root needs its signature.
 It uses 804,314 gates; proof bytes are 14,656 plus 1,824 public-input bytes and the
 signature capsule. Source/VK/proof pairings are retained under
 `build/research/noir-compact`; public timing and validation reports are in
-[experiments/noir-compact/results](experiments/noir-compact/results).
+[extra/experiments/noir-compact/results](extra/experiments/noir-compact/results).
 
 Historical complete V2 experiments, narrow component benchmarks and their
 machine-readable reports remain in the other experiment directories. The tiny
 V2 fixture's 4.669-second result is proving-only on 16 threads; it is not a normal
 session. The 10k hash-only result is in
-[results-text10000-8-threads.json](experiments/noir-replay/results-text10000-8-threads.json).
+[results-text10000-8-threads.json](extra/experiments/noir-replay/results-text10000-8-threads.json).
 
 Compiler/gate sizing uses a 90-second/6 GiB sampled-RSS budget. Proof jobs use
 exclusive admission, lower priority, owned-process-group cancellation, thermal
@@ -1730,7 +1734,7 @@ intermediate edits, key details, individual timing, checkpoint offsets and salt
 remain private unless separately disclosed.
 
 V4 and V5 writing proofs use the richer capture journal in
-[`assurance-abi.json`](experiments/noir-compact/browser/assets/assurance-abi.json).
+[`assurance-abi.json`](extra/experiments/noir-compact/browser/assets/assurance-abi.json).
 The older eight-slot V5 profile keeps 94 public fields and the original V4 capture signatures. The
 checkpoint domain is `HUMA_COMPACT_ASSURANCE_CHECKPOINT_V4\0`; approved presence
 uses `HUMA_COMPACT_ASSURANCE_PRESENCE_V4\0`. V5's verifier-key SHA-256 is
@@ -1740,7 +1744,7 @@ bytes and the 65-byte public key. The older V4 key and identity remain supported
 
 The current larger V5 profile is `assurance256-cp32-v1`, still using kind
 `huma-compact-assurance-public-proof-v5`. Its pinned
-[`assurance-cp32-abi.json`](experiments/noir-compact/browser/assets/assurance-cp32-abi.json)
+[`assurance-cp32-abi.json`](extra/experiments/noir-compact/browser/assets/assurance-cp32-abi.json)
 has **142 public fields / 4,544 bytes**, with two 32-slot checkpoint-root arrays.
 Its verifier-key SHA-256 is
 `5b3a98abe325feca9d5187668fc3e97ab0486b0a0f1e5cb2f904de1c67621b11`.
@@ -1781,19 +1785,19 @@ fixtures correctly. Its full RISC Zero proof attempt was stopped after exceeding
 14 minutes and reaching about 8.4 GiB RSS on two threads. No completed V3 proof
 is claimed. The Noir V4 and optimized V5 full-policy proofs complete through the native app
 service, as described in question 23. The earlier RISC Zero attempt is in
-[the presence/media report](zkvm/tests/results/presence-media-acceptance.json);
-[the earlier compact native capture report](experiments/noir-compact/results/native-capture-acceptance.json)
+[the presence/media report](backend/zkvm/tests/results/presence-media-acceptance.json);
+[the earlier compact native capture report](extra/experiments/noir-compact/results/native-capture-acceptance.json)
 records its separate successful 4.344-second short-session proof.
 
 Useful existing checks include:
 
 ```sh
-swift test
-cargo test --manifest-path zkvm/Cargo.toml -p huma-replay-core -p huma-replay-verifier --locked
-node zkvm/tests/browser-verifier.mjs
-npm test --prefix web
-npm test --prefix integrations/attestation
-python3 -u zkvm/tests/native-worker.py
+swift test --package-path extra
+cargo test --manifest-path backend/zkvm/Cargo.toml -p huma-replay-core -p huma-replay-verifier --locked
+node backend/zkvm/tests/browser-verifier.mjs
+npm test --prefix frontend
+npm test --prefix backend/integrations/attestation
+python3 -u backend/zkvm/tests/native-worker.py
 ```
 
 The native-worker test generates a real proof by default and can be expensive.
@@ -1803,7 +1807,7 @@ The compact native crate has its own scoped checks:
 ```sh
 DEVELOPER_DIR=/Library/Developer/CommandLineTools \
   CARGO_TARGET_DIR="$PWD/build/research/noir-compact-native-target" \
-  cargo test --all-targets --manifest-path experiments/noir-compact/native/Cargo.toml --jobs 2
+  cargo test --all-targets --manifest-path extra/experiments/noir-compact/native/Cargo.toml --jobs 2
 ```
 
 Recorded audits are not a clean production approval. The RISC Zero host lockfile
@@ -1818,7 +1822,7 @@ The independent compact Rust lockfile reported zero known vulnerabilities and on
 unmaintained `paste` warning (`RUSTSEC-2024-0436`). Its registry yanked-package check
 timed out; it must not be described as completed. No advisory is suppressed.
 
-The `web` lockfile pins S3 SDK 3.1156.0 and Coinbase SDK 1.60.0, with Coinbase
+The `frontend` lockfile pins S3 SDK 3.1156.0 and Coinbase SDK 1.60.0, with Coinbase
 frontend packages 0.0.128. Vite is now 6.4.4 with React plugin 4.7.0, and compatible
 transitive build packages were refreshed. Both pages build, and the existing
 deck's TypeScript check passes. The saved npm audit comparison fell from **14 findings
@@ -1839,7 +1843,7 @@ CDN hosts with matching SHA-256; verification then uses its pinned local copy.
 The public Apple development fixture is from
 [uebelack/node-app-attest](https://github.com/uebelack/node-app-attest/blob/main/test/fixtures/attestation-development.json),
 retrieved October 21, 2026, under the MIT notice retained at
-[integrations/attestation/test/fixtures/LICENSE](integrations/attestation/test/fixtures/LICENSE).
+[backend/integrations/attestation/test/fixtures/LICENSE](backend/integrations/attestation/test/fixtures/LICENSE).
 It contains public historical evidence, not a signing private key. The historical
 assertion pair in the tests comes from that project's `test/verifyAssertion.test.js`.
 Both are component-test material, must fail the current Mac admission policy, and

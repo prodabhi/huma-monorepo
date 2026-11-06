@@ -2,7 +2,7 @@
 
 > **Not part of the current setup.** Huma proves every page on the writer's device. This server stays for writers
 > who opt in to server proving (Settings → Where proofs are made). The on-chain batch route was retired with Base in
-> 0.2 and is archived in `experiments/onchain/prover/`.
+> 0.2 and is archived in `extra/experiments/onchain/prover/`.
 
 One Rust process for every proof Huma makes on a server:
 
@@ -24,9 +24,11 @@ Barretenberg (`bb`) does the proving math. This server keeps it busy without run
 ## Run
 
 ```sh
-python3 integrations/noir/package.py build/prover-engine      # stage the pinned engine (new directory)
-cd prover && cargo build --release
-HUMA_ENGINE_DIR=../build/prover-engine ./target/release/huma-prover
+HUMA_NODE_ENGINE=1 \
+  python3 backend/integrations/noir/package.py build/prover-engine  # stage the pinned engine (new directory)
+cargo build --release --manifest-path backend/prover/Cargo.toml
+HUMA_ENGINE_DIR="$PWD/build/prover-engine" \
+  ./backend/prover/target/release/huma-prover
 ```
 
 | Variable | Default | Meaning |
@@ -41,9 +43,9 @@ HUMA_ENGINE_DIR=../build/prover-engine ./target/release/huma-prover
 ## Test
 
 ```sh
-cargo test                                                     # admission, limits, request shape
-HUMA_PROVER_E2E_URL=http://127.0.0.1:4330 swift test --filter RemoteProverTests   # a real page, verified on the Mac
-HUMA_PROVER_E2E_URL=http://127.0.0.1:4330 node --test web/test/remote-prover.test.mjs
+cargo test --manifest-path backend/prover/Cargo.toml            # admission, limits, request shape
+HUMA_PROVER_E2E_URL=http://127.0.0.1:4330 \
+  swift test --package-path extra --filter RemoteProverTests     # a real page, verified on the Mac
 ```
 
 On Linux, stage an engine with Linux builds of `node`, `bb` and `capture-input`; `package.py` currently stages the macOS arm64 tools. The macOS network sandbox for the worker applies only on macOS.

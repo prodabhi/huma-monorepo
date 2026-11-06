@@ -11,7 +11,7 @@ handles and browser sessions. Everything that stores something goes through one 
 2. Make an account and **fund it** from the [faucet](https://hub.arkiv.network/faucet). Every write is a paid transaction
    on Arkiv's testnet (Rabdi). Make a key with
    `node -e "const {generatePrivateKey,privateKeyToAccount}=require('viem/accounts');const k=generatePrivateKey();console.log(k,privateKeyToAccount(k).address)"`
-   (run in `web/`), send the address to the faucet, and keep the private key secret.
+   (run in `frontend/`), send the address to the faucet, and keep the private key secret.
 3. Make an **encryption key** and back it up: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
    Arkiv data is public, so everything is stored encrypted. **Lose this key and nothing stored can be read again.**
 4. In `.env`:
@@ -87,7 +87,7 @@ nothing.
 
 ## Tests
 
-`cd web && node --test test/arkiv-store.test.mjs`. They run against an in-memory chain that behaves like Arkiv (separate
+`cd frontend && node --test test/arkiv-store.test.mjs`. They run against an in-memory chain that behaves like Arkiv (separate
 entities per chunk, a transaction per write, a 128 KiB limit): round trips, chunking, encryption and tampering, write-once
 pages, compare-and-swap with ten concurrent writers, half writes, removal, and a whole page shared through the real
 registry and read back after a restart. **They do not talk to Arkiv.** The SDK calls in `createArkivChain` are checked

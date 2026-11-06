@@ -12,7 +12,7 @@ import sys
 import time
 import verify as v3
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT/'extra/experiments/noir-replay'))
 import fixture

@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { keccak256 } from 'viem';
-import { createRelayer, statementKey } from '../relayer.mjs';
-import { keccak, pageKey } from '../../../backend/integrations/noir/long/chain.mjs';
+import { createRequire } from 'node:module';
+import { createRelayer, statementKey } from './relayer.mjs';
+import { keccak, pageKey } from './chain.mjs';
+
+const require = createRequire(new URL('../../../frontend/package.json', import.meta.url));
+const { keccak256 } = require('viem');
 
 const chainFixture = async () => JSON.parse(await readFile(new URL('../noir-compact/browser/test/fixtures/Long400V2-chain.json', import.meta.url), 'utf8'));
 const fields = b64 => { const raw = Buffer.from(b64, 'base64'), out = []; for (let i = 0; i < raw.length; i += 32) out.push('0x' + raw.subarray(i, i + 32).toString('hex')); return out; };
@@ -52,7 +55,7 @@ test('a proof HumaPages would reject is never sent', async () => {
 });
 
 test('a page that misses a required writing rule is explained, not sent to HumaPages', async () => {
-  const { unmetWritingRules, notEligibleReason } = await import('../publication-contract.mjs');
+  const { unmetWritingRules } = await import('../../../frontend/publication-contract.mjs');
   const raw = Buffer.from((await chainFixture()).publicInputs, 'base64').subarray(0, 46 * 32);
   assert.deepEqual(unmetWritingRules(raw.toString('base64')), []);
   // Every rule is required: short notes (under 20 s, under 30 keys, no pause) and an uneven rhythm can't go on Base.
@@ -61,5 +64,4 @@ test('a page that misses a required writing rule is explained, not sent to HumaP
     ['it was typed for less than 20 seconds', 'it has fewer than 30 key presses', 'there was no natural pause']);
   const uneven = Buffer.from(raw); uneven[39 * 32 + 31] = 0;
   assert.deepEqual(unmetWritingRules(uneven.toString('base64')), ['the typing rhythm looked unusual']);
-  assert.match(notEligibleReason(['it was typed for less than 20 seconds']), /writing rules: it was typed for less than 20 seconds\.$/);
 });

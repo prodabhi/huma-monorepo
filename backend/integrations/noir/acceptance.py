@@ -3,7 +3,7 @@
 import argparse,json,os,plistlib,shutil,subprocess,tempfile
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run',required=True)
@@ -14,7 +14,7 @@ def main():
     env=dict(os.environ,CLANG_MODULE_CACHE_PATH=str(ROOT/'build/swift-module-cache'),
         SWIFTPM_MODULECACHE_OVERRIDE=str(ROOT/'build/swift-module-cache'))
     def run(command,**kwargs):return subprocess.run([str(x) for x in command],cwd=ROOT,env=env,check=True,**kwargs)
-    bin_dir=Path(subprocess.check_output(['swift','build','--show-bin-path'],cwd=ROOT,env=env,text=True).strip())
+    bin_dir=Path(subprocess.check_output(['swift','build','--package-path','extra','--scratch-path','.build','--show-bin-path'],cwd=ROOT,env=env,text=True).strip())
     temp=Path(tempfile.mkdtemp(prefix='huma-adaptive-acceptance-'))
     try:
         app=temp/'HumaNoirPublicationProbe.app';contents=app/'Contents';binary=contents/'MacOS/HumaNoirProbe';binary.parent.mkdir(parents=True)

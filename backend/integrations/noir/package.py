@@ -2,7 +2,7 @@
 """Stage the pinned, offline Mac Noir worker; never launch or authenticate."""
 import hashlib,json,os,shutil,subprocess,sys
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 BUILD=ROOT/'build/research'
 PROGRAM=BUILD/'noir-assurance/assurance-typed250-v1/target/huma_compact_experiment.json'
 BYTECODE='15d6b3c7d5db15310f56452b0d5808444daf166c6a610daffdd7ddf682c8b1c5'
@@ -87,7 +87,7 @@ def main():
         copy(reader/f'assets/long3-{name}.vk',f'reader/assets/long3-{name}.vk')
     copy(reader/'final-text.mjs','reader/final-text.mjs')
     source=(ROOT/'backend/integrations/noir/long/reader.mjs').read_text()
-    source=source.replace("'../../../experiments/noir-compact/browser/core.mjs'","'./core.mjs'").replace("'../../../experiments/noir-compact/browser/final-text.mjs'","'./final-text.mjs'")
+    source=source.replace("'../../../../extra/experiments/noir-compact/browser/core.mjs'","'./core.mjs'").replace("'../../../../extra/experiments/noir-compact/browser/final-text.mjs'","'./final-text.mjs'")
     (destination/'reader/long.mjs').write_text(source[:source.index('// Node adapter:')])
     # The points the largest program needed (v2's final1024: 2,060,088), rounded up to 2^21 at 32 bytes each. v3's
     # largest (final10000: 1,027,301) needs half; the file stays the same so installed Macs keep theirs.

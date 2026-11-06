@@ -11,7 +11,7 @@ import time
 import check
 import verify
 
-ROOT=Path(__file__).resolve().parents[2]
+ROOT=Path(__file__).resolve().parents[3]
 HERE=Path(__file__).resolve().parent
 TOOLS=ROOT/'build/research/noir-tools'
 NATIVE=ROOT/'build/research/noir-compact-native-target/release'
@@ -38,8 +38,8 @@ if __name__=='__main__':
     if metadata.exists():
         if json.loads(metadata.read_text())!=source_hashes:raise RuntimeError('Use a new name for changed native capture code')
     else:
-        subprocess.run(['swift','build','--target','HumaCore','--jobs','2'],cwd=ROOT,check=True)
-        binary_path=Path(subprocess.check_output(['swift','build','--show-bin-path'],cwd=ROOT,text=True).strip())
+        subprocess.run(['swift','build','--package-path','extra','--scratch-path','.build','--target','HumaCore','--jobs','2'],cwd=ROOT,check=True)
+        binary_path=Path(subprocess.check_output(['swift','build','--package-path','extra','--scratch-path','.build','--show-bin-path'],cwd=ROOT,text=True).strip())
         generator=casework/'swift-live-capture'
         subprocess.run(['swiftc','-parse-as-library','-module-cache-path',str(ROOT/'build/module-cache'),
             '-I',str(binary_path),str(HERE/'live-capture.swift'),str(binary_path/'HumaCore.o'),'-o',str(generator)],cwd=ROOT,check=True)

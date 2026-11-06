@@ -2,13 +2,13 @@
 # Builds a Developer ID signed, notarized and stapled Huma.dmg that opens on any Mac.
 # Needs the Developer ID certificate in the keychain and the `huma-notary` notarytool profile.
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 IDENTITY="${HUMA_SIGN_IDENTITY:-Developer ID Application: Swayam Karle (38V69R9TA5)}"
 OUT="$PWD/build/release"
 rm -rf "$OUT/Huma.app" "$OUT/dmg" "$OUT/Huma.dmg"
 mkdir -p "$OUT"
 # The proving points are downloaded once by the app instead of shipped (HumaCore ProvingSetup).
-HUMA_EXTERNAL_SETUP=1 HUMA_CONFIG=release HUMA_SIGN_IDENTITY="$IDENTITY" HUMA_APP_DIR="$OUT/Huma.app" ./scripts/build.sh
+HUMA_EXTERNAL_SETUP=1 HUMA_CONFIG=release HUMA_SIGN_IDENTITY="$IDENTITY" HUMA_APP_DIR="$OUT/Huma.app" ./backend/scripts/build.sh
 codesign --verify --deep --strict "$OUT/Huma.app"
 
 mkdir -p "$OUT/dmg"

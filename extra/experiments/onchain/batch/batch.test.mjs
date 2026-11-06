@@ -1,4 +1,4 @@
-// node --test integrations/noir/batch/batch.test.mjs   (HUMA_BATCH_PROVE=1 also proves a real batch)
+// node --test extra/experiments/onchain/batch/batch.test.mjs   (HUMA_BATCH_PROVE=1 also proves a real batch)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { slotOf, layout, proveBatch, leafOf } from './prove.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url)), repo = path.resolve(here, '../../../..');
+const onchain = path.resolve(here, '..');
 const fixture = async name => slotOf(JSON.parse(await readFile(path.join(repo, 'extra/experiments/noir-compact/browser/test/fixtures', name + '.json'), 'utf8')));
 const noirJs = path.join(repo, 'extra/experiments/noir-replay/runtime/node_modules/@noir-lang/noir_js/lib/index.mjs');
 
@@ -40,8 +41,8 @@ test('proves a real batch for the registry contract', { skip: !process.env.HUMA_
   const batch = await proveBatch([await fixture('AssuranceV5'), await fixture('Assurance64Unicode'), await fixture('AssuranceCP32')]);
   const seconds = (performance.now() - started) / 1000;
   assert.match(batch.proof, /^0x[0-9a-f]+$/);
-  await mkdir(path.join(repo, 'contracts/test/fixtures'), { recursive: true });
-  await writeFile(path.join(repo, 'contracts/test/fixtures/batch.json'), JSON.stringify({ root: batch.root, proof: batch.proof }) + '\n');
+  await mkdir(path.join(onchain, 'contracts/test/fixtures'), { recursive: true });
+  await writeFile(path.join(onchain, 'contracts/test/fixtures/batch.json'), JSON.stringify({ root: batch.root, proof: batch.proof }) + '\n');
   console.log(`batch proved in ${seconds.toFixed(1)} s; proof ${(batch.proof.length - 2) / 2} bytes; root ${batch.root}`);
 });
 

@@ -6,7 +6,7 @@ from pathlib import Path, PurePosixPath
 import tarfile
 import urllib.request
 
-BASE = Path(__file__).resolve().parents[2] / "build/research"
+BASE = Path(__file__).resolve().parents[3] / "build/research"
 TOOLS = BASE / "noir-tools"
 RELEASES = [
     ("noir-lang/noir", "v1.0.0-beta.25", "noir-aarch64-apple-darwin.tar.gz", "noir", "nargo",

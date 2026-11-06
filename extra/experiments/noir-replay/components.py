@@ -10,7 +10,7 @@ import subprocess
 import time
 import fixture
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 WORK = ROOT / "build/research/noir-replay-components"
 TOOLS = ROOT / "build/research/noir-tools"

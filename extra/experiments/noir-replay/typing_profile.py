@@ -8,7 +8,7 @@ import subprocess
 import time
 import fixture
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parent
 WORK = ROOT / "build/research/noir-typing-fixtures"
 
@@ -21,9 +21,9 @@ def run(args):
 if __name__ == "__main__":
     WORK.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, RAYON_NUM_THREADS="2")
-    subprocess.run(["swift", "build", "--target", "HumaCore", "--jobs", "2"],
+    subprocess.run(["swift", "build", "--package-path", "extra", "--scratch-path", ".build", "--target", "HumaCore", "--jobs", "2"],
                    cwd=ROOT, env=env, check=True, timeout=120)
-    bin_dir = Path(run(["swift", "build", "--show-bin-path"]).strip())
+    bin_dir = Path(run(["swift", "build", "--package-path", "extra", "--scratch-path", ".build", "--show-bin-path"]).strip())
     generator = WORK / "generate-typing"
     run(["swiftc", "-parse-as-library", "-module-cache-path", ROOT / "build/module-cache",
          "-I", bin_dir, HERE / "generate-typing.swift", bin_dir / "HumaCore.o", "-o", generator])
