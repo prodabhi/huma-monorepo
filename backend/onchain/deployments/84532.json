@@ -11,5 +11,19 @@
     "HumaChunk10000Verifier": "0xc40d8ed9f4c69cec7dca60e90495b0a5a84add4f",
     "HumaFinal10000Verifier": "0x9e06ad3ce2318b74fae75003514e81e0cd40b24c"
   },
-  "at": "2026-11-06T11:37:23.741Z"
+  "at": "2026-11-06T11:37:23.741Z",
+  "transactions": {
+    "HumaChunk1024Verifier": "0x0b3b0ce676c30a4fcbf96ad9073fca3f92fe9e616d95c97d43c4702bc0b05efb",
+    "HumaFinal1024Verifier": "0xd0c2939bda9172a3c63b39dc98f138b762350849fd743860f2d3e8bf3bec4301",
+    "HumaChunk4096Verifier": "0x99cbee79af26fba426302b984673e595bf4f2e670d713bffd64fbd1da525dedd",
+    "HumaFinal4096Verifier": "0xc086efb0a3770c9567487e14aeff953e3379b99256da84f4b6ae49331e75ed63",
+    "HumaChunk10000Verifier": "0xe8f4afcb1bf2bf59a4d60dc102a08b4f35a8f95d752414833d20d8330c4f4c02",
+    "HumaFinal10000Verifier": "0x3dfe9f2ad45b0394b7198b3325bd9e5c482f741986fce3bb2fcd138a6b88c2d9",
+    "HumaPagesV3": "0x236736f9e74695b29f1ef748f38c51e3901888ea446e3d0bc7da899f3205eff9"
+  },
+  "sourceVerified": [
+    "https://sepolia.basescan.org",
+    "https://sourcify.dev",
+    "https://base-sepolia.blockscout.com"
+  ]
 }

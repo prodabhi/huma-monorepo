@@ -24,7 +24,16 @@ for each page size, 1024, 4096 and 10000 characters). No circuit is changed or a
 
 ## Deployed (Base Sepolia, chain 84532)
 
-`deployments/84532.json`: HumaPagesV3 is at `0x4e793a7b932ea5b65b196aaab9e95be2162f687f`.
+`deployments/84532.json` lists every address and deploy transaction. HumaPagesV3 is at
+[`0x4e793a7b932ea5b65b196aaab9e95be2162f687f`](https://sepolia.basescan.org/address/0x4e793a7b932ea5b65b196aaab9e95be2162f687f#code).
+All seven contracts' source is verified on Basescan, on Sourcify (exact match) and on Blockscout.
+
+`node audit.mjs` reads the chain and runs 32 checks; it sends nothing. It checks that:
+- each contract's code is byte-identical to this folder's build;
+- HumaPagesV3 points at its six verifiers;
+- every verifier accepts a real proof of its size and rejects it with a bit flipped;
+- every page recorded since deployment is there;
+- the deploy transactions succeeded.
 
 ## Use
 
