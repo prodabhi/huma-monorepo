@@ -1,63 +1,78 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { humaScore, pageSummary, percentLabel, scoreLine, checkTier, CHECK_TIERS } from '../publication-contract.mjs';
-import { composition } from '../replay-core.mjs';
+import { scoreSession, contribution, detailFor, verifiedHuman, DEFAULT_THRESHOLDS, BANDS } from '../detection/score.mjs';
+import { extractFeatures, FEATURES } from '../detection/features.mjs';
+import { checkIntegrity } from '../detection/integrity.mjs';
+import { GENERATORS, SAMPLE_TEXT } from '../detection/eval/synthetic.mjs';
 
-// The same cases as Tests/HumaCoreTests/HumaScoreTests.swift, so readers and the Mac agree on every page's score.
-test('the score weighs typed text, typing checks and Touch ID like the Mac app', () => {
-  const all = Array(9).fill(true), parts = p => ({ typed: 0, external: 0, pasted: 0, before: 0, other: 0, ...p, total: Object.values(p).reduce((a, b) => a + b, 0) });
-  const score = (c, { typing = 0, edits = 0, rules = all, presence = 2, onTime = 2 } = {}) =>
-    humaScore({ composition: c, typingEdits: typing, edits, rules, presenceCount: presence, onTime }).value;
-  assert.equal(score(parts({ typed: 100 })), 100);
-  assert.equal(score(parts({ external: 100 })), 72);
-  assert.equal(score(parts({ typed: 80, pasted: 20 })), 86);
-  assert.equal(score(null, { typing: 50, edits: 50 }), 72);
-  const rules = [...all]; rules[2] = rules[5] = rules[8] = false;
-  // Unusual holds and speed (typing no person makes) keep it at 50; a short or unpaused page isn't capped.
-  assert.equal(score(parts({ typed: 100 }), { rules, onTime: 1 }), 50);
-  const plain = [...all]; plain[2] = plain[7] = false;
-  assert.equal(score(parts({ typed: 100 }), { rules: plain, onTime: 1 }), 89);
-  assert.equal(humaScore({ composition: parts({ typed: 100 }), rules, presenceCount: 2, onTime: 1 }).capped, true);
-  assert.equal(score(parts({ typed: 100 }), { presence: 0, onTime: 0 }), 100);
-  assert.equal(score(parts({ pasted: 100 }), { rules: Array(9).fill(false), presence: 3, onTime: 0 }), 0);
+const verdict = (generator, seed = 1, extra = {}) => {
+  const s = GENERATORS[generator](SAMPLE_TEXT, seed);
+  const features = extractFeatures({ events: s.stream.events, meta: s.stream.meta, frames: s.frames, text: s.text });
+  const integrity = checkIntegrity({ stream: s.stream, frames: s.frames, text: s.text, journal: s.journal });
+  return scoreSession({ features, integrity, ...extra });
+};
+
+test('the rules map a value to a bounded logit, and say why in words', () => {
+  const ramp = { kind: 'ramp', low: 0, high: 0.1, logit: [-1.5, 1.5], detail: '{percent} of keys rolled over ({value2})' };
+  assert.equal(contribution(ramp, -1), -1.5); assert.equal(contribution(ramp, 0.05), 0); assert.equal(contribution(ramp, 5), 1.5); assert.equal(contribution(ramp, null), 0);
+  assert.equal(contribution({ kind: 'band', inside: [0.2, 0.8], logit: [0.5, -1] }, 0.5), 0.5); assert.equal(contribution({ kind: 'band', inside: [0.2, 0.8], logit: [0.5, -1] }, 0.9), -1);
+  assert.equal(contribution({ kind: 'step', above: 0.5, logit: [0, -3] }, 0.5), -3); assert.equal(contribution({ kind: 'step', above: 0.5, logit: [0, -3] }, 0.4), 0);
+  assert.equal(detailFor(ramp, 0.0712), '7% of keys rolled over (0.07)');
+  // Every feature has a rule with a detail line.
+  for (const name of Object.values(FEATURES).flat()) { const rule = DEFAULT_THRESHOLDS.features[name]; assert.ok(rule, name); assert.ok(rule.detail, name); assert.ok(detailFor(rule, 0.5).length > 0); }
 });
-test('the page summary reads the proof statement the score uses', () => {
-  const raw = new Uint8Array(46 * 32), set = (i, v) => { raw[i * 32 + 31] = v; };
-  set(16, 40); set(18, 38); set(19, 2); set(25, 3); set(27, 2);
-  for (let rule = 0; rule < 9; rule++) if (rule !== 1) set(33 + rule, 1);
-  const summary = pageSummary(btoa(String.fromCharCode(...raw)));
-  assert.deepEqual(summary, { edits: 40, samples: 0, typingEdits: 38, pasteEdits: 2, presenceCount: 3, onTime: 2, rules: [true, false, true, true, true, true, true, true, true] });
-  assert.equal(humaScore({ ...summary, composition: { typed: 90, external: 0, pasted: 10, before: 0, other: 0, total: 100 } }).value, 90);
+
+test('the verdict has the schema, is never 0 or 100, and names its reasons', () => {
+  const v = verdict('human');
+  assert.deepEqual(Object.keys(v).sort(), ['band', 'contributions', 'humanProbability', 'integrity', 'logit', 'modality', 'modelVersion', 'reasons'].sort());
+  assert.ok(v.humanProbability >= 0.01 && v.humanProbability <= 0.99); assert.ok(BANDS.includes(v.band));
+  assert.equal(v.band, 'likely_human'); assert.equal(v.integrity, 'pass'); assert.equal(v.modality, 'physical_keyboard'); assert.match(v.modelVersion, /^rules-.*\+features-1$/);
+  assert.ok(v.reasons.length >= 3 && v.reasons.every(r => ['human', 'automated'].includes(r.direction) && typeof r.detail === 'string' && r.feature));
+  assert.ok(v.reasons.filter(r => r.direction === 'human').length >= 3);
+  assert.ok(verifiedHuman(v));
+  // A session that looks like a person's in every behavioural way but hides from the DevTools probe: uncertain, not automated.
+  const hiding = GENERATORS.human(SAMPLE_TEXT, 2);
+  const hidingFeatures = extractFeatures({ events: hiding.stream.events, meta: { ...hiding.stream.meta, consoleNative: false }, frames: hiding.frames, text: hiding.text });
+  const hidden = scoreSession({ features: hidingFeatures, integrity: checkIntegrity({ stream: hiding.stream, frames: hiding.frames, text: hiding.text, journal: hiding.journal }) });
+  assert.ok(hidden.contributions.console_wrapped === -5 && hidden.logit < verdict('human', 2).logit - 4);
+  // Nothing measured at all: uncertain, not a verdict either way.
+  const empty = scoreSession({ features: extractFeatures(), integrity: { status: 'pass', failures: [], penalties: [] } });
+  assert.equal(empty.band, 'uncertain'); assert.ok(empty.humanProbability > 0.3 && empty.humanProbability < 0.7);
 });
-test('typing on another keyboard has its own share of the text', () => {
-  assert.deepEqual(composition('ttkkpi'), { typed: 2, external: 2, pasted: 1, before: 1, other: 0, total: 6 });
-});
-test('the score splits into whole points that add up to it, and one plain line', () => {
-  const all = Array(9).fill(true), some = [...all]; some[3] = some[6] = false;
-  const cases = [[{ typed: 97, pasted: 3, total: 100 }, all, 3, 2], [{ typed: 50, external: 50, total: 100 }, some, 2, 1], [null, some, 0, 0]];
-  for (const [composition, rules, presenceCount, onTime] of cases) {
-    const score = humaScore({ composition, typingEdits: 40, edits: 41, rules, presenceCount, onTime });
-    assert.equal(score.points.typed + score.points.checks + score.points.touch, score.value);
-    assert.ok(score.points.typed <= 70 && score.points.checks <= 20 && score.points.touch <= 10);
+
+test('each way software types ends likely automated, and no single feature decides it', () => {
+  for (const generator of ['playwright_type', 'cdp_dispatch_humanized', 'os_type', 'replay_human', 'computer_use_agent']) {
+    for (const seed of [1, 2, 3]) {
+      const v = verdict(generator, seed);
+      assert.equal(v.band, 'likely_automated', generator + ' ' + seed + ' ' + v.humanProbability);
+      assert.ok(v.reasons.some(r => r.direction === 'automated'));
+      // No behavioural feature outweighs the rest; the environment tells (webdriver, a replaced console) carry more, and alone leave a session uncertain.
+      const biggest = Math.max(...Object.entries(v.contributions).filter(([k]) => !['webdriver', 'console_wrapped'].includes(k)).map(([, c]) => Math.abs(c)));
+      assert.ok(biggest <= 3, generator + ': ' + biggest);
+      assert.ok(!verifiedHuman(v));
+    }
   }
-  const line = (composition, rules = all) => scoreLine(humaScore({ composition, typingEdits: 9, edits: 10, rules, presenceCount: 2, onTime: 1 }));
-  assert.equal(line({ typed: 100, external: 0, pasted: 0, before: 0, other: 0, total: 100 }), 'Mac app \u00b7 strong check \u00b7 100% typed \u00b7 7 of 7 typing checks \u00b7 Touch ID 1 of 2');
-  assert.equal(line({ typed: 995, external: 0, pasted: 5, before: 0, other: 0, total: 1000 }), 'Mac app \u00b7 strong check \u00b7 99% typed \u00b7 7 of 7 typing checks \u00b7 Touch ID 1 of 2');
-  assert.equal(line({ typed: 60, external: 40, pasted: 0, before: 0, other: 0, total: 100 }, some), 'Mac app \u00b7 strong check \u00b7 100% typed (40% on another keyboard) \u00b7 5 of 7 typing checks \u00b7 Touch ID 1 of 2');
-  assert.equal(line(null), 'Mac app \u00b7 strong check \u00b7 Replay not shared, so typing counts at 60% \u00b7 7 of 7 typing checks \u00b7 Touch ID 1 of 2');
-  // A web page scores out of 100 too, and always says it's the basic check.
-  const web = humaScore({ composition: { typed: 100, external: 0, pasted: 0, total: 100 }, typingEdits: 9, edits: 10, rules: all, presenceCount: 0, onTime: 0, browser: true });
-  assert.equal(web.value, 100);
-  assert.equal(scoreLine(web), 'Web browser \u00b7 basic check \u00b7 100% typed \u00b7 7 of 7 typing checks');
-  // A passkey that approved every check-in raises the tier, never the score; a Mac page has no passkey tier.
-  const inputs = { composition: { typed: 80, external: 0, pasted: 20, total: 100 }, typingEdits: 9, edits: 10, rules: some, presenceCount: 3, onTime: 2, browser: true };
-  const basic = humaScore(inputs), passkey = humaScore({ ...inputs, passkey: true });
-  assert.equal(passkey.value, basic.value); assert.deepEqual(passkey.points, basic.points); assert.equal(passkey.passkey, true); assert.equal(basic.passkey, false);
-  assert.equal(scoreLine(passkey), 'Web browser \u00b7 passkey check \u00b7 80% typed \u00b7 5 of 7 typing checks \u00b7 Check-ins 2 of 3');
-  assert.equal(scoreLine(basic), 'Web browser \u00b7 basic check \u00b7 80% typed \u00b7 5 of 7 typing checks \u00b7 Check-ins 2 of 3');
-  const macInputs = { ...inputs, browser: false }, mac = humaScore({ ...macInputs, passkey: true });
-  assert.equal(mac.value, humaScore(macInputs).value); assert.equal(mac.passkey, false);
-  assert.match(scoreLine(mac), /^Mac app \u00b7 strong check \u00b7 /);
-  assert.equal(checkTier(true, true), CHECK_TIERS.passkey); assert.equal(checkTier(true), CHECK_TIERS.web); assert.equal(checkTier(false, true), CHECK_TIERS.mac);
-  assert.deepEqual([0, 0.004, 0.5, 0.996, 1].map(percentLabel), ['0%', '<1%', '50%', '99%', '100%']);
+  for (const generator of ['human', 'human_touch', 'human_ime']) for (const seed of [1, 2, 3]) assert.equal(verdict(generator, seed).band, 'likely_human', generator + ' ' + seed);
+});
+
+test('integrity and the traps override everything', () => {
+  const posted = verdict('fabricated_post');
+  assert.equal(posted.integrity, 'fail'); assert.equal(posted.band, 'likely_automated'); assert.ok(posted.humanProbability <= 0.3);
+  assert.ok(posted.reasons[0].feature.startsWith('integrity:') && posted.reasons.some(r => r.feature === 'integrity:burst'));
+  const inserted = verdict('cdp_inserttext');
+  assert.equal(inserted.integrity, 'fail'); assert.equal(inserted.band, 'likely_automated');
+  // No stream at all: not verifiable, so uncertain, never automated on that alone.
+  const s = GENERATORS.human(SAMPLE_TEXT, 2), features = extractFeatures({ events: [], meta: null, frames: s.frames, text: s.text });
+  const none = scoreSession({ features, integrity: checkIntegrity({ stream: null, frames: s.frames, text: s.text }) });
+  assert.equal(none.integrity, 'fail'); assert.equal(none.band, 'uncertain'); assert.ok(none.humanProbability <= 0.5);
+  // A trap hit on a session that looks like a person's.
+  const trapped = verdict('human', 1, { traps: { canary: true } });
+  assert.equal(trapped.band, 'likely_automated'); assert.equal(trapped.humanProbability, 0.01); assert.equal(trapped.reasons[0].feature, 'trap:canary');
+  assert.equal(verdict('human', 1, { traps: { honeypot: true } }).humanProbability, 0.01);
+  assert.equal(verdict('human', 1, { traps: { canary: false, honeypot: false } }).band, 'likely_human');
+  // The long-text-no-pause penalty, and a personal baseline far from this session.
+  const steady = scoreSession({ features: extractFeatures(), integrity: { status: 'pass', failures: [], penalties: [{ check: 'pauses', detail: 'no pause' }] } });
+  assert.ok(steady.contributions['integrity:pauses'] < 0 && steady.reasons.some(r => r.feature === 'integrity:pauses'));
+  const far = verdict('human', 1, { baseline: { distance: 9, confidence: 1 } }), near = verdict('human', 1, { baseline: { distance: 1, confidence: 1 } });
+  assert.ok(far.logit < near.logit && near.contributions.baseline_distance > 0);
 });

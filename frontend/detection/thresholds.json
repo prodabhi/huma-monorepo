@@ -1,0 +1,440 @@
+{
+  "modelVersion": "rules-2026-11-07d",
+  "notes": "Phase A rule ensemble (score.mjs). Each feature maps to a bounded logit contribution, positive toward a person, weighted by the feature's confidence; the sum plus the prior goes through a sigmoid. Kinds: ramp (linear from logit[0] at low to logit[1] at high, clamped), band (logit[0] inside [a, b], logit[1] outside), step (logit[0] below `above`, logit[1] at or above). A feature with logit [0, 0] is measured and reported but not scored until data tunes it. Tuned by hand from the synthetic sessions (detection/eval/synthetic.mjs) and to be re-tuned from detection/eval/REPORT.md. Environment tells (webdriver, console_wrapped) carry -5: alone they leave a session uncertain (held at 50 on the web), never likely automated against typing that looks like a person's.",
+  "prior": 0.5,
+  "bands": {
+    "likely_human": 0.7,
+    "likely_automated": 0.3
+  },
+  "clamp": [
+    0.01,
+    0.99
+  ],
+  "reasons": 6,
+  "penalties": {
+    "pauses": -2.0,
+    "trap": -8.0
+  },
+  "features": {
+    "dwell_mean": {
+      "kind": "ramp",
+      "low": 5,
+      "high": 40,
+      "logit": [
+        -3.0,
+        0.2
+      ],
+      "detail": "keys were held {value} ms on average"
+    },
+    "dwell_cv": {
+      "kind": "ramp",
+      "low": 0.05,
+      "high": 0.2,
+      "logit": [
+        -2.5,
+        0.2
+      ],
+      "detail": "key hold times varied {percent}"
+    },
+    "missing_keyup_rate": {
+      "kind": "ramp",
+      "low": 0.05,
+      "high": 0.5,
+      "logit": [
+        0,
+        -2.0
+      ],
+      "detail": "{percent} of key presses had no release"
+    },
+    "rollover_rate": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 0.08,
+      "logit": [
+        -1.5,
+        1.5
+      ],
+      "detail": "{percent} of keys were pressed before the previous one was released"
+    },
+    "shift_mismatch_rate": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 0.5,
+      "logit": [
+        0.3,
+        -3.0
+      ],
+      "detail": "{percent} of capitals and symbols came without the Shift key"
+    },
+    "code_key_mismatch": {
+      "kind": "step",
+      "above": 0.02,
+      "logit": [
+        0,
+        -2.0
+      ],
+      "detail": "{percent} of keys didn't match their physical key"
+    },
+    "orphan_input_rate": {
+      "kind": "ramp",
+      "low": 0.05,
+      "high": 0.5,
+      "logit": [
+        0.2,
+        -3.0
+      ],
+      "detail": "{percent} of text arrived with no key press"
+    },
+    "untrusted_rate": {
+      "kind": "step",
+      "above": 0.01,
+      "logit": [
+        0,
+        -3.0
+      ],
+      "detail": "{percent} of events were dispatched by script"
+    },
+    "webdriver": {
+      "kind": "step",
+      "above": 0.5,
+      "logit": [
+        0,
+        -5.0
+      ],
+      "detail": "the browser says it is automated"
+    },
+    "iki_lag1_ac": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 0.1,
+      "logit": [
+        -0.5,
+        0.5
+      ],
+      "detail": "each gap between keys {value3} correlated with the one before"
+    },
+    "iki_hurst": {
+      "kind": "ramp",
+      "low": 0.5,
+      "high": 0.65,
+      "logit": [
+        -0.8,
+        0.8
+      ],
+      "detail": "the rhythm's long memory (Hurst {value2})"
+    },
+    "iki_exgauss_fit": {
+      "kind": "ramp",
+      "low": 0.05,
+      "high": 0.3,
+      "logit": [
+        0,
+        0
+      ],
+      "detail": "fit to an ex-Gaussian rhythm (distance {value2})"
+    },
+    "iki_lognorm_ks": {
+      "kind": "ramp",
+      "low": 0.05,
+      "high": 0.3,
+      "logit": [
+        0,
+        0
+      ],
+      "detail": "fit to a log-normal rhythm (distance {value2})"
+    },
+    "bigram_corr": {
+      "kind": "ramp",
+      "low": 0.1,
+      "high": 0.5,
+      "logit": [
+        -1.2,
+        1.2
+      ],
+      "detail": "letter pairs took the times a hand takes (correlation {value2})"
+    },
+    "quantization_score": {
+      "kind": "ramp",
+      "low": 0.2,
+      "high": 0.6,
+      "logit": [
+        0,
+        -2.5
+      ],
+      "detail": "gaps between keys sat on a timer's grid ({value2})"
+    },
+    "drift_slope": {
+      "kind": "ramp",
+      "low": -0.1,
+      "high": 0.1,
+      "logit": [
+        0,
+        0
+      ],
+      "detail": "the speed drifted {value3} per minute"
+    },
+    "window_stationarity": {
+      "kind": "ramp",
+      "low": 0.01,
+      "high": 0.04,
+      "logit": [
+        -1.0,
+        0.3
+      ],
+      "detail": "the speed varied {percent} between minutes"
+    },
+    "word_onset_ratio": {
+      "kind": "ramp",
+      "low": 1.0,
+      "high": 1.5,
+      "logit": [
+        -2.0,
+        2.0
+      ],
+      "detail": "the first letter of a word took {value2}× the time of letters inside words"
+    },
+    "word_onset_shift": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 4,
+      "logit": [
+        -1.0,
+        1.5
+      ],
+      "detail": "word starts stood out from the rhythm (z {value1})"
+    },
+    "word_freq_corr": {
+      "kind": "ramp",
+      "low": -0.05,
+      "high": 0.15,
+      "logit": [
+        -0.5,
+        0.8
+      ],
+      "detail": "rarer words came after longer pauses (correlation {value2})"
+    },
+    "boundary_pause_ratio": {
+      "kind": "ramp",
+      "low": 0.2,
+      "high": 0.6,
+      "logit": [
+        -2.0,
+        1.5
+      ],
+      "detail": "{percent} of pauses fell at word or sentence boundaries"
+    },
+    "linearity_ratio": {
+      "kind": "ramp",
+      "low": 0.95,
+      "high": 1.0,
+      "logit": [
+        0.5,
+        -1.0
+      ],
+      "detail": "{percent} of the text was added at the very end"
+    },
+    "revision_depth": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 50,
+      "logit": [
+        -0.5,
+        0.8
+      ],
+      "detail": "edits reached back {value} characters"
+    },
+    "typo_fix_latency": {
+      "kind": "ramp",
+      "low": 1,
+      "high": 3,
+      "logit": [
+        0,
+        0
+      ],
+      "detail": "typos were fixed after {value1} keys"
+    },
+    "typo_fix_spread": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 3,
+      "logit": [
+        -1.0,
+        0.8
+      ],
+      "detail": "typos were fixed after a varying number of keys (spread {value1})"
+    },
+    "typo_adjacency": {
+      "kind": "band",
+      "inside": [
+        0.25,
+        0.9
+      ],
+      "logit": [
+        0.3,
+        -1.0
+      ],
+      "detail": "{percent} of typos were on a neighbouring key"
+    },
+    "semantic_rewrite_rate": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 0.01,
+      "logit": [
+        -0.5,
+        0.8
+      ],
+      "detail": "{percent} of words were rewritten"
+    },
+    "pause_periodicity": {
+      "kind": "ramp",
+      "low": 0.5,
+      "high": 0.85,
+      "logit": [
+        0.3,
+        -2.5
+      ],
+      "detail": "long pauses came at a regular period ({value2})"
+    },
+    "burst_len_cv": {
+      "kind": "ramp",
+      "low": 0.3,
+      "high": 0.8,
+      "logit": [
+        -1.5,
+        0.5
+      ],
+      "detail": "the text came in bursts of similar length (variation {value2})"
+    },
+    "burst_speed_after_long_pause": {
+      "kind": "ramp",
+      "low": 1.0,
+      "high": 1.5,
+      "logit": [
+        0.3,
+        -1.5
+      ],
+      "detail": "typing after a long pause ran {value2}× the usual speed"
+    },
+    "hidden_input_rate": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 0.05,
+      "logit": [
+        0,
+        -3.0
+      ],
+      "detail": "{percent} of keys came while the page was hidden or unfocused"
+    },
+    "teleport_click_rate": {
+      "kind": "ramp",
+      "low": 0.2,
+      "high": 0.8,
+      "logit": [
+        0.3,
+        -2.0
+      ],
+      "detail": "{percent} of clicks landed without the pointer moving there"
+    },
+    "path_straightness": {
+      "kind": "ramp",
+      "low": 0.9,
+      "high": 0.995,
+      "logit": [
+        0.3,
+        -1.5
+      ],
+      "detail": "pointer paths were {percent} straight"
+    },
+    "jerk_profile": {
+      "kind": "band",
+      "inside": [
+        0.06,
+        0.5
+      ],
+      "logit": [
+        0.3,
+        -1.0
+      ],
+      "detail": "pointer speed profiles were {value2} from a perfect curve"
+    },
+    "tremor_power": {
+      "kind": "ramp",
+      "low": 0.02,
+      "high": 0.1,
+      "logit": [
+        -0.8,
+        0.5
+      ],
+      "detail": "a hand's tremor in the pointer ({percent} of its power at 8–12 Hz)"
+    },
+    "overshoot_rate": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 0.3,
+      "logit": [
+        -0.2,
+        0.3
+      ],
+      "detail": "{percent} of pointer moves overshot and corrected"
+    },
+    "idle_pointer_ratio": {
+      "kind": "ramp",
+      "low": 0.9,
+      "high": 1.0,
+      "logit": [
+        0,
+        -0.2
+      ],
+      "detail": "the pointer was idle {percent} of the time"
+    },
+    "baseline_distance": {
+      "kind": "ramp",
+      "low": 2,
+      "high": 6,
+      "logit": [
+        1.0,
+        -1.5
+      ],
+      "detail": "this session sat {value1} from the writer's own typing profile"
+    },
+    "correction_rate": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 0.02,
+      "logit": [
+        -1.0,
+        0.5
+      ],
+      "detail": "{percent} of typed characters were later deleted"
+    },
+    "console_wrapped": {
+      "kind": "step",
+      "above": 0.5,
+      "logit": [
+        0,
+        -5.0
+      ],
+      "detail": "the page’s console was replaced, which hides the browser from its own DevTools check"
+    },
+    "preface_activity": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 20,
+      "logit": [
+        -1.0,
+        0.4
+      ],
+      "detail": "{value} pointer, scroll or selection events in the minute before the first key"
+    },
+    "copy_rate": {
+      "kind": "ramp",
+      "low": 0,
+      "high": 2,
+      "logit": [
+        0,
+        -1.0
+      ],
+      "detail": "{value2} copies or cuts per hundred keys"
+    }
+  }
+}
