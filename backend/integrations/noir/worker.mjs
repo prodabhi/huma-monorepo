@@ -75,7 +75,7 @@ function child(executable,args,input=Buffer.alloc(0),limit=2*1024*1024,threadCou
 }
 // Long drafts (assurance-long-v3): every part is proved on its own while the writer types, and the final step
 // states the sealed session; no proof verifies another. One part and one final program per text tier, all
-// staged from integrations/noir/long3. Pages proved before v3 (v1, v2) are only verified.
+// staged from backend/integrations/noir/long3. Pages proved before v3 (v1, v2) are only verified.
 const long3={
   chunk1024:{bytecode:'7fb97a2452c2d421f3728f891ce981e3da41f4b7f1ced019acf4c0549c0a4300',vk:'8d8a3bae78664b1b3883b94a1e361d56ee573b7102acc5c18bfd6e721490396b'},
   final1024:{bytecode:'0ef8d2d4be19b51eb1727484703837e59d229cea631177b5b4b100cd8a1f3a44',vk:'c9ce374434fdda60af5c436336410bacc83bdadfaef034ac33432d82a1b3cc28'},
@@ -93,7 +93,7 @@ async function program3(name){
   return program;
 }
 /** Writes the witness for `program`'s `input` to the new file `out`: Noir's own solver run natively (witness,
- *  from integrations/noir/witness). Same bytes as noir_js; a 600-operation part takes about 1 s, where noir_js on
+ *  from backend/integrations/noir/witness). Same bytes as noir_js; a 600-operation part takes about 1 s, where noir_js on
  *  JavaScriptCore took 44 s. */
 const solve=(program,input,out)=>child(path.join(root,'witness'),[program,out],Buffer.from(JSON.stringify(input)),0);
 const fieldHex=v=>BigInt(v).toString(16).padStart(64,'0');

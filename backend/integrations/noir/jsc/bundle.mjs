@@ -1,6 +1,6 @@
 // Bundles a staged engine's worker.mjs (with its readers) into one worker.js for HumaScriptHost, macOS's own
 // JavaScriptCore.
-// Usage (from package.py): node integrations/noir/jsc/bundle.mjs <staged NoirEngine folder>
+// Usage (from package.py): node backend/integrations/noir/jsc/bundle.mjs <staged NoirEngine folder>
 import { writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';

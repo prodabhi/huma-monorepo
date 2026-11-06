@@ -3,7 +3,7 @@
 //   final<N>   the sealed session's public statement, from the last part's end state and the seal
 // No program verifies another proof; a reader links the parts by their roots and checks every signature itself.
 //   build                              compile all programs and write their keys
-//   check <case.json> [--mutations]    witnesses only (software-key fixtures from experiments/noir-compact/native/examples/long_cases.rs)
+//   check <case.json> [--mutations]    witnesses only (software-key fixtures from extra/experiments/noir-compact/native/examples/long_cases.rs)
 //   chain <case.json>                  prove every part and the final step, then verify each proof
 //   bundle <case.json>                 the public proof from `chain`'s proofs, checked by the reader, then altered copies
 import { readFile, writeFile, mkdir, copyFile, rm } from 'node:fs/promises';

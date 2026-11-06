@@ -32,7 +32,7 @@ export const KEYS = { chunk: 'b9e817091fcdd28ebbd43c21b068ab9a0e776f6cafa198335e
   final10000: '842cdcaebc3c382f4c4f4b478cf08a8505be2a54ebe0e789270cf033aa013ce8' };
 // v2 final keys (build/research/noir-long2, prover.mjs build). Each pins the start and fold keys in-circuit.
 export const KEYS2 = { final1024: 'ccc8f6538f604edcbc026c2a04b5d7bde7bbcad6652d2184ff5db94b9fafaf51', final4096: '79315d8e8666d5922d49acf9879787c77253cae19ecca3eb7ff78e1b5fce2f16', final10000: '8c7eaff3a810517bd82ed2d7de5747ee8f8fe4f4f57b4f31db3b62f8955e7f77' };
-// v3 part and final keys per text tier (build/research/noir-long3, integrations/noir/long3/prover.mjs build).
+// v3 part and final keys per text tier (build/research/noir-long3, backend/integrations/noir/long3/prover.mjs build).
 export const KEYS3 = { chunk1024: '8d8a3bae78664b1b3883b94a1e361d56ee573b7102acc5c18bfd6e721490396b', final1024: 'c9ce374434fdda60af5c436336410bacc83bdadfaef034ac33432d82a1b3cc28',
   chunk4096: 'a73280bcdb84a952e6ca84bc7bcf264dcaea0ee480b3dde00933d7d123782894', final4096: '75414e8be776c623d3eca1177fa1ba2af5f094cd6605427826e0af8c1e5ee95f',
   chunk10000: 'fd0f825f50bfc0312b617bc02141c73a2691df7f444eee5ddd78b219cd3d0ba0', final10000: '842cdcaebc3c382f4c4f4b478cf08a8505be2a54ebe0e789270cf033aa013ce8' };

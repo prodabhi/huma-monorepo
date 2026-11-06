@@ -53,9 +53,9 @@ def main():
     with tarfile.open(bb_archive) as t:
         members=[m for m in t.getmembers() if m.isfile() and Path(m.name).name=='bb']
         assert len(members)==1 and t.extractfile(members[0]).read()==bb.read_bytes()
-    # Witnesses come from Noir's own solver built natively (backend/integrations/noir/witness, scripts/build.sh builds it).
+    # Witnesses come from Noir's own solver built natively (backend/integrations/noir/witness, backend/scripts/build.sh builds it).
     witness=ROOT/'build/witness-target/release/witness'
-    assert witness.is_file(),'Build integrations/noir/witness first (backend/scripts/build.sh does).'
+    assert witness.is_file(),'Build backend/integrations/noir/witness first (backend/scripts/build.sh does).'
     node_engine=os.environ.get('HUMA_NODE_ENGINE')=='1'
     destination.mkdir(parents=True)
     def copy(src,target):
@@ -67,7 +67,7 @@ def main():
     for src,target in [(node,'node'),(bb,'bb'),(BUILD/'noir-compact-native-target/release/huma-compact-experiment','capture-input'),(witness,'witness')]:copy(src,target)
     (destination/'licenses/noir-NOTICE.txt').write_text("witness: built from noir-lang/noir v1.0.0-beta.25 (acvm, acir, brillig_vm, "
         "bn254_blackbox_solver, noirc_abi), MIT OR Apache-2.0, https://github.com/noir-lang/noir. Its other Rust crates "
-        "and their licenses are listed in integrations/noir/witness/Cargo.lock.\n")
+        "and their licenses are listed in backend/integrations/noir/witness/Cargo.lock.\n")
     (destination/'program.json').write_text(json.dumps({k:program[k] for k in ['noir_version','bytecode','abi']}))
     (destination/'program-v5.json').write_text(json.dumps({k:program5[k] for k in ['noir_version','bytecode','abi']}))
     (destination/'program-cp32.json').write_text(json.dumps({k:program32[k] for k in ['noir_version','bytecode','abi']}))
@@ -76,7 +76,7 @@ def main():
     for name in ['assurance-core.mjs','assurance-profile.mjs','core.mjs','profile.mjs','assets/assurance256.vk','assets/assurance256-v2.vk','assets/assurance-abi.json','assets/assurance256-cp32.vk','assets/assurance-cp32-abi.json','assets/assurance64.vk','assets/assurance128-cp32.vk']:copy(reader/name,'reader/'+name)
     for name in ['core.mjs','contract.mjs']:copy(ROOT/'frontend/verify-core'/name,'evidence/'+name)
     # Long drafts (assurance-long-v3): one part and one final program per text tier from
-    # integrations/noir/long3/prover.mjs build, pinned by the worker and reader. The v1 and v2 keys stay so
+    # backend/integrations/noir/long3/prover.mjs build, pinned by the worker and reader. The v1 and v2 keys stay so
     # proofs made before v3 still verify; their programs are no longer shipped.
     for name in ['chunk','final1024','final4096','final10000']:copy(reader/f'assets/long-{name}.vk',f'reader/assets/long-{name}.vk')
     for name in ['final1024','final4096','final10000']:copy(reader/f'assets/long2-{name}.vk',f'reader/assets/long2-{name}.vk')
@@ -92,7 +92,7 @@ def main():
     # The points the largest program needed (v2's final1024: 2,060,088), rounded up to 2^21 at 32 bytes each. v3's
     # largest (final10000: 1,027,301) needs half; the file stays the same so installed Macs keep theirs.
     # bb unpacks them once into the user's cache. Release builds leave them out (64 MB that don't compress): the app
-    # downloads them once and checks this fingerprint (HumaCore ProvingSetup, scripts/upload-engine.mjs).
+    # downloads them once and checks this fingerprint (HumaCore ProvingSetup, backend/scripts/upload-engine.mjs).
     with open(BUILD/'noir-crs'/'bn254_g1_compressed.dat','rb') as source:points=source.read(CRS_POINTS*32)
     assert len(points)==CRS_POINTS*32 and hashlib.sha256(points).hexdigest()==CRS_SHA256
     if os.environ.get('HUMA_EXTERNAL_SETUP')!='1':
@@ -100,7 +100,7 @@ def main():
         (destination/'crs'/'bn254_g1_compressed.dat').write_bytes(points)
     # Release engines run the worker on macOS's own JavaScriptCore (extra/Sources/HumaScriptHost) instead of Node.js: one
     # bundled worker.js replaces node (116 MB).
-    # HUMA_NODE_ENGINE=1 keeps Node.js, for engines that run elsewhere (the server prover, prover/src/page.rs).
+    # HUMA_NODE_ENGINE=1 keeps Node.js, for engines that run elsewhere (the server prover, backend/prover/src/page.rs).
     if not node_engine:
         host=Path(os.environ.get('HUMA_SCRIPT_HOST',''))
         assert host.is_file(),'Set HUMA_SCRIPT_HOST to the built HumaScriptHost (backend/scripts/build.sh does).'
@@ -108,8 +108,8 @@ def main():
         copy(host,'HumaScriptHost')
         # The bundle carries code from these packages; their licenses travel with it.
         web=ROOT/'frontend/node_modules'
-        for name,src in [('buffer-LICENSE',web/'buffer/LICENSE'),('base64-js-LICENSE',web/'base64-js/LICENSE'),
-                         ('ieee754-LICENSE',web/'ieee754/LICENSE')]:copy(src,'licenses/'+name)
+        for name,src in [('buffer-LICENSE',frontend/'buffer/LICENSE'),('base64-js-LICENSE',frontend/'base64-js/LICENSE'),
+                         ('ieee754-LICENSE',frontend/'ieee754/LICENSE')]:copy(src,'licenses/'+name)
         (destination/'node').unlink();(destination/'licenses/node-LICENSE').unlink()
     manifest(destination)
     print('Staged offline Noir engine; no proof, key use or authentication started.')
