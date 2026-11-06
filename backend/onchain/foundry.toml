@@ -1,0 +1,13 @@
+[profile.default]
+src = "src"
+test = "test"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.29"
+optimizer = true
+optimizer_runs = 1
+evm_version = "cancun"
+fs_permissions = [{ access = "read", path = "test/fixtures" }]
+
+[lint]
+lint_on_build = false

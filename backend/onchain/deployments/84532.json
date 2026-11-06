@@ -1,0 +1,15 @@
+{
+  "chainId": 84532,
+  "rpc": "https://sepolia.base.org",
+  "deployer": "0x8a38A1282c8072e9354013BD806490Db054d7CA7",
+  "HumaPagesV3": "0x4e793a7b932ea5b65b196aaab9e95be2162f687f",
+  "verifiers": {
+    "HumaChunk1024Verifier": "0x56a1ced3ec6272152756efc648dbfaf442b57daa",
+    "HumaFinal1024Verifier": "0x70c536f7dfe962fb86f4cf614bca4af63aa80566",
+    "HumaChunk4096Verifier": "0x628be0e84cd103e623bb7996ed8714b090d81e58",
+    "HumaFinal4096Verifier": "0x550c34e91812750f29546c6881b994615d93c08f",
+    "HumaChunk10000Verifier": "0xc40d8ed9f4c69cec7dca60e90495b0a5a84add4f",
+    "HumaFinal10000Verifier": "0x9e06ad3ce2318b74fae75003514e81e0cd40b24c"
+  },
+  "at": "2026-11-06T11:37:23.741Z"
+}
