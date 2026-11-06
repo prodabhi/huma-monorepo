@@ -22,6 +22,9 @@ const native = f => { try { return typeof f === 'function' && /\{\s*\[native cod
 /** Why this browser looks driven by software (empty when it doesn't): definite signs only, never DevTools alone. */
 export function automationSigns(win = globalThis) {
   const nav = win.navigator, doc = win.document, signs = [];
+  // The console's methods replaced (or Function.prototype.toString patched to hide that): the way software gets past
+  // runtimeProbe below. A browser extension can do it too, so the sign says what to turn off.
+  if (consoleReplaced(win)) signs.push('the browser’s console was replaced (turn off extensions that change it)');
   // Set by --enable-automation, --headless and ChromeDriver; by Marionette in Firefox, and safaridriver in Safari.
   if (nav?.webdriver === true) signs.push('the browser says it is automated');
   // Chromium has had navigator.webdriver since 63 and userAgentData since 90: one without the other was removed, as
@@ -35,6 +38,13 @@ export function automationSigns(win = globalThis) {
   return signs;
 }
 
+/** Whether the page's console methods, or Function.prototype.toString, aren't the browser's own. */
+export function consoleReplaced(win = globalThis) {
+  const con = win.console;
+  if (!con) return false;
+  try { if (!/\{\s*\[native code\]\s*\}\s*$/.test(Function.prototype.toString.call(Function.prototype.toString))) return true; } catch { return true; }
+  return ['log', 'groupEnd', 'debug', 'info', 'error', 'table'].some(name => !native(con[name]));
+}
 /** Whether a stack (by default, the caller's) runs through a script a driver evaluated in the page. */
 export const scriptedStack = (stack = new Error().stack) => EVALUATED.test(stack ?? '');
 

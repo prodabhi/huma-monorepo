@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import inspector from 'node:inspector';
-import { automationSigns, automation, runtimeProbe, scriptedStack, watchAutomation } from '../write/automation.mjs';
+import { automationSigns, automation, runtimeProbe, scriptedStack, watchAutomation, consoleReplaced } from '../write/automation.mjs';
 
 // A browser's globals, as plain objects: navigator's attributes live on its prototype, as in browsers.
 function browser({ nav = {}, chromium = true, win = {}, doc = {}, attributes = [] } = {}) {
@@ -38,6 +38,15 @@ test('drivers are told by what they leave', () => {
   const old = browser({ chromium: false }); delete Object.getPrototypeOf(old.navigator).webdriver;
   assert.deepEqual(automationSigns(old), []);
   assert.deepEqual(automation(browser({ nav: { webdriver: true } }), {}), { kind: 'controlled', reason: 'the browser says it is automated' });
+});
+
+test('a console whose methods were replaced is a sign, as it hides the DevTools probe', () => {
+  assert.equal(consoleReplaced({ console }), false);
+  const original = console.groupEnd;
+  const wrapped = { console: Object.assign(Object.create(console), { groupEnd: (...a) => original.apply(console, a) }) };
+  assert.equal(consoleReplaced(wrapped), true);
+  assert.equal(automationSigns(browser({ win: wrapped })).at(-1), 'the browser’s console was replaced (turn off extensions that change it)');
+  assert.deepEqual(automationSigns(browser({ win: { console } })), []);
 });
 
 test('stacks through a driver’s evaluated scripts', () => {
