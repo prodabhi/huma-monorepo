@@ -14,7 +14,7 @@ const dep = JSON.parse(readFileSync(O + 'deployments/' + chainId + '.json', 'utf
 const results = []; const ok = (name, pass, detail = '') => results.push([pass ? 'PASS' : 'FAIL', name, detail]);
 const art = name => JSON.parse(readFileSync(path.join(O, 'out', name + '.sol', name + '.json'), 'utf8'));
 // 1. Code on chain equals the compiled runtime code (HumaPagesV3: immutables masked).
-const all = { ...dep.verifiers, HumaPagesV3: dep.HumaPagesV3 };
+const all = { ...dep.verifiers, HumaPagesV3: dep.HumaPagesV3, ...(dep.HumaPagesV4 ? { HumaPagesV4: dep.HumaPagesV4, HumaPoseidon2: dep.HumaPoseidon2 } : {}) };
 for (const [name, address] of Object.entries(all)) {
   const code = await c.getCode({ address }); const a = art(name), compiled = a.deployedBytecode.object;
   let same = code === compiled;
@@ -26,6 +26,12 @@ for (const [name, address] of Object.entries(all)) {
   ok(`code ${name}`, same, `${(code.length - 2) / 2} bytes at ${address}`);
 }
 // 2. Wiring and constants of HumaPagesV3.
+const P4 = parseAbi(['function chunk1024() view returns (address)', 'function final1024() view returns (address)', 'function chunk4096() view returns (address)',
+  'function final4096() view returns (address)', 'function chunk10000() view returns (address)', 'function final10000() view returns (address)',
+  'function poseidon2() view returns (address)', 'function FINAL_INPUTS() view returns (uint256)', 'function MAX_PARTS_PER_TX() view returns (uint256)',
+  'function MAX_EVENTS_PER_TX() view returns (uint256)', 'function verified(bytes32) view returns (bool)',
+  'function pages(bytes32) view returns (uint64,uint32,uint32,uint32,bool,address)',
+  'event PageVerified(bytes32 indexed statement, address indexed submitter, uint256 tier, uint256 parts, uint256 events, bytes32 keyHash, bool passkey)']);
 const P = parseAbi(['function chunk1024() view returns (address)', 'function final1024() view returns (address)', 'function chunk4096() view returns (address)',
   'function final4096() view returns (address)', 'function chunk10000() view returns (address)', 'function final10000() view returns (address)',
   'function FINAL_INPUTS() view returns (uint256)', 'function MAX_PARTS_PER_TX() view returns (uint256)', 'function verified(bytes32) view returns (bool)',
@@ -58,6 +64,27 @@ for (const l of logs) {
   ok(`page ${l.args.statement.slice(0, 10)}… recorded`, (await read('verified', [l.args.statement])) && block === l.blockNumber, `tier ${tier}, ${parts} parts, block ${block}, tx ${l.transactionHash.slice(0, 12)}…, by ${by.slice(0, 8)}…`);
 }
 ok('verified(random statement) is false', (await read('verified', [keccak256('0x1234')])) === false);
+// 4b. HumaPagesV4: the same verifiers, its Poseidon2, and the reader's own Poseidon2 output from the deployed contract.
+if (dep.HumaPagesV4) {
+  const read4 = (functionName, args = []) => c.readContract({ address: dep.HumaPagesV4, abi: P4, functionName, args });
+  for (const t of ['1024', '4096', '10000']) for (const k of ['chunk', 'final'])
+    ok(`HumaPagesV4.${k}${t}() → right verifier`, (await read4(k + t)).toLowerCase() === dep.verifiers[`Huma${k[0].toUpperCase() + k.slice(1)}${t}Verifier`].toLowerCase());
+  ok('HumaPagesV4.poseidon2() → HumaPoseidon2', (await read4('poseidon2')).toLowerCase() === dep.HumaPoseidon2.toLowerCase());
+  ok('HumaPagesV4 limits: 44 fields, 12 parts and 64 events a tx', (await read4('FINAL_INPUTS')) === 44n && (await read4('MAX_PARTS_PER_TX')) === 12n && (await read4('MAX_EVENTS_PER_TX')) === 64n);
+  const { hash } = await import(new URL('../../extra/experiments/noir-compact/browser/final-text.mjs', import.meta.url).href);
+  const { poseidon2Permute } = await import(new URL('../integrations/noir/long/reader.mjs', import.meta.url).href);
+  const input = [1n, 2n, 3n, 4n, 5n], want = await hash(input, poseidon2Permute);
+  const got = await c.readContract({ address: dep.HumaPoseidon2, abi: parseAbi(['function hash(uint256[] input) pure returns (uint256)']), functionName: 'hash', args: [input] });
+  ok('HumaPoseidon2.hash = the reader\'s Poseidon2', got === want, got.toString(16).slice(0, 16) + '…');
+  const from4 = (await c.getTransactionReceipt({ hash: dep.transactions.HumaPagesV4 })).blockNumber, logs4 = [];
+  for (let from = from4; from <= latest; from += 200n) logs4.push(...await c.getLogs({ address: dep.HumaPagesV4, event: P4.find(x => x.name === 'PageVerified'), fromBlock: from, toBlock: from + 199n > latest ? latest : from + 199n }));
+  ok('scanned every block since V4 for PageVerified', true, `${latest - from4 + 1n} blocks, ${logs4.length} pages`);
+  for (const l of logs4) {
+    const [block, parts, tier, events, passkey] = await read4('pages', [l.args.statement]);
+    ok(`V4 page ${l.args.statement.slice(0, 10)}… recorded`, (await read4('verified', [l.args.statement])) && block === l.blockNumber,
+      `tier ${tier}, ${parts} parts, ${events} signed events${passkey ? ', passkey' : ''}, key ${l.args.keyHash.slice(0, 10)}…`);
+  }
+}
 // 5. Deploy transactions succeeded and the relayer's balance.
 for (const [name, tx] of Object.entries(dep.transactions)) {
   const r = await c.getTransactionReceipt({ hash: tx }); ok(`deploy ${name} (${tx.slice(0, 10)}…) succeeded`, r.status === 'success', `block ${r.blockNumber}`);

@@ -19,11 +19,16 @@
     "HumaFinal4096Verifier": "0xc086efb0a3770c9567487e14aeff953e3379b99256da84f4b6ae49331e75ed63",
     "HumaChunk10000Verifier": "0xe8f4afcb1bf2bf59a4d60dc102a08b4f35a8f95d752414833d20d8330c4f4c02",
     "HumaFinal10000Verifier": "0x3dfe9f2ad45b0394b7198b3325bd9e5c482f741986fce3bb2fcd138a6b88c2d9",
-    "HumaPagesV3": "0x236736f9e74695b29f1ef748f38c51e3901888ea446e3d0bc7da899f3205eff9"
+    "HumaPagesV3": "0x236736f9e74695b29f1ef748f38c51e3901888ea446e3d0bc7da899f3205eff9",
+    "HumaPoseidon2": "0x5f6287aa7251541696402ca164d53daaaf28cdf992e8323fab429b4c0aaedd6d",
+    "HumaPagesV4": "0xe3b92bb59156201ab76330a344a98997e207426c8c862f06505b02f9cf41fe62"
   },
   "sourceVerified": [
     "https://sepolia.basescan.org",
     "https://sourcify.dev",
     "https://base-sepolia.blockscout.com"
-  ]
+  ],
+  "HumaPoseidon2": "0xf8f106026e4b55161bff921f0a59660fbc510f4a",
+  "HumaPagesV4": "0xe2ddc02dc6f5b1a01270014a4d294f7ef6fcfe4b",
+  "v4At": "2026-11-06T13:27:54.247Z"
 }
