@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writer · Huma</title>
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Huma">
+<meta property="og:title" content="A writer on Huma">
+<meta property="og:description" content="Pages they wrote, each with its Huma Score.">
+<meta property="og:image" content="https://huma.social/img/og-home.jpg?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@huma_social">
+<meta name="description" content="Pages they wrote, each with its Huma Score.">
+<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/foundation-logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/brand/icon-512.png">
+<link rel="stylesheet" href="/site.css">
+<link rel="modulepreload" href="/writer.mjs">
+<link rel="modulepreload" href="/publication-contract.mjs">
+<style>
+/* The writer: face, level, name and handle on the left, then their record as mono rows split by rules. */
+.face { display: block; width: 72px; height: 72px; border-radius: 50%; background: var(--fill); margin-bottom: 22px; }
+.page-head .page-title { overflow-wrap: anywhere; }
+.handle { margin: 12px 0 0; color: var(--grey); text-transform: none; overflow-wrap: anywhere; }
+.record { margin: 34px 0 0; max-width: 380px; border-top: 1px solid var(--separator); }
+.record > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--separator); }
+.record dt { color: var(--tertiary); white-space: nowrap; }
+.record dd { margin: 0; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+.page-head .page-actions { margin-top: 30px; }
+
+/* The pages they chose to show: one card each, the whole card a link. */
+.list-head { display: block; color: var(--tertiary); margin: 0 0 12px 2px; }
+.docs { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+/* The writer's own options on each page: a small menu at the card's top right. */
+.docs li { position: relative; }
+.more { position: absolute; top: 12px; right: 12px; }
+.docs li:has(.more) .doc h2 { padding-right: 36px; }
+.more summary { list-style: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; color: var(--secondary); font: 500 18px/1 var(--sans); }
+.more summary::-webkit-details-marker { display: none; }
+.more summary:hover, .more[open] summary { background: rgba(34, 34, 34, .07); color: var(--ink); }
+.more-menu { position: absolute; z-index: 5; top: 36px; right: 0; min-width: 190px; display: flex; flex-direction: column; padding: 6px; border-radius: 10px;
+    background: rgba(250, 249, 248, .97); border: 1px solid var(--separator); box-shadow: 0 8px 24px rgba(0, 0, 0, .08); }
+.more-menu a, .more-menu button { display: block; padding: 9px 10px; border: 0; border-radius: 6px; background: none; color: var(--ink); text-align: left; text-decoration: none;
+    font: 400 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .01em; cursor: pointer; }
+.more-menu a:hover, .more-menu button:hover { background: rgba(34, 34, 34, .06); }
+.more-menu .danger { color: #b3261e; }
+.doc { display: block; background: var(--card); border: 1px solid var(--separator); border-radius: 14px; padding: 18px 20px 16px; color: var(--ink); text-decoration: none;
+    transition: border-color .2s, background-color .2s; }
+a.doc:hover { color: var(--ink); background: #fff; border-color: rgba(34, 34, 34, .28); }
+a.doc:focus-visible { border-radius: 14px; }
+.doc h2 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 450; letter-spacing: -.01em; overflow-wrap: anywhere;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+.doc .meta { margin: 8px 0 0; color: var(--tertiary); }
+.doc .score { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--separator); font-size: 14px; line-height: 1.4; }
+.doc .score::before { content: "✓"; flex: none; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--green); color: #fff; font: 700 11px var(--sans); }
+.doc .score b { font-weight: 500; font-variant-numeric: tabular-nums; }
+.doc .score span { color: var(--secondary); }
+.empty { margin: 0; padding: 22px 20px; background: var(--card); border: 1px solid var(--separator); border-radius: 14px; color: var(--secondary); }
+
+/* While the writer loads, grey shapes hold their places. */
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.skeleton i { display: block; border-radius: 6px; background: linear-gradient(90deg, var(--fill) 30%, rgba(34, 34, 34, .09) 50%, var(--fill) 70%) 0 0 / 200% 100%; animation: shimmer 1.4s ease-in-out infinite; }
+.skeleton .round { width: 72px; height: 72px; border-radius: 50%; margin-bottom: 22px; }
+.skeleton .line { height: 14px; width: 40%; margin-bottom: 18px; }
+.skeleton .title { height: 44px; width: 70%; }
+.skeleton .card-shape { height: 118px; border-radius: 14px; margin-bottom: 10px; }
+@media (prefers-reduced-motion: reduce) { .skeleton i { animation: none; } }
+body:not(.loading) .skeleton, body.loading .loaded { display: none; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.docs, .empty { animation: rise .4s cubic-bezier(.2, .8, .2, 1) both; }
+@media (prefers-reduced-motion: reduce) { .docs, .empty { animation: none; } a.doc { transition: none; } }
+@media (max-width: 560px) { .doc { padding: 16px 16px 14px; } .record { max-width: none; } }
+</style>
+</head>
+<body class="loading">
+<nav class="nav" aria-label="Main">
+    <div class="nav_blur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <a class="nav_logo" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
+    <a class="nav_cta" href="/write">Start Writing</a>
+</nav>
+<main class="split" aria-busy="true">
+    <header class="page-head">
+        <div class="skeleton" aria-hidden="true"><i class="round"></i><i class="line"></i><i class="title"></i></div>
+        <div class="loaded" id="writer"></div>
+    </header>
+    <div class="page-body">
+        <div class="skeleton" aria-hidden="true"><i class="card-shape"></i><i class="card-shape"></i><i class="card-shape"></i></div>
+        <section class="loaded" id="pages" aria-label="Pages"></section>
+    </div>
+</main>
+<footer class="footer">
+    <nav class="grid footer_menu mono" aria-label="Footer">
+        <div class="f1"><a class="head" href="/#story">Why</a><a href="/#story">The story</a><a href="/#evidence">The evidence</a><a href="/deck/">Research note</a></div>
+        <div class="f2"><a class="head" href="/#how">Product</a><a href="/#how">How it works</a><a href="/#faq">Questions</a><a href="/download">Get Huma</a><a href="/verify">Verify a link</a><a href="/ask">Ask for a Huma Link</a></div>
+        <div class="f3"><a class="head" href="/prove-you-didnt-use-ai">Guides</a><a href="/prove-you-didnt-use-ai">Prove you didn’t use AI</a><a href="/ai-detector-false-positive">Flagged by an AI detector</a></div>
+        <div class="f4"><a class="head" href="/">Huma home</a></div>
+        <div class="f5"><a class="head" href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
+        <div class="f6"><a class="head" href="/deck/">Research</a></div>
+    </nav>
+    <div class="grid footer_brand">
+        <div class="footer_logo"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></div>
+        <p class="mono footer_tag">The human-first internet.</p>
+        <a class="mono footer_social" href="https://x.com/huma_social" target="_blank" rel="me noopener" aria-label="Huma on X"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.2 1.5h2.2L9.6 7l5.6 7.5h-4.4L7.4 10l-3.9 4.5H1.3l5.1-5.9L1 1.5h4.5l3.1 4.1z" fill="currentColor"/></svg>@huma_social</a>
+    </div>
+</footer>
+<script type="module" src="/writer.mjs"></script>
+<script type="module" src="/visit.js"></script>
+</body>
+</html>
