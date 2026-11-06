@@ -64,12 +64,12 @@ hash chain, or an attacker proves rules over one trace and submits another
 ## 3. Layer B in detail: presence challenges
 
 Huma already has the primitive: a Secure Enclave P-256 key created with
-`.privateKeyUsage` and `.biometryCurrentSet` (`Sources/HumaCore/TouchIDCaptureKey.swift:80-84`).
+`.privateKeyUsage` and `.biometryCurrentSet` (`../extra/Sources/HumaCore/TouchIDCaptureKey.swift:80-84`).
 Apple's rule for that flag: Touch ID or Face ID must be enrolled, and the key is
 invalidated if the enrolment set changes ([Apple](https://developer.apple.com/documentation/security/secaccesscontrolcreateflags/biometrycurrentset)).
-Today it is used twice, at start and at seal (`Sources/Huma/WritingView.swift:479,493`).
+Today it is used twice, at start and at seal (`../extra/Sources/Huma/WritingView.swift:479,493`).
 Durability checkpoints every 256 records or 10 s are separate and unattended
-(`Sources/HumaCore/CheckpointCadence.swift:6-7`).
+(`../extra/Sources/HumaCore/CheckpointCadence.swift:6-7`).
 
 Proposed protocol:
 
@@ -118,8 +118,8 @@ example, synthesizes keystrokes with a private source state
 Posting also needs the user-granted PostEvent privilege, shown as Accessibility
 in System Settings ([Apple DTS](https://developer.apple.com/forums/thread/820594)).
 Huma records both origin fields and the keyboard type with every key sample
-(`Sources/Huma/RichTextEditor.swift:247-249`), and while recording it drops any key
-whose event doesn't carry PID 0 and the HID state (`Sources/HumaCore/HumaTextView.swift:39-47`).
+(`../extra/Sources/Huma/RichTextEditor.swift:247-249`), and while recording it drops any key
+whose event doesn't carry PID 0 and the HID state (`../extra/Sources/HumaCore/HumaTextView.swift:39-47`).
 
 **Tested (29 Oct 2026, macOS 27, MacBook Pro M4 Max):**
 - Real typing on the built-in keyboard passes: every page written on this Mac
@@ -128,7 +128,7 @@ whose event doesn't carry PID 0 and the HID state (`Sources/HumaCore/HumaTextVie
   when it sends the event macOS replaces the PID with the sender's own. All four
   forgeries arrived refused. The test sends only to its own process:
   `testKeysSentByAProgramAreRefusedEvenWhenTheyClaimToBeTheKeyboard` in
-  `Tests/HumaCoreTests/HumaTextViewTests.swift`.
+  `../extra/Tests/HumaCoreTests/HumaTextViewTests.swift`.
 - The state field alone can be forged, so the PID is what the check rests on.
 
 **Untested:** events sent at the HID tap with `CGEventPost`, and AppleScript
@@ -178,7 +178,7 @@ A learned model in the circuit is a later step and must be benchmarked against
 BeCAPTCHA-Type-style synthetic traces before it is called a detector.
 
 **Measured** by `typing_checks_catch_machine_timing_but_not_imitation` in
-`experiments/noir-compact/native/src/long.rs`, against the nine shipped rules:
+`../extra/experiments/noir-compact/native/src/long.rs`, against the nine shipped rules:
 
 | Fake typist | Result |
 | --- | --- |
@@ -294,14 +294,14 @@ needs a test or a source first.
 
 | Claim | Where it appears | Evidence | Limit (say it, or don't claim more) |
 | --- | --- | --- | --- |
-| Keys sent by other apps, scripts or AI agents don't count | `Sources/Huma/WritingView.swift:169` | Refused unless PID 0 (`HumaTextView.swift:39-47`). macOS sets the sender's PID even when it writes 0 (§4 test). Sending keys needs the Accessibility privilege ([Apple DTS](https://developer.apple.com/forums/thread/789896)). Computer-use agents type by sending events or writing through Accessibility; both are refused (`testTextWrittenThroughAccessibilityIsRefused`). | A virtual keyboard driver (root) or a USB device that types produces real keyboard events |
-| Text that doesn't come from a key press doesn't count | `Sources/Huma/RichTextEditor.swift:113-119` | Writing Tools, predictions and completions are off. Paste is labelled. Other inserted text is refused (`HumaTextView.swift:121`). One key press may add at most 16 UTF-16 units (`testOneKeyPressAddsAtMostAShortWord`). | An input method can still add up to 16 characters per key press |
-| Another keyboard counts at 60% | `web/pages/verify.mjs:695`, both reports | `KeyboardGuard.swift`. An Apple ID counts only with a connection type and no third-party driver, so Karabiner's virtual keyboard is caught even with Apple's ID (`KeyboardGuardTests`). | USB devices can claim any vendor ID, and Hak5's own example uses Apple's ([Hak5](https://docs.hak5.org/hak5-usb-rubber-ducky/attack-modes-constants-and-variables/attack-modes)) |
+| Keys sent by other apps, scripts or AI agents don't count | `../extra/Sources/Huma/WritingView.swift:169` | Refused unless PID 0 (`HumaTextView.swift:39-47`). macOS sets the sender's PID even when it writes 0 (§4 test). Sending keys needs the Accessibility privilege ([Apple DTS](https://developer.apple.com/forums/thread/789896)). Computer-use agents type by sending events or writing through Accessibility; both are refused (`testTextWrittenThroughAccessibilityIsRefused`). | A virtual keyboard driver (root) or a USB device that types produces real keyboard events |
+| Text that doesn't come from a key press doesn't count | `../extra/Sources/Huma/RichTextEditor.swift:113-119` | Writing Tools, predictions and completions are off. Paste is labelled. Other inserted text is refused (`HumaTextView.swift:121`). One key press may add at most 16 UTF-16 units (`testOneKeyPressAddsAtMostAShortWord`). | An input method can still add up to 16 characters per key press |
+| Another keyboard counts at 60% | `../frontend/pages/verify.mjs:695`, both reports | `KeyboardGuard.swift`. An Apple ID counts only with a connection type and no third-party driver, so Karabiner's virtual keyboard is caught even with Apple's ID (`KeyboardGuardTests`). | USB devices can claim any vendor ID, and Hak5's own example uses Apple's ([Hak5](https://docs.hak5.org/hak5-usb-rubber-ducky/attack-modes-constants-and-variables/attack-modes)) |
 | The nine typing checks | Shared page, both reports | Bounds sit wide of human typing: mean key hold 116 ms (SD 24), mean gap 239 ms (SD 112), gaps rarely under 60 ms ([Dhakal et al., CHI 2018](https://doi.org/10.1145/3173574.3174220)). Machine timing fails (§5 table). | Imitated timing passes: "Speed- and regularity-based heuristics are easily evaded" ([Lotto et al. 2026](https://arxiv.org/abs/2604.15845)). Record bursts above 19 keys a second fail the speed check. |
 | Touch ID at the start and at random times | Both reports, onboarding | Biometric-gated Secure Enclave key (§3) | Shows a fingerprint this Mac knows at those moments, not who typed in between |
-| "Typed by a person" (was "Written by a human" until 29 Oct) | `web/pages/verify.mjs:488`, `web/registry.mjs:266` | Typed on a keyboard, with plausible timing and Touch ID present | Not who composed the words: retyping AI text gives "authentic motor signals" ([Condrey 2026](https://arxiv.org/abs/2601.17280)) |
-| "Text from bots and scripts doesn’t count" (was "Bots get turned away at the door") | `web/pages/foundation.html:122` | Keys sent by software are refused; pasted and inserted text counts 0 | A hardware typist with a person at Touch ID still counts |
-| "53% of all web traffic now comes from bots" | `web/pages/foundation.html:115` | "In 2025, bots made up more than 53% of all web traffic" ([Thales, 28 April 2026](https://www.thalesgroup.com/en/news-centre/press-releases/ai-driven-bot-attacks-surged-125x-according-thales-bad-bot-report)) | Includes good bots such as search crawlers. 40% was bad bots. The publisher sells bot defence. |
+| "Typed by a person" (was "Written by a human" until 29 Oct) | `../frontend/pages/verify.mjs:488`, `../frontend/registry.mjs:266` | Typed on a keyboard, with plausible timing and Touch ID present | Not who composed the words: retyping AI text gives "authentic motor signals" ([Condrey 2026](https://arxiv.org/abs/2601.17280)) |
+| "Text from bots and scripts doesn’t count" (was "Bots get turned away at the door") | `../frontend/pages/foundation.html:122` | Keys sent by software are refused; pasted and inserted text counts 0 | A hardware typist with a person at Touch ID still counts |
+| "53% of all web traffic now comes from bots" | `../frontend/pages/foundation.html:115` | "In 2025, bots made up more than 53% of all web traffic" ([Thales, 28 April 2026](https://www.thalesgroup.com/en/news-centre/press-releases/ai-driven-bot-attacks-surged-125x-according-thales-bad-bot-report)) | Includes good bots such as search crawlers. 40% was bad bots. The publisher sells bot defence. |
 
 ## Sources
 

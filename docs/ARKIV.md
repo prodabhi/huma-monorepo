@@ -2,7 +2,7 @@
 
 `HUMA_STORAGE_BACKEND=arkiv` keeps what Huma stores on [Arkiv](https://docs.arkiv.network) instead of a local folder or
 Cloudflare R2: shared pages (text and proofs), publication records, accounts' documents, short links, writer pages,
-handles and browser sessions. Everything that stores something goes through one interface
+and handles. Everything that stores something goes through one interface
 (`object-store.mjs`), so the app is unchanged; `arkiv-store.mjs` is the new backend behind it.
 
 ## Turn it on
@@ -11,7 +11,7 @@ handles and browser sessions. Everything that stores something goes through one 
 2. Make an account and **fund it** from the [faucet](https://hub.arkiv.network/faucet). Every write is a paid transaction
    on Arkiv's testnet (Rabdi). Make a key with
    `node -e "const {generatePrivateKey,privateKeyToAccount}=require('viem/accounts');const k=generatePrivateKey();console.log(k,privateKeyToAccount(k).address)"`
-   (run in `frontend/`), send the address to the faucet, and keep the private key secret.
+   (run in `../frontend/`), send the address to the faucet, and keep the private key secret.
 3. Make an **encryption key** and back it up: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
    Arkiv data is public, so everything is stored encrypted. **Lose this key and nothing stored can be read again.**
 4. In `.env`:
@@ -44,10 +44,12 @@ Pages already stored in the local folder are not copied over; the Arkiv backend 
 - **Encrypted.** AES-256-GCM, a fresh nonce for each write, the key name as authenticated data (so a payload can't be
   moved to another key). What is public is the key (a kind and a hash, like `records/<id>`), the sizes and the times.
   The link key that opens a private page is never stored: only its hash is, inside the encrypted record.
-- **Changeable state** (documents, handles, listed pages, replay choices, writing requests, sessions) is replaced by
+- **Changeable state** (documents, handles, listed pages, replay choices, writing requests) is replaced by
   compare-and-swap: under a lock per key, the version is checked, then one transaction deletes the old chunks and
   creates the new ones. This is exact for **one server** writing with one wallet; two servers could race.
-- **Daily upload counters** (`quotas/`) change on every upload, so they stay in the local folder.
+- **Daily upload counters** (`quotas/`) change on every upload, and **browser sessions' nonces** (`sessions/`) on every
+  Start Recording, so both stay in the local folder: a transaction each would keep a writer waiting several seconds to
+  begin, for state that lapses within a day.
 - **Not on Arkiv:** the proving points (16 to 32 MB), the landing video and the Mac installer. They are static files,
   too big for entities, and are served from the folder or R2 as before.
 

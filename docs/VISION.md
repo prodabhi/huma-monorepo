@@ -129,7 +129,7 @@ assertion must not be presented as direct attestation of the extension (§8.6).
 
 **October 30: Base retired.** Huma no longer records pages on Base. The
 contracts, relayer, batch circuit and batch prover are archived in
-`experiments/onchain/`. The Base decisions below are kept as history.
+`../extra/experiments/onchain/`. The Base decisions below are kept as history.
 
 **Old.** Proof distribution depends on a social post and a chain anchor.
 
@@ -149,7 +149,7 @@ one transaction per page costs about the same, and nothing private or costly
 runs on a server.
 
 - Long pages fold while the writer types (assurance-long-v2,
-  `integrations/noir/long`). The first part is the `start` program; every later
+  `../backend/integrations/noir/long`). The first part is the `start` program; every later
   part is `fold`, which proves its own step and verifies the previous part's
   proof. Every part checks the capture key's P-256 signatures in-circuit, and
   the chain carries a commitment to that key. At Finish one `final` program per
@@ -183,7 +183,7 @@ runs on a server.
   Only the statement (commitments and the summary the proof already exposes)
   and the owner wallet; publication is explicit, never automatic.
 - Dormant, kept for higher volume: the 4-page batch circuit
-  (`experiments/onchain/batch`) and the Rust prover (`prover/`), which can also
+  (`../extra/experiments/onchain/batch`) and the Rust prover (`../backend/prover/`), which can also
   prove pages for writers who opt in. Short single-proof pages still verify
   off-chain; pages proved before v2 are not recorded on-chain.
 
@@ -349,9 +349,9 @@ signed payloads separate from signatures/attachments to avoid a circular digest.
 Unknown mandatory versions are rejected and attachment sizes bounded. An
 attachment may add facts but cannot change the content or policy already bound.
 
-`CaptureRecord` / `SignedCheckpoint` in `Sources/HumaCore/SignedCapture.swift`
-and `MediaCapture.Manifest` in `Sources/HumaCore/MediaCapture.swift` remain the
-capture foundations. `Sources/HumaCore/EvidenceEnvelope.swift` implements the
+`CaptureRecord` / `SignedCheckpoint` in `../extra/Sources/HumaCore/SignedCapture.swift`
+and `MediaCapture.Manifest` in `../extra/Sources/HumaCore/MediaCapture.swift` remain the
+capture foundations. `../extra/Sources/HumaCore/EvidenceEnvelope.swift` implements the
 shared data types; `ReplayProofService.evidenceEnvelope` derives a statement only
 after replay verification. The Mac Export menu offers an evidence package. Its
 proof is projected through the shared typed Rust exporter to remove private
@@ -392,12 +392,12 @@ derived by the verifier from the proof; the statement hash alone authenticates
 nothing. Existing device attachments retain their checked proof bindings. Experimental Noir media membership now has a pinned verification
 backend; its master bytes are supplied independently by the reader. This checks
 signed master binding and sampled membership, not decoding or scene response.
-The tests in `web/verify-core/fixtures/statements.json` remain encoding vectors;
-the real media proofs live under `experiments/noir-media/reader/test/fixtures`.
+The tests in `../frontend/verify-core/fixtures/statements.json` remain encoding vectors;
+the real media proofs live under `../extra/experiments/noir-media/reader/test/fixtures`.
 
 ### 8.2 Separate evidence verification from its presentation
 
-`web/verify-core/` now provides a DOM-free entry point for text and experimental media proofs:
+`../frontend/verify-core/` now provides a DOM-free entry point for text and experimental media proofs:
 
 ```text
 verify(envelope, readerPolicy, expectedContent) → facts + missing + failures
@@ -620,10 +620,10 @@ a proof; it does not imply native product integration or hardware acceptance.
 | Signed input, origin and presence history | `SignedCapture`, `HumanPresence`, `CaptureSigner`; native/Rust checks | Real fingerprint and physical-input attack measurements |
 | Existing replay ZK | `zkvm`; old receipts and reader compatibility retained | Current heavier guest's full proof remains uncompleted; app still uses this backend |
 | Faster full writing-policy ZK | `assurance-v4.nr`, `assurance.nr`, `assurance-core.mjs`; real 250-character and failed-policy proofs | V4 native capture/worker routing, larger histories, five-second target |
-| Shared portable statement/export | `EvidenceEnvelope.swift`, `web/verify-core`; native export/browser registry acceptance | Additional versioned evidence bindings |
+| Shared portable statement/export | `EvidenceEnvelope.swift`, `../frontend/verify-core`; native export/browser registry acceptance | Additional versioned evidence bindings |
 | New authenticated collector report | Existing app evidence requires base replay proof | New report contract and admitted app/version association; no weakening of the base proof |
 | Media stream commitments | `MediaCapture.swift`; multi-stream signature/blob checks | Actual camera/microphone/motion recording and signed association to media seal |
-| Media sampled ZK | `experiments/noir-media/src/main.nr`; PNG/FLAC/AV1 real proofs, shared SDK | Final sample geometry, meaningful scene policies, coverage/soundness analysis |
+| Media sampled ZK | `../extra/experiments/noir-media/src/main.nr`; PNG/FLAC/AV1 real proofs, shared SDK | Final sample geometry, meaningful scene policies, coverage/soundness analysis |
 | Canonical master and decoded root | Experimental encoded hash + decoded Merkle root under a signed seal | Full asset sizes, bit-exact decoder conformance and ZK decoder relation |
 | Display edits | Seal reserves edit commitment | Canonical signed edit instructions and verified-master viewer; baked-edit circuit deferred |
 | Physical response/probes | Fresh probe nonces in media contract | Sensors/actuators, local feature extraction, calibrated checks, attack bench, ZK relations |
@@ -636,9 +636,9 @@ a proof; it does not imply native product integration or hardware acceptance.
 | Portable C2PA/on-chain/wrappers | Existing detached envelopes verify independently | Conforming credentials/manifests, independent reader, public-proof wrapping/composition and chain verifier |
 | Open-source release | Source available locally | License/release, reproducible distribution, signing/notarization and audit |
 
-Acceptance reports: `web/verify-core/acceptance.json`,
-`experiments/noir-media/results/acceptance.json` and
-`experiments/noir-compact/results/assurance-v4-acceptance.json`. Measurements use
+Acceptance reports: `../frontend/verify-core/acceptance.json`,
+`../extra/experiments/noir-media/results/acceptance.json` and
+`../extra/experiments/noir-compact/results/assurance-v4-acceptance.json`. Measurements use
 generated software-key fixtures; they do not certify hardware or production
 readiness. No score, unique-person count or “everything complete” claim follows.
 

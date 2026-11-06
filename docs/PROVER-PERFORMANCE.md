@@ -7,7 +7,7 @@ right-sized profiles that prove the same public statements with 14–36% fewer g
 Those profiles are research candidates; wiring them into the app is a separate,
 reviewed change.
 
-Related data: [prover-performance-attack.json](integrations/noir/results/prover-performance-attack.json).
+Related data: [prover-performance-attack.json](../backend/integrations/noir/results/prover-performance-attack.json).
 Reproducible circuits, witnesses, keys and proofs:
 `build/research/noir-profile-sizing/{short-tight8,medium-tight32,long-tight32}`.
 
@@ -204,14 +204,14 @@ statement, so old and new proofs remain valid.
    constraint and boundary suites (`assurance_checks.py`, `bucket_checks.py`) and
    prove one complete signed fixture.
 2. Register the profile name, public ABI reference, program, VK and bytecode pin in
-   `integrations/noir/worker.mjs`.
+   `../backend/integrations/noir/worker.mjs`.
 3. Add the reader pin and VK asset in
-   `experiments/noir-compact/browser/assurance-profile.mjs` and `browser/assets/`,
+   `../extra/experiments/noir-compact/browser/assurance-profile.mjs` and `browser/assets/`,
    then verify an exported proof through the browser/Node SDK.
-4. Extend `experiments/noir-compact/native/src/profile_fit.rs` with the new
+4. Extend `../extra/experiments/noir-compact/native/src/profile_fit.rs` with the new
    candidate limits and selection order; extend `assurance_input.rs` so the
    private arrays are padded or rejected at the new exact capacities.
-5. Update `integrations/noir/prepare.py`, `package.py` and the app engine staging
+5. Update `../backend/integrations/noir/prepare.py`, `package.py` and the app engine staging
    with the new programs, VKs, pins and manifests.
 6. Decide the final-proof thread policy after thermal testing. Four threads is the
    conservative fast setting; eight is the knee for the largest tier.
