@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Drafted by Claude for Huma; not yet rewritten in Huma. After it's rewritten in Huma, add the line
+     "This post was written in Huma. See how it was typed: [link]" at the end (growth/blog/writing-rules.md). -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Accurate Are AI Detectors? What the Studies Say · Huma</title>
+<meta name="description" content="AI detectors wrongly flag human writing often enough that universities have turned them off. What the studies found, who gets flagged, and what to do instead.">
+<link rel="canonical" href="https://huma.social/blog/how-accurate-are-ai-detectors">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Huma">
+<meta property="og:title" content="How Accurate Are AI Detectors? What the Studies Say">
+<meta property="og:description" content="AI detectors wrongly flag human writing often enough that universities have turned them off. What the studies found, who gets flagged, and what to do instead.">
+<meta property="og:url" content="https://huma.social/blog/how-accurate-are-ai-detectors">
+<meta property="og:image" content="https://huma.social/img/og-home.jpg?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@huma_social">
+<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/foundation-logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/brand/icon-512.png">
+<link rel="stylesheet" href="/site.css">
+<script type="module" src="/visit.js"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How Accurate Are AI Detectors? What the Studies Say", "description": "AI detectors wrongly flag human writing often enough that universities have turned them off. What the studies found, who gets flagged, and what to do instead.", "url": "https://huma.social/blog/how-accurate-are-ai-detectors", "mainEntityOfPage": "https://huma.social/blog/how-accurate-are-ai-detectors", "datePublished": "2026-11-05", "dateModified": "2026-11-05", "author": {"@type": "Person", "name": "Swayam"}, "publisher": {"@type": "Organization", "name": "Huma", "url": "https://huma.social/", "logo": {"@type": "ImageObject", "url": "https://huma.social/brand/icon-512.png"}}, "image": "https://huma.social/img/og-home.jpg", "citation": ["https://arxiv.org/abs/2304.02819", "https://hai.stanford.edu/news/ai-detectors-biased-against-non-native-english-writers", "https://the-decoder.com/openai-discontinues-ai-text-detector-due-to-lack-of-accuracy/", "https://doi.org/10.1007/s40979-023-00146-z", "https://arxiv.org/abs/2303.11156", "https://bfi.uchicago.edu/working-papers/artificial-writing-and-automated-detection/", "https://mitsloanedtech.mit.edu/ai/teach/ai-detectors-dont-work/", "https://www.edweek.org/technology/black-students-are-more-likely-to-be-falsely-accused-of-using-ai-to-cheat/2024/09", "https://campustechnology.com/articles/2023/05/turnitin-says-its-ai-detector-analyzed-38m-submissions-in-six-weeks.aspx", "https://www.vanderbilt.edu/brightspace/2023/08/16/guidance-on-ai-detection-and-why-were-disabling-turnitins-ai-detector/"]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can AI detectors be wrong?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. OpenAI shut down its own detector after it flagged 9% of human text, and a Stanford study found seven popular detectors flagged 61% of essays by non-native English writers as AI on average."}}, {"@type": "Question", "name": "Why did OpenAI shut down its AI detector?", "acceptedAnswer": {"@type": "Answer", "text": "OpenAI took its AI text classifier offline in July 2023 because of its low accuracy. It caught only 26% of AI-written text and wrongly flagged 9% of human text."}}, {"@type": "Question", "name": "Are AI detectors biased against non-native English speakers?", "acceptedAnswer": {"@type": "Answer", "text": "A 2023 Stanford study found seven popular detectors flagged 61% of TOEFL essays by non-native English writers as AI on average, while being near-perfect on essays by US-born eighth graders."}}]}</script>
+</head>
+<body>
+<!--#include nav-->
+<main class="post">
+    <article>
+        <header class="post-head">
+            <a class="post-kicker mono" href="/blog">Blog</a>
+            <h1>How accurate are AI detectors?</h1>
+            <p class="post-lead">Not accurate enough to accuse anyone with. And the deeper problem is that they can’t be fixed.</p>
+            <p class="post-meta mono">By Swayam · November 5, 2026 · 4 min read</p>
+        </header>
+        <div class="post-body">
+            <p>The short answer is: not accurate enough to accuse anyone with. But the more interesting question is why, because once you see why, you see that better detectors won’t fix it.</p>
+            <p><strong>Short answer:</strong> AI detectors wrongly flag human writing often enough to matter. OpenAI shut down its own detector for being inaccurate, and a Stanford study found popular detectors flagged most essays by non-native English writers as AI. Some newer detectors test much better, but every detector gives you a guess, not evidence.</p>
+            <!--#include cta-short-->
+            <h2>What the studies found</h2>
+            <p>In 2023 a group at Stanford ran 91 essays from the TOEFL, the English test for non-native speakers, through seven popular detectors.<a class="ref" href="#note-1">[1]</a> Every essay was written by a person. On average, the detectors called 61% of them AI. At least one detector flagged 89 of the 91. The same detectors were near-perfect on essays by US-born eighth graders.<a class="ref" href="#note-2">[2]</a></p>
+            <figure><svg viewBox="0 0 640 168" role="img" aria-label="Share of 91 human-written TOEFL essays that detectors called AI" class="chart"><text x="0" y="20" class="c-label">Flagged by at least one of the 7 detectors</text><rect x="0" y="28" width="570" height="16" rx="8" class="c-track"/><rect x="0" y="28" width="557.5" height="16" rx="8" style="fill:var(--warm)"/><text x="640" y="41" text-anchor="end" class="c-value">97.8%</text><text x="0" y="74" class="c-label">Average across the 7 detectors</text><rect x="0" y="82" width="570" height="16" rx="8" class="c-track"/><rect x="0" y="82" width="348.8" height="16" rx="8" style="fill:var(--warm)"/><text x="640" y="95" text-anchor="end" class="c-value">61.2%</text><text x="0" y="128" class="c-label">Flagged by all 7 detectors</text><rect x="0" y="136" width="570" height="16" rx="8" class="c-track"/><rect x="0" y="136" width="112.9" height="16" rx="8" style="fill:var(--warm)"/><text x="640" y="149" text-anchor="end" class="c-value">19.8%</text></svg><figcaption>Share of 91 TOEFL essays, all written by people, that detectors called AI-generated. Source: Liang et al., 2023.</figcaption></figure>
+            <p>That same year OpenAI took its own detector offline. It caught only 26% of AI-written text and wrongly flagged 9% of human text.<a class="ref" href="#note-3">[3]</a> The company that makes ChatGPT couldn’t reliably tell when something was written by ChatGPT. A separate team tested 14 tools, Turnitin among them, and concluded they were “neither accurate nor reliable”.<a class="ref" href="#note-4">[4]</a></p>
+            <div class="table"><table><thead><tr><th>Study</th><th>What was tested</th><th>What they found</th></tr></thead><tbody><tr><td>Liang et al., Stanford, 2023</td><td>7 detectors, 91 TOEFL essays by people</td><td>61% flagged as AI on average; 97.8% by at least one</td></tr><tr><td>OpenAI, 2023</td><td>Its own AI text classifier</td><td>Caught 26% of AI text, flagged 9% of human text; shut down</td></tr><tr><td>Weber-Wulff et al., 2023</td><td>14 tools, including Turnitin</td><td>“Neither accurate nor reliable”</td></tr><tr><td>Jabarian and Imas, UChicago, 2025</td><td>Several commercial detectors</td><td>Pangram near-zero errors on longer passages; others mixed</td></tr></tbody></table></div>
+            <h2>Why detectors can’t be fixed</h2>
+            <p>Here’s the problem in one sentence: a detector has to decide whether a person could have written a piece of text, and a person can write almost anything.</p>
+            <p>AI models are trained to write like people, and every improvement makes their output harder to tell apart from ours. Meanwhile any AI text a detector does catch can be run through a paraphrasing tool, and researchers have shown that this defeats many detectors.<a class="ref" href="#note-5">[5]</a> So detectors are squeezed from both sides. Catching more AI means flagging more humans. Flagging fewer humans means catching less AI.</p>
+            <p>Some detectors are much better than others, and it’s worth being fair about that. A 2025 University of Chicago working paper found that Pangram made almost no errors on medium and long passages.<a class="ref" href="#note-6">[6]</a> That’s real progress. But notice what even a perfect detector gives you: its opinion of the words. It can’t give an honest student anything to show back.</p>
+            <figure><svg viewBox="0 0 680 192" role="img" aria-label="An AI detector guesses from finished text; Huma records the writing and makes a proof anyone can check" class="chart"><text x="0" y="37.0" class="c-name">AI detector</text><rect x="148" y="0" width="160" height="64" rx="12" class="c-box"/><text x="228.0" y="37.0" text-anchor="middle" class="c-step">The finished text</text><path d="M314 32.0 h12 m-6 -5 l6 5 l-6 5" class="c-arrow"/><rect x="334" y="0" width="160" height="64" rx="12" class="c-box"/><text x="414.0" y="28.5" text-anchor="middle" class="c-step">A model guesses how</text><text x="414.0" y="45.5" text-anchor="middle" class="c-step">predictable it is</text><path d="M500 32.0 h12 m-6 -5 l6 5 l-6 5" class="c-arrow"/><rect x="520" y="0" width="160" height="64" rx="12" class="c-box"/><text x="600.0" y="37.0" text-anchor="middle" class="c-step">A score: “72% AI”</text><text x="0" y="141.0" class="c-name">Huma</text><rect x="148" y="104" width="160" height="64" rx="12" class="c-box"/><text x="228.0" y="132.5" text-anchor="middle" class="c-step">Every key press,</text><text x="228.0" y="149.5" text-anchor="middle" class="c-step">with its timing</text><path d="M314 136.0 h12 m-6 -5 l6 5 l-6 5" class="c-arrow"/><rect x="334" y="104" width="160" height="64" rx="12" class="c-box"/><text x="414.0" y="132.5" text-anchor="middle" class="c-step">A proof made on your</text><text x="414.0" y="149.5" text-anchor="middle" class="c-step">own device</text><path d="M500 136.0 h12 m-6 -5 l6 5 l-6 5" class="c-arrow"/><rect x="520" y="104" width="160" height="64" rx="12" class="c-box hot"/><text x="600.0" y="132.5" text-anchor="middle" class="c-step">A link anyone can</text><text x="600.0" y="149.5" text-anchor="middle" class="c-step">check</text></svg><figcaption>A detector gives you an opinion about the words. A recording gives you evidence about how they were made.</figcaption></figure>
+            <h2>Who pays for the errors</h2>
+            <ul>
+            <li><strong>Non-native English writers.</strong> Across the seven detectors in the Stanford study, 61% of their essays were wrongly flagged, against about 5% of essays by native writers.<a class="ref" href="#note-7">[7]</a></li>
+            <li><strong>Black students.</strong> In a Common Sense Media survey, about 20% of Black teens said a teacher had wrongly flagged their work as AI, compared with 7% of white teens.<a class="ref" href="#note-8">[8]</a></li>
+            <li><strong>Anyone who writes plainly.</strong> Clear, simple writing is exactly what detectors find predictable.</li>
+            </ul>
+            <p>And small rates become big numbers at scale. Turnitin checked 38 million submissions in its first six weeks.<a class="ref" href="#note-9">[9]</a> Vanderbilt worked out that even a 1% error rate could mean about 750 wrongly flagged papers a year on its campus, and turned the detector off.<a class="ref" href="#note-10">[10]</a></p>
+            <h2>What works instead</h2>
+            <p>Stop asking “does this text look human?” and ask “how was this text made?” The first question can only be answered with a guess. The second can be answered with a record, and that’s what Huma gives you. Huma records every key press as you write and gives you a link and a PDF Report showing what was typed and what was pasted, which anyone can check in a browser. See <a href="/blog/huma-vs-grammarly-authorship">how Huma compares with Grammarly Authorship</a>, or what to do if <a href="/blog/turnitin-flagged-my-essay">Turnitin has already flagged you</a>.</p>
+            <!--#include cta-end-->
+            <h2>Questions</h2>
+            <h3>Can AI detectors be wrong?</h3>
+            <p>Yes. OpenAI shut down its own detector after it flagged 9% of human text, and a Stanford study found seven popular detectors flagged 61% of essays by non-native English writers as AI on average.</p>
+            <h3>Why did OpenAI shut down its AI detector?</h3>
+            <p>OpenAI took its AI text classifier offline in July 2023 because of its low accuracy. It caught only 26% of AI-written text and wrongly flagged 9% of human text.</p>
+            <h3>Are AI detectors biased against non-native English speakers?</h3>
+            <p>A 2023 Stanford study found seven popular detectors flagged 61% of TOEFL essays by non-native English writers as AI on average, while being near-perfect on essays by US-born eighth graders.</p>
+            <h2>Notes</h2>
+            <ol class="notes">
+            <li id="note-1">Liang, Yuksekgonul, Mao, Wu and Zou, “GPT detectors are biased against non-native English writers”, Patterns, 2023. <a href="https://arxiv.org/abs/2304.02819">arxiv.org</a></li>
+            <li id="note-2">Stanford HAI, “AI-Detectors Biased Against Non-Native English Writers”. <a href="https://hai.stanford.edu/news/ai-detectors-biased-against-non-native-english-writers">hai.stanford.edu</a></li>
+            <li id="note-3">The Decoder, “OpenAI discontinues AI text detector due to lack of accuracy”, July 2023. <a href="https://the-decoder.com/openai-discontinues-ai-text-detector-due-to-lack-of-accuracy/">the-decoder.com</a></li>
+            <li id="note-4">Weber-Wulff et al., “Testing of detection tools for AI-generated text”, International Journal for Educational Integrity, 2023. <a href="https://doi.org/10.1007/s40979-023-00146-z">doi.org</a></li>
+            <li id="note-5">Sadasivan et al., “Can AI-Generated Text be Reliably Detected?”, 2023. <a href="https://arxiv.org/abs/2303.11156">arxiv.org</a></li>
+            <li id="note-6">Jabarian and Imas, “Artificial Writing and Automated Detection”, Becker Friedman Institute, University of Chicago, 2025. <a href="https://bfi.uchicago.edu/working-papers/artificial-writing-and-automated-detection/">bfi.uchicago.edu</a></li>
+            <li id="note-7">MIT Sloan Teaching & Learning Technologies, “AI Detectors Don’t Work. Here’s What to Do Instead.”. <a href="https://mitsloanedtech.mit.edu/ai/teach/ai-detectors-dont-work/">mitsloanedtech.mit.edu</a></li>
+            <li id="note-8">EdWeek, “Black Students Are More Likely to Be Falsely Accused of Using AI to Cheat”, September 2024 (Common Sense Media survey). <a href="https://www.edweek.org/technology/black-students-are-more-likely-to-be-falsely-accused-of-using-ai-to-cheat/2024/09">www.edweek.org</a></li>
+            <li id="note-9">Campus Technology, “Turnitin Says Its AI Detector Analyzed 38M Submissions in Six Weeks”, May 2023. <a href="https://campustechnology.com/articles/2023/05/turnitin-says-its-ai-detector-analyzed-38m-submissions-in-six-weeks.aspx">campustechnology.com</a></li>
+            <li id="note-10">Vanderbilt University, “Guidance on AI Detection and Why We’re Disabling Turnitin’s AI Detector”, August 2023. <a href="https://www.vanderbilt.edu/brightspace/2023/08/16/guidance-on-ai-detection-and-why-were-disabling-turnitins-ai-detector/">www.vanderbilt.edu</a></li>
+            </ol>
+        </div>
+    </article>
+</main>
+<!--#include footer-->
+</body>
+</html>
