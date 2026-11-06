@@ -1,0 +1,6 @@
+[package]
+name="huma_batch"
+type="bin"
+authors=[]
+compiler_version=">=1.0.0"
+[dependencies]
