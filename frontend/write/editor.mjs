@@ -995,21 +995,40 @@ async function syncPage(record) {
 // const signInWindow = () => window.open('', 'huma-signin', 'popup,width=480,height=720');
 /** Signing in, with World ID (worldid.mjs): its QR shows over this page, so a recording here waits behind it. */
 let signingIn = null;
+/** Just signed in (`me`, the account): the page shows it, and everything already in this browser joins the account. */
+async function afterSignIn(me) {
+  updateAccount(); say('Signed in with World ID.');
+  ensureProfile({ ask: false });
+  // Everything already in this browser joins the account, unless the account already has it as new.
+  const kept = new Map((await accountDocuments().catch(() => [])).map(d => [d.id, d.updated]));
+  const pending = (await keptPages().catch(() => [])).filter(record => !(kept.get(record.id) >= record.updated));
+  await Promise.all(Array.from({ length: 3 }, async () => { while (pending.length) await syncPage(pending.shift()); }));
+  return me;
+}
 function startSignIn() {
   signingIn ??= signInWithWorldID()
-    .then(async me => {
-      if (!me?.wallet) { if (me?.reason) say(me.reason); return null; }
-      updateAccount(); say('Signed in with World ID.');
-      ensureProfile({ ask: false });
-      // Everything already in this browser joins the account, unless the account already has it as new.
-      const kept = new Map((await accountDocuments().catch(() => [])).map(d => [d.id, d.updated]));
-      const pending = (await keptPages().catch(() => [])).filter(record => !(kept.get(record.id) >= record.updated));
-      await Promise.all(Array.from({ length: 3 }, async () => { while (pending.length) await syncPage(pending.shift()); }));
-      return me;
-    })
+    .then(me => { if (!me?.wallet) { if (me?.reason) say(me.reason); return null; } return afterSignIn(me); })
     .catch(e => { say(e.message); return null; })
     .finally(() => { signingIn = null; });
   return signingIn;
+}
+/** Before a new document, signed out where World ID is on: its sign-in first (a QR for World App, worldid.mjs). Go Back
+ *  (or Escape) stays on /write, without a new document; Continue, or signing in, opens it (`open`). Signed in already,
+ *  or World ID off, it opens straight away. Finishing still asks for World ID where it's required (humanBeforeFinish). */
+async function signInBeforeNew(open) {
+  if (account() || signingIn || !(await worldIDOn())) { open(); return; }
+  let choice = null;
+  signingIn = signInWithWorldID({ gate: true })
+    .then(me => {
+      if (me?.wallet) return afterSignIn(me);
+      choice = me?.choice ?? null;
+      if (me?.reason && !choice) say(me.reason);
+      return null;
+    })
+    .catch(e => { say(e.message); return null; })
+    .finally(() => { signingIn = null; });
+  if ((await signingIn) || choice === 'continue') open();
+  else if (choice === 'back' && !document.body.classList.contains('home-mode')) openPages();
 }
 $('signinCancel').onclick = () => { $('signinWait').hidden = true; };
 function updateAccount() {
@@ -1727,7 +1746,10 @@ async function done(result, { reopened = false } = {}) {
 }
 // A new page was already confirmed: the browser doesn't ask again on the way out.
 let leaving = false;
-function newPage() { leaving = true; persist().finally(() => { location.href = '/write?page=' + newId(); }); }
+function newPage() {
+  if ($('confirmNew').open) $('confirmNew').close();
+  signInBeforeNew(() => { leaving = true; persist().finally(() => { location.href = '/write?page=' + newId(); }); });
+}
 function confirmNew() {
   if (finished || !recording || plainText(view.state.doc) === initialText) { newPage(); return; }
   $('confirmNew').showModal();
@@ -1963,7 +1985,7 @@ function deletePage(record, after = refreshPages) {
   $('deletePage').showModal(); $('deleteCancel').focus();
 }
 $('deleteCancel').onclick = () => $('deletePage').close();
-$('homeNew').onclick = () => { location.href = '/write?page=' + newId(); };
+$('homeNew').onclick = () => signInBeforeNew(() => { location.href = '/write?page=' + newId(); });
 /** Your Pages, with this page saved first. */
 function openPages() { persist().finally(() => { location.href = '/write?pages'; }); }
 $('pagesLink').onclick = e => { if (!hasPages) return; e.preventDefault(); openPages(); };

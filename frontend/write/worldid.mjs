@@ -44,18 +44,25 @@ const failure = code => (DECLINED.has(code) ? 'World ID was declined' : code ===
 /**
  * A World ID proof made for `signal`: shows a QR and a link for World App and waits for the writer. Resolves
  * { proof } (the IDKit result) or { proof: null, reason } when World ID is off (reason null), skipped, declined or
- * timed out. It never rejects.
+ * timed out. It never rejects. `gate`: the sign-in offered before a new document, with Go Back and Continue instead of
+ * Cancel; its answer also says which the writer chose ({ choice: 'back' | 'continue' }, Escape is Go Back, null when it
+ * ran out or failed).
  */
-export async function proveHuman(signal, { after: then } = {}) {
+export async function proveHuman(signal, { after: then, gate = false } = {}) {
   const world = await worldIDConfig();
   if (!world) return { proof: null, reason: null };
-  const dialog = $('worldid'), status = $('worldidStatus'), open = $('worldidOpen');
+  const dialog = $('worldid'), status = $('worldidStatus'), open = $('worldidOpen'), next = $('worldidContinue');
   const after = then ?? (world.required ? REQUIRED : SKIPPED);
-  $('worldidSkip').textContent = then || world.required ? 'Cancel' : 'Finish Without It';
+  $('worldidTitle').textContent = gate ? 'Sign In with World ID' : 'Verify You’re Human';
+  $('worldidSkip').textContent = gate ? 'Go Back' : then || world.required ? 'Cancel' : 'Finish Without It';
+  next.hidden = !gate;
   const cancel = new AbortController();
+  let chosen = null;
   const stop = () => cancel.abort();
   const timer = setTimeout(stop, WAIT);
-  $('worldidSkip').onclick = stop; dialog.oncancel = stop;
+  const choose = choice => () => { chosen ??= choice; stop(); };
+  $('worldidSkip').onclick = choose('back'); next.onclick = choose('continue'); dialog.oncancel = choose('back');
+  const answer = value => (gate ? { ...value, choice: chosen } : value);
   try {
     status.textContent = 'Getting a request ready…'; open.hidden = true; $('worldidQR').replaceChildren();
     if (!dialog.open) dialog.showModal();
@@ -69,11 +76,11 @@ export async function proveHuman(signal, { after: then } = {}) {
     status.textContent = 'Waiting for World App…';
     const done = await request.pollUntilCompletion({ signal: cancel.signal, timeout: WAIT });
     if (done.success) return { proof: done.result, reason: null };
-    return { proof: null, reason: failure(done.error) + '. ' + after };
+    return answer({ proof: null, reason: failure(done.error) + '. ' + after });
   } catch {
-    return { proof: null, reason: (cancel.signal.aborted ? 'World ID wasn’t completed' : 'World ID couldn’t be reached') + '. ' + after };
+    return answer({ proof: null, reason: (cancel.signal.aborted ? 'World ID wasn’t completed' : 'World ID couldn’t be reached') + '. ' + after });
   } finally {
-    clearTimeout(timer); dialog.oncancel = null;
+    clearTimeout(timer); dialog.oncancel = null; next.onclick = null; next.hidden = true;
     if (dialog.open) dialog.close();
   }
 }
@@ -81,12 +88,13 @@ export async function proveHuman(signal, { after: then } = {}) {
 /**
  * Signs this browser in with World ID: a QR for World App, made for this browser's publishing key, then the server
  * checks it with World and links the key to that World ID's account. Resolves the account ({ wallet, name }), or
- * { reason } when it didn't happen: World ID off, cancelled, declined, timed out or refused.
+ * { reason } when it didn't happen: World ID off, cancelled, declined, timed out or refused. `gate`: offered before a
+ * new document (proveHuman), so a sign-in that didn't happen also says { choice }.
  */
-export async function signInWithWorldID() {
+export async function signInWithWorldID({ gate = false } = {}) {
   if (!(await worldIDOn())) return { reason: 'Sign-in isn’t set up here yet.' };
-  const { proof, reason } = await proveHuman(await linkSignal(), { after: SIGN_IN });
-  if (!proof) return { reason };
+  const { proof, reason, choice } = await proveHuman(await linkSignal(), { after: SIGN_IN, gate });
+  if (!proof) return gate ? { reason, choice } : { reason };
   try { return await worldIDSignIn(proof); } catch (e) { return { reason: e.message || 'Couldn’t sign in with World ID.' }; }
 }
 
