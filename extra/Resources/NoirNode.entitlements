@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+    <!-- HumaScriptHost runs the engine's JavaScript on JavaScriptCore, which compiles it just in time (MAP_JIT memory
+         only). Without it a page's checks run 4.5 times slower. No unsigned executable memory: Node needed that, and
+         the app no longer ships Node or any WebAssembly. -->
+    <key>com.apple.security.cs.allow-jit</key><true/>
+</dict></plist>
