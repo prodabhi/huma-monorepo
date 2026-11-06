@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-22",
+  "machine": {
+    "cpu": "Apple M4 Max",
+    "physicalCores": 16,
+    "memoryGiB": 48
+  },
+  "conditions": "Shared interactive Mac, not controlled idle laboratory. Three warm samples per workload, two threads, prover nice10. Tools and CRS already cached. No claim about production backend soundness or full Huma replay latency.",
+  "results": {
+    "p256-8": {
+      "variant": "p256-8",
+      "statement": "Synthetic P-256/SHA-256 microbenchmark, not Huma replay",
+      "noir": "1.0.0-beta.25",
+      "bb": "5.2.0",
+      "verifierTarget": "noir-recursive",
+      "zeroKnowledge": true,
+      "threads": 2,
+      "nice": 10,
+      "crs": "cached for samples",
+      "vk": "precomputed for samples",
+      "initialCompileAndWitnessMs": 126.92,
+      "setupAndFirstProofMs": 4493.84,
+      "samples": [
+        {
+          "witnessMs": 411.65,
+          "proveMs": 4515.18,
+          "verifyMs": 12.6,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 121.81,
+          "proveMs": 3391.83,
+          "verifyMs": 13.54,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 134.23,
+          "proveMs": 3411.63,
+          "verifyMs": 11.74,
+          "proofBytes": 14656
+        }
+      ],
+      "medianProveMs": 3411.63,
+      "medianWitnessProveVerifyMs": 3557.6,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 848,
+            "circuit_size": 341865
+          }
+        ]
+      },
+      "invalidSignatureRejected": true,
+      "tamperedPublicInputRejected": true,
+      "changedPayloadRejected": null
+    },
+    "checkpoint-2": {
+      "variant": "checkpoint-2",
+      "statement": "Synthetic P-256/SHA-256 microbenchmark, not Huma replay",
+      "noir": "1.0.0-beta.25",
+      "bb": "5.2.0",
+      "verifierTarget": "noir-recursive",
+      "zeroKnowledge": true,
+      "threads": 2,
+      "nice": 10,
+      "crs": "cached for samples",
+      "vk": "precomputed for samples",
+      "initialCompileAndWitnessMs": 288.11,
+      "setupAndFirstProofMs": 3406.11,
+      "samples": [
+        {
+          "witnessMs": 164.81,
+          "proveMs": 2469.88,
+          "verifyMs": 11.81,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 164.39,
+          "proveMs": 2475.25,
+          "verifyMs": 11.77,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 162.48,
+          "proveMs": 2500.92,
+          "verifyMs": 11.67,
+          "proofBytes": 14656
+        }
+      ],
+      "medianProveMs": 2475.25,
+      "medianWitnessProveVerifyMs": 2651.41,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 3737,
+            "circuit_size": 235247
+          }
+        ]
+      },
+      "invalidSignatureRejected": true,
+      "tamperedPublicInputRejected": true,
+      "changedPayloadRejected": true
+    },
+    "p256-2": {
+      "variant": "p256-2",
+      "statement": "Synthetic P-256/SHA-256 microbenchmark, not Huma replay",
+      "noir": "1.0.0-beta.25",
+      "bb": "5.2.0",
+      "verifierTarget": "noir-recursive",
+      "zeroKnowledge": true,
+      "threads": 2,
+      "nice": 10,
+      "crs": "cached for samples",
+      "vk": "precomputed for samples",
+      "initialCompileAndWitnessMs": 145.06,
+      "setupAndFirstProofMs": 1247.45,
+      "samples": [
+        {
+          "witnessMs": 106.86,
+          "proveMs": 956.96,
+          "verifyMs": 12.66,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 110.57,
+          "proveMs": 1021.7,
+          "verifyMs": 12.97,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 112.72,
+          "proveMs": 1005.88,
+          "verifyMs": 12.04,
+          "proofBytes": 14656
+        }
+      ],
+      "medianProveMs": 1005.88,
+      "medianWitnessProveVerifyMs": 1130.64,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 260,
+            "circuit_size": 88347
+          }
+        ]
+      },
+      "invalidSignatureRejected": true,
+      "tamperedPublicInputRejected": true,
+      "changedPayloadRejected": null
+    }
+  }
+}

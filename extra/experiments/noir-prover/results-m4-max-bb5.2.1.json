@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-22",
+  "machine": {
+    "cpu": "Apple M4 Max",
+    "physicalCores": 16,
+    "memoryGiB": 48
+  },
+  "conditions": "Shared interactive Mac with a single-core gate profiler concurrently running. Three warm samples, two prover threads, nice10, cached CRS and precomputed VK. Synthetic component circuit, not full replay.",
+  "results": {
+    "checkpoint-2": {
+      "variant": "checkpoint-2",
+      "statement": "Synthetic P-256/SHA-256 microbenchmark, not Huma replay",
+      "noir": "1.0.0-beta.25",
+      "bb": "5.2.1",
+      "verifierTarget": "noir-recursive",
+      "zeroKnowledge": true,
+      "threads": 2,
+      "nice": 10,
+      "crs": "cached for samples",
+      "vk": "precomputed for samples",
+      "initialCompileAndWitnessMs": 169.02,
+      "setupAndFirstProofMs": 3257.47,
+      "samples": [
+        {
+          "witnessMs": 161.69,
+          "proveMs": 2435.12,
+          "verifyMs": 13.23,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 164.7,
+          "proveMs": 2437.01,
+          "verifyMs": 11.66,
+          "proofBytes": 14656
+        },
+        {
+          "witnessMs": 164.26,
+          "proveMs": 2437.7,
+          "verifyMs": 11.25,
+          "proofBytes": 14656
+        }
+      ],
+      "medianProveMs": 2437.01,
+      "medianWitnessProveVerifyMs": 2613.21,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 3737,
+            "circuit_size": 235247
+          }
+        ]
+      },
+      "invalidSignatureRejected": true,
+      "tamperedPublicInputRejected": true,
+      "changedPayloadRejected": true
+    }
+  }
+}

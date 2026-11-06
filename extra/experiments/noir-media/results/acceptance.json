@@ -1,0 +1,264 @@
+{
+  "date": "2026-10-23",
+  "experimental": true,
+  "softwareFixturesOnly": true,
+  "proofSystem": "barretenberg-5.2.1-ultrahonk",
+  "verifierTarget": "noir-recursive",
+  "zeroKnowledgeEnabled": true,
+  "cases": [
+    {
+      "case": "image",
+      "experimental": true,
+      "softwareKeysOnly": true,
+      "proofGenerated": true,
+      "gates": 768921,
+      "compileAndWitness": {
+        "wallMs": 517.0,
+        "peakSampledRSS": 187400192
+      },
+      "encodedBytes": 291,
+      "leafCount": 2,
+      "decodedBytes": 6144,
+      "sampleCount": 2,
+      "leafCapacity": 3072,
+      "treeDepth": 8,
+      "layout": {
+        "codec": "png",
+        "bitDepth": 16,
+        "width": 32,
+        "height": 32,
+        "format": "rgb48le",
+        "fallback": true
+      },
+      "threads": 2,
+      "verification": {
+        "verified": true,
+        "allSignaturesVerified": true,
+        "keyHash": "f6a82be835f1087c23c074c61c32511dfa19867c20d59d6216cea05acc1856f6",
+        "kind": 1,
+        "sealHash": "4265e406ca47924edc4477c8059a5ec27e84b554ff816837a82dc365be6f0e66",
+        "decodingProven": false,
+        "scenePolicyChecked": false,
+        "manufacturerAttestation": false,
+        "masterCompared": true,
+        "samplingFreshness": "local-unattested-fixture",
+        "expectedChallengeMatched": false
+      },
+      "proveMs": 7060.215208,
+      "verifyMs": 58.21,
+      "vkSha256": "8cada434b665ae722250b38cfc394dab269e71aa1efec9365fef1e347fbeae9a",
+      "contiguousMs": 11249.87
+    },
+    {
+      "case": "audio",
+      "experimental": true,
+      "softwareKeysOnly": true,
+      "proofGenerated": true,
+      "gates": 768921,
+      "compileAndWitness": {
+        "wallMs": 518.65,
+        "peakSampledRSS": 182812672
+      },
+      "encodedBytes": 11706,
+      "leafCount": 10,
+      "decodedBytes": 28800,
+      "sampleCount": 2,
+      "leafCapacity": 3072,
+      "treeDepth": 8,
+      "layout": {
+        "codec": "flac",
+        "bitDepth": 24,
+        "sampleRate": 48000,
+        "channels": 1,
+        "format": "s24le"
+      },
+      "threads": 2,
+      "verification": {
+        "verified": true,
+        "allSignaturesVerified": true,
+        "keyHash": "c69494636990043794746a4ef1d3612ac8d74781ff6c15f76e1b9f0089f880df",
+        "kind": 2,
+        "sealHash": "f52d8de6572b4903132dae2a151d5b8e35dad9de9d545f4f3578ae17f56664fd",
+        "decodingProven": false,
+        "scenePolicyChecked": false,
+        "manufacturerAttestation": false,
+        "masterCompared": true,
+        "samplingFreshness": "local-unattested-fixture",
+        "expectedChallengeMatched": false
+      },
+      "proveMs": 7043.665833,
+      "verifyMs": 52.46,
+      "vkSha256": "8cada434b665ae722250b38cfc394dab269e71aa1efec9365fef1e347fbeae9a",
+      "contiguousMs": 8210.06
+    },
+    {
+      "case": "video",
+      "experimental": true,
+      "softwareKeysOnly": true,
+      "proofGenerated": true,
+      "gates": 768921,
+      "compileAndWitness": {
+        "wallMs": 493.36,
+        "peakSampledRSS": 137838592
+      },
+      "encodedBytes": 6676,
+      "leafCount": 24,
+      "decodedBytes": 73728,
+      "sampleCount": 2,
+      "leafCapacity": 3072,
+      "treeDepth": 8,
+      "layout": {
+        "codec": "av1",
+        "bitDepth": 10,
+        "width": 64,
+        "height": 64,
+        "fps": 30,
+        "format": "yuv420p10le",
+        "filmGrain": false
+      },
+      "threads": 2,
+      "verification": {
+        "verified": true,
+        "allSignaturesVerified": true,
+        "keyHash": "403d48e95442dcb88b14c185e510a0dde7d69c3b8c3e846cee85d45b3e402cce",
+        "kind": 3,
+        "sealHash": "34898e3bbe7b8cb364292dba74e3808fe7d805162251c9feacc5887289238134",
+        "decodingProven": false,
+        "scenePolicyChecked": false,
+        "manufacturerAttestation": false,
+        "masterCompared": true,
+        "samplingFreshness": "local-unattested-fixture",
+        "expectedChallengeMatched": false
+      },
+      "proveMs": 7103.02425,
+      "verifyMs": 52.8,
+      "vkSha256": "8cada434b665ae722250b38cfc394dab269e71aa1efec9365fef1e347fbeae9a",
+      "contiguousMs": 8230.85
+    }
+  ],
+  "witnessChecks": {
+    "experimental": true,
+    "proofGenerated": false,
+    "artifactSha256": "0c4d3e1bda84bf23e6dee0586b9b1b3813ff54f560a0b2b6844ce9fd26a7aa78",
+    "passed": 19,
+    "results": [
+      {
+        "name": "image positive",
+        "passed": true,
+        "rejected": false
+      },
+      {
+        "name": "audio positive",
+        "passed": true,
+        "rejected": false
+      },
+      {
+        "name": "video positive",
+        "passed": true,
+        "rejected": false
+      },
+      {
+        "name": "private sample altered",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "sibling altered",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "empty leaf",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "oversized leaf",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "wrong sampled position",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "wrong sealed root",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "wrong encoded master hash",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "wrong layout",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "wrong edit list",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "unsupported medium",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "wrong profile",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "empty encoded asset",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "oversized tree",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "challenge cannot reuse old selected positions",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "partial leaf positive",
+        "passed": true,
+        "rejected": false
+      },
+      {
+        "name": "nonzero unused private padding",
+        "passed": true,
+        "rejected": true
+      }
+    ]
+  },
+  "publicProofBytes": 14656,
+  "publicInputBytes": 8416,
+  "readerMasterLimitBytes": 33554432,
+  "missing": [
+    "decoder-correctness",
+    "live-capture-association",
+    "physical-scene-policy",
+    "signed-display-edits",
+    "external-sampling-freshness",
+    "final-sample-geometry",
+    "mobile-native-integration"
+  ],
+  "sourceSha256": {
+    "experiments/noir-media/src/main.nr": "52d2274cbffaa72433189d6363d451c33efd204cacf084deff91fc8b18ae51bb",
+    "experiments/noir-media/protocol.py": "4662c5a2513cb5f75178aa70283c35fb98c327004cb8e84d885f3b72505911e2",
+    "experiments/noir-media/run.py": "ccdfbfdf69235e8a93fa107e46c04ecf1f83329f104358bb70851968908ea97b",
+    "experiments/noir-media/check.py": "eff15d016c04122543a418bb359d9120f6528321d7f83a151635ebda6fc67b32",
+    "experiments/noir-media/reader/core.mjs": "409a017c13c1a91784c365721e886b88da1a823b690508c9fddd80c7177f8ee4",
+    "experiments/noir-media/reader/profile.mjs": "34a9d9e205ad66786088828aeeb67451ef470f47050704ae97bba0e3d7ad982d",
+    "experiments/noir-media/reader/node-verifier.mjs": "adf8cb43995d46db4cd886b75f95d92b75ae15da3abfc9c0deb93788eea17031",
+    "experiments/noir-media/reader/inline.mjs": "85d2be51d137f13505c6b8046dd677104cc7bd1afc722b94e0e1e766a3340b07"
+  }
+}
