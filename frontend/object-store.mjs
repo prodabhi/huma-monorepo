@@ -46,6 +46,16 @@ async function localRead(file, limit) {
   } finally { await handle.close(); }
 }
 const requestSignal = signal => signal ? AbortSignal.any([signal, AbortSignal.timeout(20000)]) : AbortSignal.timeout(20000);
+// Windows refuses to replace a file another handle has open (EPERM/EBUSY/EACCES); a reader holds it only for a moment.
+async function renameOver(from, to) {
+  for (let attempt = 0; ; attempt++) {
+    try { return await rename(from, to); }
+    catch (error) {
+      if (!['EPERM', 'EBUSY', 'EACCES'].includes(error.code) || attempt >= 40) throw error;
+      await new Promise(resolve => setTimeout(resolve, 5 + attempt));
+    }
+  }
+}
 export class LocalObjectStore {
   constructor(directory) { this.directory = directory; this.kind = 'local'; }
   async put(key, bytes) {
@@ -88,7 +98,7 @@ export class LocalObjectStore {
       if ((await this.quotaRead(key, signal))?.version !== (version ?? undefined)) return false;
       const output = await open(temporary, 'wx', 0o600);
       try { await output.writeFile(bytes); await output.sync(); } finally { await output.close(); }
-      signal?.throwIfAborted(); await rename(temporary, file);
+      signal?.throwIfAborted(); await renameOver(temporary, file);
       return true;
     } finally {
       await lock.close(); await unlink(file + '.lock'); await unlink(temporary).catch(() => {});

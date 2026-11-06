@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
@@ -97,7 +98,7 @@ test('shipped server rejects retired uploads while existing proof records stay r
 
 test('all declared approval chunks including lazy wallet assets are served; traversal stays rejected', async t => {
   const { request } = await running(t);
-  const files = await shareAssetFiles(new URL('../', import.meta.url).pathname);
+  const files = await shareAssetFiles(fileURLToPath(new URL('../', import.meta.url)));
   // World ID sign-in, loaded lazily (Privy's wallet screens, off for now, were here before).
   assert.ok(files.some(name => name.includes('WorldSignIn')));
   for (const name of files.filter(name => name.startsWith('assets/'))) {

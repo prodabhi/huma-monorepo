@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
@@ -11,7 +12,7 @@ import { KEYS3 } from '../../backend/integrations/noir/long/reader.mjs';
 import { der, loadRecorder, Recording } from '../write/recorder.mjs';
 import { keyCode, modifiers } from '../write/keys.mjs';
 
-const W = new URL('../', import.meta.url).pathname, hash = b => createHash('sha256').update(b).digest('hex');
+const W = fileURLToPath(new URL('../', import.meta.url)), hash = b => createHash('sha256').update(b).digest('hex');
 
 test('the browser prover pins the same programs and keys as the Mac engine and the reader', async () => {
   const worker = await readFile(W + '../backend/integrations/noir/worker.mjs', 'utf8');

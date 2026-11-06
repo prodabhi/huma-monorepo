@@ -13,7 +13,7 @@ test('every module the package ships has its local imports shipped too', async (
   for (const file of fixed.filter(name => name.endsWith('.mjs') && !name.startsWith('frontend/pages/'))) {
     const source = await readFile(path.join(root, file), 'utf8');
     for (const [, local] of source.matchAll(/(?:from|import\() *'(\.{1,2}\/[^']+\.mjs)'/g)) {
-      const target = path.relative(root, path.resolve(root, path.dirname(file), local));
+      const target = path.relative(root, path.resolve(root, path.dirname(file), local)).split(path.sep).join('/');
       assert.ok(shipped.has(target), `${file} imports ${target}, which the package leaves out`);
     }
   }

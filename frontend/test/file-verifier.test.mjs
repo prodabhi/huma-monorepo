@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, writeFile, mkdtemp, rm } from 'node:fs/promises';
@@ -6,7 +7,7 @@ import { promisify } from 'node:util';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { envelope } from '../verify-core/node.mjs';
-const run = promisify(execFile), root = new URL('../../', import.meta.url).pathname;
+const run = promisify(execFile), root = fileURLToPath(new URL('../../', import.meta.url));
 const check = (...args) => run(process.execPath, ['backend/zkvm/scripts/verify-file.mjs', ...args], { cwd: root, timeout: 25000, maxBuffer: 128 * 1024 });
 test('saved package and exact text verify through the independent CLI', async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'huma-package-cli-'));

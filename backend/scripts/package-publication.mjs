@@ -10,7 +10,7 @@ import { ASSETS as ASSURANCE } from '../../extra/experiments/noir-compact/browse
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const names = (prefix, files) => files.split(' ').map(file => prefix + file);
 export const fixed = [
-  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs'),
+  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs hash-record.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs'),
   // Writing in the browser: the page, its pins (the server checks the proving points against them) and its build.
   'frontend/pages/write.html', 'frontend/write/pins.mjs',
   ...names('frontend/dist/write/', 'write.js prover.js bb-thread.js replay.js grammar.js writer-actions.js recorder.wasm witness.wasm grammar.wasm barretenberg-threads.wasm g2.dat'
