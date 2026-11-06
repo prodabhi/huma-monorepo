@@ -3,6 +3,7 @@
 // and sentence starts come from the Space and full-stop keys, hands and fingers from where keys sit.
 // Two outcomes: `blatant`, typing no person can produce (keys released in no time, a metronome's rhythm), for which a
 // recording stops; and `signals`, the ways typing can look natural, which only count with enough key presses.
+import { RHYTHM, spreadOf } from '../publication-contract.mjs';
 
 // Mac virtual key codes (ANSI) by finger: 0-3 left pinky to index, 4-7 right index to pinky, 8 thumbs.
 const FINGER = new Map();
@@ -17,7 +18,9 @@ place(6, [31, 37, 47, 25]);              // O L . 9
 place(7, [35, 41, 44, 39, 33, 30, 42, 29, 27, 24]); // P ; / ' [ ] \ 0 - =
 place(8, [49]);                          // Space
 const SPACE = 49, BACKSPACE = 51, PERIOD = 47, RETURN = 36;
-const MODIFIERS = new Set([54, 55, 56, 57, 58, 59, 60, 61, 62, 63]);
+const MODIFIERS = new Set([54, 55, 56, 57, 58, 59, 60, 61, 62, 63]), SHIFT = new Set([56, 60]);
+/** Gaps inside words needed before their spread is judged (as RHYTHM.minSpreadGaps for a replay). */
+const SPREAD_KEYS = 120;
 const hand = code => { const f = FINGER.get(code); return f === undefined || f === 8 ? null : f < 4 ? 'L' : 'R'; };
 
 const median = values => { if (!values.length) return null; const s = [...values].sort((a, b) => a - b), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
@@ -54,15 +57,25 @@ export const PAUSE = 2000;
 export function analyse(events) {
   const downs = [], dwells = [], held = new Map();
   let rolled = 0, rollable = 0;
+  // Shift and the key typed under it: a hand presses Shift well before the letter and lets go well after; software
+  // that fakes a capital moves them together.
+  const leads = [], trails = []; let shiftAt = null, shifted = null;
   for (const [t, code, kind] of events) {
+    if (SHIFT.has(code)) {
+      if (kind === 'down') { shiftAt = t; shifted = null; }
+      else if (kind === 'up') { if (shifted?.up !== undefined) trails.push(t - shifted.up); shiftAt = null; shifted = null; }
+      continue;
+    }
     if (MODIFIERS.has(code)) continue;
     if (kind === 'down') {
       if (held.has(code)) continue; // a held key's repeats
       // Another key still down when this one goes down: rollover, as fast typists do.
       if (downs.length && t - downs.at(-1).t < PAUSE) { rollable++; if (held.size) rolled++; }
       held.set(code, t); downs.push({ t, code });
+      if (shiftAt !== null && shifted === null) { shifted = { code }; leads.push(t - shiftAt); }
     } else if (kind === 'up' && held.has(code)) {
       dwells.push(t - held.get(code)); held.delete(code);
+      if (shifted?.code === code && shifted.up === undefined) shifted.up = t;
     }
   }
   const gaps = [];
@@ -94,13 +107,21 @@ export function analyse(events) {
     // The same two, as how sure the difference is: word starts slower than inside words; one hand slower than two.
     wordStartShift: shift(wordStart, inWord), handShift: shift(sameHand, alternate, 10),
     corrections: downs.length ? backspaces / downs.length : null, pauses,
+    // Capitals: how long Shift went down before its letter, and stayed down after the letter came up.
+    shifted: leads.length, shiftLead: median(leads), shiftTrail: median(trails),
   };
+  // The shape of the gaps inside words (spreadOf in publication-contract.mjs, where readers judge a replay the same
+  // way): a hand's gaps are skewed, most quick with a long tail of slow ones; delays drawn evenly at random are flat.
+  const spread = inWord.length >= SPREAD_KEYS ? spreadOf(inWord) : null;
+  measures.spreadTail = spread?.tail ?? null; measures.spreadSkew = spread?.skew ?? null;
   const blatant = [];
   if (downs.length >= 20) {
     if (measures.instantHolds !== null && dwells.length >= 20 && measures.instantHolds >= 0.5) blatant.push('keys released instantly');
     if (measures.instantGaps >= 0.5) blatant.push('keys pressed faster than fingers move');
     if (iki.length >= 60 && (measures.evenGaps >= 0.6 || measures.gapVariation < 0.1)) blatant.push('a perfectly even rhythm');
     if (dwells.length >= 60 && measures.holdVariation !== null && measures.holdVariation < 0.05) blatant.push('every key held the same time');
+    // Five capitals with Shift down within 8 ms of the letter and up within 8 ms of its release: no hand does that.
+    if (leads.length >= 5 && trails.length >= 5 && measures.shiftLead <= 8 && Math.abs(measures.shiftTrail) <= 8) blatant.push('the Shift key moved in lockstep with its letter');
   }
   // Natural typing, each a yes or no once there's enough of it (null until then, and while it's unclear).
   const clear = z => (z === null ? null : z >= 2 ? true : z < 1 ? false : null);
@@ -110,12 +131,16 @@ export function analyse(events) {
     rollover: measures.rollover === null || downs.length < MIN_KEYS || typingGap > 160 ? null : measures.rollover >= 0.04,
     holds: measures.holdVariation === null || dwells.length < MIN_KEYS ? null : measures.holdVariation >= 0.15,
     rhythm: measures.gapVariation === null || iki.length < MIN_KEYS ? null : measures.gapVariation >= 0.3,
+    // Skewed like a hand's (true), flat like evenly drawn delays (false), or in between.
+    spread: spread === null ? null : spread.tail >= 1.3 ? true : spread.tail < RHYTHM.flatTail && spread.skew < RHYTHM.flatSkew ? false : null,
   };
   return { measures, blatant, signals };
 }
 
-/** Typing whose rhythm follows neither words nor hands, as delays drawn at random do: never a person's. */
-export const robotic = signals => signals.wordStarts === false && signals.hands === false;
+/** Typing whose rhythm follows neither words nor hands, as delays drawn at random do; or whose gaps are spread flat
+ *  with no rollover and no clear sign of words or hands, as delays drawn evenly at random are: never a person's. */
+export const robotic = signals => (signals.wordStarts === false && signals.hands === false)
+  || (signals.spread === false && signals.rollover === false && signals.wordStarts !== true && signals.hands !== true);
 
 /** The natural-typing signals met and judged, as "met of judged". */
 export function natural(signals) {
