@@ -198,7 +198,7 @@ pub fn replay(words: &[u64], capacity: usize) -> Result<Replayed,String> {
         assert!(replay(&[word(BASELINE,0xd800),word(BASELINE_END,0)],8).is_err());
     }
     #[test] fn v3_fixture_adapter_cannot_silently_strip_new_assurance_fields() {
-        let w: Witness=serde_json::from_str(include_str!("../../../../../backend/zkvm/common/tests/fixtures/presence-typed.json")).unwrap();
+        let w: Witness=serde_json::from_str(include_str!("../../../../zkvm/common/tests/fixtures/presence-typed.json")).unwrap();
         assert!(compile(&w).is_err());
     }
 }

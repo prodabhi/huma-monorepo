@@ -117,7 +117,7 @@ pub fn synthetic_fixture(legacy: &huma_replay_core::Witness,capacity: usize) -> 
 #[cfg(test)] mod tests {
     use super::*;
     #[test] fn synthetic_fixture_signatures_and_mutations() {
-        let w:huma_replay_core::Witness=serde_json::from_str(include_str!("../../../../../backend/zkvm/common/tests/fixtures/swift-timed.json")).unwrap();
+        let w:huma_replay_core::Witness=serde_json::from_str(include_str!("../../../../zkvm/common/tests/fixtures/swift-timed.json")).unwrap();
         let (private,capsule)=synthetic_fixture(&w,128).unwrap();
         assert_eq!(statement(&private,128).unwrap(),capsule.journal);
         let key=verify_signatures(&capsule,None,Some(&w.text)).unwrap();

@@ -1,6 +1,6 @@
 //! Long sessions (the assurance-long-v1 capture), proved as parts plus one final proof. This is the native
-//! mirror of the circuits: `backend/integrations/noir/long3` (v3, current: independent parts at the session's text
-//! tier) and `backend/integrations/noir/long` (v2, 0.1 pages: folded parts at capacity 10000, read only).
+//! mirror of the circuits: `integrations/noir/long3` (v3, current: independent parts at the session's text
+//! tier) and `integrations/noir/long` (v2, 0.1 pages: folded parts at capacity 10000, read only).
 //! The same carried state, roots, event rules and deterministic part plan.
 //! Signed checkpoint/presence roots use the V4 formulas with long-profile domains;
 //! the final checkpoint binds Poseidon text commitments instead of SHA-256.

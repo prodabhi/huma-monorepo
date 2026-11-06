@@ -12,7 +12,10 @@ impl Capture {fn info(&self)->Value {match self {Self::Replay(c)=>c.info(),Self:
 pub struct Handle {capture: Capture,poisoned: bool}
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Config {profile:String,initial_text:String,public_key:Vec<u8>,unix:u64}
+struct Config {profile:String,initial_text:String,public_key:Vec<u8>,unix:u64,
+    /// A long session's public nonce[0]: 16 bytes the host issued at Start (sessions.mjs), so its World ID scan there
+    /// and the page's proof name the same session. Without it the session picks its own.
+    #[serde(default)] nonce:Option<Vec<u8>>}
 #[derive(Deserialize)]
 #[serde(tag="command",rename_all="snake_case",deny_unknown_fields)]
 enum Request {
@@ -69,7 +72,10 @@ pub unsafe extern "C" fn huma_compact_create(data:*const u8,len:usize,reply:*mut
         let config:Config=serde_json::from_slice(input(data,len)?).map_err(|_|"Invalid capture configuration")?;
         match config.profile.as_str() {
             PROFILE=>LiveCapture::new(&config.initial_text,config.public_key,config.unix).map(Capture::Replay),
-            ASSURANCE_PROFILE|EXTENDED_PROFILE|LONG_PROFILE=>LiveAssuranceCapture::with_profile(&config.initial_text,config.public_key,config.unix,&config.profile).map(Capture::Assurance),
+            ASSURANCE_PROFILE|EXTENDED_PROFILE|LONG_PROFILE=>{
+                let nonce=match config.nonce {None=>None,Some(n)=>Some(<[u8;16]>::try_from(n.as_slice()).map_err(|_|"Invalid session nonce")?)};
+                LiveAssuranceCapture::with_seed(&config.initial_text,config.public_key,config.unix,&config.profile,nonce).map(Capture::Assurance)
+            },
             _=>Err("Unsupported compact capture profile".into()),
         }
     }));

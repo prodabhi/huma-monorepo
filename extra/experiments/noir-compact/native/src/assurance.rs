@@ -273,7 +273,7 @@ pub fn synthetic_case(name:&str)->Result<(Private,Capsule,String),String> {
 #[cfg(test)] mod tests {
     use super::*;
     fn fixture(name:&str)->Witness {
-        serde_json::from_slice(&std::fs::read(format!("{}/../../../../backend/zkvm/common/tests/fixtures/{name}.json",env!("CARGO_MANIFEST_DIR"))).unwrap()).unwrap()
+        serde_json::from_slice(&std::fs::read(format!("{}/../../../zkvm/common/tests/fixtures/{name}.json",env!("CARGO_MANIFEST_DIR"))).unwrap()).unwrap()
     }
     #[test] fn one_pasted_character_fails_the_typing_rule_even_with_valid_signatures() {
         for name in ["paste-small","paste-large"] {
