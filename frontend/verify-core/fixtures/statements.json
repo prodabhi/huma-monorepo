@@ -1,0 +1,101 @@
+{
+  "format": "huma-statement-test-vectors-v1",
+  "verificationEvidence": false,
+  "vectors": [
+    {
+      "name": "unsigned-empty",
+      "statement": {
+        "version": 1,
+        "contentKind": "text",
+        "contentPolicy": "trailing-ascii-space-tab-v1",
+        "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "byteLength": "0",
+        "sessionBinding": "1111111111111111111111111111111111111111111111111111111111111111",
+        "captureScheme": "sha256-capture-v2",
+        "captureHead": "2222222222222222222222222222222222222222222222222222222222222222",
+        "checkpointBinding": null,
+        "captureKeyHash": null,
+        "policyID": null,
+        "policySatisfied": null
+      },
+      "payload": "[\"huma-evidence-statement-v1\",\"1\",\"text\",\"trailing-ascii-space-tab-v1\",\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"0\",\"1111111111111111111111111111111111111111111111111111111111111111\",\"sha256-capture-v2\",\"2222222222222222222222222222222222222222222222222222222222222222\",\"\",\"\",\"\",\"\"]",
+      "sha256": "42c0fb9dab89eca1d64ae190747a66d420f3e1ec42bdc0053275f2e32002d8fc"
+    },
+    {
+      "name": "unicode-text",
+      "statement": {
+        "version": 1,
+        "contentKind": "text",
+        "contentPolicy": "trailing-ascii-space-tab-v1",
+        "contentHash": "9ac19d387c02acc9c17e7fdb70c9c7437b37d735e0ac4b6d56c9afb4e4337356",
+        "byteLength": "16",
+        "sessionBinding": "1111111111111111111111111111111111111111111111111111111111111111",
+        "captureScheme": "sha256-capture-v3",
+        "captureHead": "2222222222222222222222222222222222222222222222222222222222222222",
+        "checkpointBinding": "4444444444444444444444444444444444444444444444444444444444444444",
+        "captureKeyHash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "policyID": "huma-writing-rules-v1",
+        "policySatisfied": true
+      },
+      "payload": "[\"huma-evidence-statement-v1\",\"1\",\"text\",\"trailing-ascii-space-tab-v1\",\"9ac19d387c02acc9c17e7fdb70c9c7437b37d735e0ac4b6d56c9afb4e4337356\",\"16\",\"1111111111111111111111111111111111111111111111111111111111111111\",\"sha256-capture-v3\",\"2222222222222222222222222222222222222222222222222222222222222222\",\"4444444444444444444444444444444444444444444444444444444444444444\",\"3333333333333333333333333333333333333333333333333333333333333333\",\"huma-writing-rules-v1\",\"true\"]",
+      "sha256": "095fda2dc66b9c009eac41af60098d757048d31fb19486481dcb8c99bbe5b9ff"
+    },
+    {
+      "name": "u64-max-data-only",
+      "statement": {
+        "version": 1,
+        "contentKind": "image",
+        "contentPolicy": "exact-bytes-v1",
+        "contentHash": "f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d",
+        "byteLength": "18446744073709551615",
+        "sessionBinding": "1111111111111111111111111111111111111111111111111111111111111111",
+        "captureScheme": "sha256-media-v1",
+        "captureHead": "2222222222222222222222222222222222222222222222222222222222222222",
+        "checkpointBinding": "4444444444444444444444444444444444444444444444444444444444444444",
+        "captureKeyHash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "policyID": null,
+        "policySatisfied": null
+      },
+      "payload": "[\"huma-evidence-statement-v1\",\"1\",\"image\",\"exact-bytes-v1\",\"f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d\",\"18446744073709551615\",\"1111111111111111111111111111111111111111111111111111111111111111\",\"sha256-media-v1\",\"2222222222222222222222222222222222222222222222222222222222222222\",\"4444444444444444444444444444444444444444444444444444444444444444\",\"3333333333333333333333333333333333333333333333333333333333333333\",\"\",\"\"]",
+      "sha256": "756028e4232ffe103c3e511a5de77e797d3644f267fdd83410802d3c9dc374ad"
+    },
+    {
+      "name": "failed-policy-data-only",
+      "statement": {
+        "version": 1,
+        "contentKind": "audio",
+        "contentPolicy": "exact-bytes-v1",
+        "contentHash": "f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d",
+        "byteLength": "1024",
+        "sessionBinding": "1111111111111111111111111111111111111111111111111111111111111111",
+        "captureScheme": "sha256-media-v1",
+        "captureHead": "2222222222222222222222222222222222222222222222222222222222222222",
+        "checkpointBinding": "4444444444444444444444444444444444444444444444444444444444444444",
+        "captureKeyHash": "3333333333333333333333333333333333333333333333333333333333333333",
+        "policyID": "huma-audio-rules-v1",
+        "policySatisfied": false
+      },
+      "payload": "[\"huma-evidence-statement-v1\",\"1\",\"audio\",\"exact-bytes-v1\",\"f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d\",\"1024\",\"1111111111111111111111111111111111111111111111111111111111111111\",\"sha256-media-v1\",\"2222222222222222222222222222222222222222222222222222222222222222\",\"4444444444444444444444444444444444444444444444444444444444444444\",\"3333333333333333333333333333333333333333333333333333333333333333\",\"huma-audio-rules-v1\",\"false\"]",
+      "sha256": "7c10574007453c83ffc74f1958783cc72833636772ebcd32d4e389f4728599aa"
+    },
+    {
+      "name": "verified Noir V4 writing policy",
+      "statement": {
+        "version": 1,
+        "contentKind": "text",
+        "contentPolicy": "trailing-ascii-space-tab-v1",
+        "contentHash": "bb69be653c7136c6c82a386cc053b56ea85df929b64c161b99b5bc63a465eb1a",
+        "byteLength": "250",
+        "sessionBinding": "b4f88b83cc3a5cd9815ad71c9f6e0d8efb4cfd0714a6d7dd444a9e98a2b75627",
+        "captureScheme": "poseidon2-capture-v4",
+        "captureHead": "0a698cd1277d8c732253daf09737444aa909c2e534865994ab7f43d25439b710",
+        "checkpointBinding": "2cf85f2db3fe5facc3c1402349c0ccaba87d5a3f475f5b257512d011b31409b3",
+        "captureKeyHash": "76002156969efaef5bd9034fe1b20c649e6ce0cb6cef71e6ef9c95d852bb9b68",
+        "policyID": "huma-writing-rules-v1",
+        "policySatisfied": true
+      },
+      "payload": "[\"huma-evidence-statement-v1\",\"1\",\"text\",\"trailing-ascii-space-tab-v1\",\"bb69be653c7136c6c82a386cc053b56ea85df929b64c161b99b5bc63a465eb1a\",\"250\",\"b4f88b83cc3a5cd9815ad71c9f6e0d8efb4cfd0714a6d7dd444a9e98a2b75627\",\"poseidon2-capture-v4\",\"0a698cd1277d8c732253daf09737444aa909c2e534865994ab7f43d25439b710\",\"2cf85f2db3fe5facc3c1402349c0ccaba87d5a3f475f5b257512d011b31409b3\",\"76002156969efaef5bd9034fe1b20c649e6ce0cb6cef71e6ef9c95d852bb9b68\",\"huma-writing-rules-v1\",\"true\"]",
+      "sha256": "dfb56b6b622296c75d2dafb339be4d31a10f01b45a41b0e2f72cfb8f35d697d2"
+    }
+  ]
+}

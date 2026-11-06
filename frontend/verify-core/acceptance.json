@@ -1,0 +1,2106 @@
+{
+  "date": "2026-10-23",
+  "softwareFixturesOnly": true,
+  "newProofGenerated": true,
+  "swiftTests": {
+    "passed": 47,
+    "failed": 0,
+    "skipped": 0
+  },
+  "nodeAndRegistryTests": {
+    "passed": 50,
+    "failed": 0
+  },
+  "browser": {
+    "passed": 46,
+    "failed": 0,
+    "crossOriginIsolated": false,
+    "softwareFixturesOnly": true,
+    "results": [
+      {
+        "name": "RISC Zero verified through common browser worker",
+        "passed": true
+      },
+      {
+        "name": "native Mac envelope verifies with matching statement hash",
+        "passed": true
+      },
+      {
+        "name": "compact proof and every signature verify through common worker",
+        "passed": true
+      },
+      {
+        "name": "compact envelope retains proof identity",
+        "passed": true
+      },
+      {
+        "name": "Unicode fixture retains exact character policy",
+        "passed": true
+      },
+      {
+        "name": "only absolute-end ASCII space/tab ignored",
+        "passed": true
+      },
+      {
+        "name": "changed displayed text rejected",
+        "passed": true
+      },
+      {
+        "name": "changed claimed capture rejected",
+        "passed": true
+      },
+      {
+        "name": "invented policy result rejected",
+        "passed": true
+      },
+      {
+        "name": "fake manufacturer attachment rejected",
+        "passed": true
+      },
+      {
+        "name": "retired account policy rejected",
+        "passed": true
+      },
+      {
+        "name": "cancellation and single admission",
+        "passed": true
+      },
+      {
+        "name": "real image proof verifies exact master in browser",
+        "passed": true
+      },
+      {
+        "name": "real audio proof verifies exact master in browser",
+        "passed": true
+      },
+      {
+        "name": "real video proof verifies exact master in browser",
+        "passed": true
+      },
+      {
+        "name": "media envelope rejects altered master and claimed policy",
+        "passed": true
+      },
+      {
+        "name": "media browser rejects changed SNARK and unsupported freshness claim",
+        "passed": true
+      },
+      {
+        "name": "full Noir writing-policy proof verifies origin and presence in browser",
+        "passed": true
+      },
+      {
+        "name": "fresh Swift capture proof preserves all original signatures in browser",
+        "passed": true
+      },
+      {
+        "name": "optimized V5 verifies the original full signed statement in browser",
+        "passed": true
+      },
+      {
+        "name": "small profile small64 verifies full evidence in browser",
+        "passed": true
+      },
+      {
+        "name": "small profile small64-unicode verifies full evidence in browser",
+        "passed": true
+      },
+      {
+        "name": "small profile small128-boundary verifies full evidence in browser",
+        "passed": true
+      },
+      {
+        "name": "small profile small128-unicode verifies full evidence in browser",
+        "passed": true
+      },
+      {
+        "name": "small profile substitution and changed final signature rejected in browser",
+        "passed": true
+      },
+      {
+        "name": "expanded profile verifies all 24 original checkpoints in browser",
+        "passed": true
+      },
+      {
+        "name": "expanded profile verifies all 32 original checkpoints in browser",
+        "passed": true
+      },
+      {
+        "name": "expanded browser profile rejects a changed final checkpoint signature",
+        "passed": true
+      },
+      {
+        "name": "optional Noir history disclosure verifies proof without certifying raw history",
+        "passed": true
+      },
+      {
+        "name": "browser distinguishes valid proof from satisfied writing policy",
+        "passed": true
+      },
+      {
+        "name": "browser rejects changed V4 presence signature",
+        "passed": true
+      },
+      {
+        "name": "proof reader has no account flow or retired service bundle",
+        "passed": true
+      },
+      {
+        "name": "existing reader accepts legacy RISC Zero via shared core",
+        "passed": true
+      },
+      {
+        "name": "existing reader imports native evidence envelope",
+        "passed": true
+      },
+      {
+        "name": "existing reader imports compact evidence envelope",
+        "passed": true
+      },
+      {
+        "name": "existing reader imports full Noir writing policy with its results",
+        "passed": true
+      },
+      {
+        "name": "reader imports optimized V5 and renders its policy and presence results",
+        "passed": true
+      },
+      {
+        "name": "reader imports the expanded profile and renders all 32 checkpoint signatures",
+        "passed": true
+      },
+      {
+        "name": "reader imports the optional native Noir history-disclosure file",
+        "passed": true
+      },
+      {
+        "name": "reader invalidates altered text then accepts final whitespace",
+        "passed": true
+      },
+      {
+        "name": "native envelope registry link opens and verifies automatically",
+        "passed": true
+      },
+      {
+        "name": "full Noir writing-policy registry link verifies automatically",
+        "passed": true
+      },
+      {
+        "name": "shared exact text master and V4 proof download and verify in reader",
+        "passed": true
+      },
+      {
+        "name": "shared exact text master and V5 proof download and verify in reader",
+        "passed": true
+      },
+      {
+        "name": "shared exact text master and V5 expanded proof download and verify in reader",
+        "passed": true
+      },
+      {
+        "name": "shared audio master and membership proof verify exact downloaded bytes in reader",
+        "passed": true
+      }
+    ],
+    "sameOriginCSP": true,
+    "externalDNSDisabled": true,
+    "osNetworkDeny": false
+  },
+  "nativeExport": {
+    "externalNetworkDenied": true,
+    "cachedReceipt": true,
+    "envelopeBytes": 590099,
+    "statementHash": "d48fc3f793435c16015b5b19a86966c076445557f7066c356ba552a75f1d98d0",
+    "privateMetadataRemoved": true,
+    "bundle": "build/Huma-proof-preview.app",
+    "newProofGenerated": false,
+    "saveReopenVerified": true,
+    "registryStoreFetchVerified": true,
+    "linkPersistsAndInvalidatesOnEdit": true,
+    "historical": true
+  },
+  "ownerHardwareAcceptance": false,
+  "previewLaunched": false,
+  "sourceSha256": {
+    "Sources/HumaCore/EvidenceEnvelope.swift": "8c547c6e88368654ebb1db644706fcaeb9cf0c467d589d0018407793692c3af9",
+    "Sources/Huma/ReplayProofService.swift": "8f743ef7b938833654bfdbe4a6dca316adac4b150838996ae9900048c434d9bc",
+    "Sources/Huma/WritingView.swift": "419b978514c1a04e5cc991006a56dd64beac07a01c55927ce8a3c332529bed30",
+    "web/verify-core/contract.mjs": "e5fb041d2801bb419db8205c2d23eba27a0742b785b71ba342ae8e16104562d1",
+    "web/verify-core/core.mjs": "2ff668d34befb6d550710dbe2540ba400aaf17ce6739d62942d9306c561ca623",
+    "web/verify-core/node.mjs": "6fad126bc3677d18b7a05fd20e54e8f4d3eef42e8cbf91abf602c954e242ff8f",
+    "web/verify-core/node-worker.mjs": "df4289489b16154a76b49dcbf3f87647c263434b76bb2499be126c50fea3277a",
+    "web/verify-core/node-engine.mjs": "e17fc0746c8668849faf3c962d319bf880f46e37984869cbb2ce99dcc19b6a4a",
+    "web/verify-core/browser.mjs": "c00bd51e54674f18633c2b8824d2794bb9e19a9445b5e801e8ec2ba7e3e48ff7",
+    "web/verify-core/worker.mjs": "6edeec36df24ac61964f6fc5235aedb2025a5d22ed6342548d788ce13c90f675",
+    "web/pages/replay-worker.mjs": "e3503945818afe3c9a2d72df6f6c772026581edf297aaf4bb42811af582f4116",
+    "web/pages/verify.mjs": "fb6ba2dfe3c56baca54089b473a94faaeafbc5a18b86007bfdab12eedada5f28",
+    "web/registry-verifier.mjs": "e82b42107dd81b1cfde55988d0615360cf867f740b0877e5f3533d6b4a5ab513",
+    "web/registry.mjs": "9d9529cb9c3280e178f2e1a64e159061d3b414ce370235a3b81768ba11f54451",
+    "zkvm/verifier/src/lib.rs": "86106e55d4af855bf9ca6c682df9e6ef086890134025a2da420c70c442280cbb",
+    "zkvm/browser/src/lib.rs": "0f5f47b690efc2549059326fe7df5d8e5aa958fc574d7c529e9d881e47bd2550",
+    "zkvm/host/src/main.rs": "941862c9773b2749baecaa42a7e4e58b7b267db2b5d16bad4b59eb901399a617",
+    "web/test/media-evidence.test.mjs": "7e5d34eb1b2a652ff128ca039e055ddb6f262cddf481c67d3c1f1b21877a9813",
+    "web/test/assurance-evidence.test.mjs": "568002dbf6ec5ba4ff12d596da73b3e0cb6b857bb88b5ec84acaca5da8be9a3f",
+    "web/verify-core/fixtures/statements.json": "3c8c18e136d4c3fb8579f633316924f147fa01202bf8e03c07ba9798b796c392",
+    "experiments/noir-compact/browser/build.mjs": "bb9b993a6ea30f0d7fe7924999e1be39b490d7a1407053dcd85bcab1b47d8d6d",
+    "Sources/Huma/Settings.swift": "29b634754acc300186473b943e6f120da5a64595e1bedefcc0e0429972e2173b",
+    "Sources/HumaCore/Draft.swift": "f1b5bfd109495e11cff7857ef0fcc42ea1b4b0dc17dd51b0df719aa7294ea244",
+    "Sources/HumaCore/ProofRegistryClient.swift": "f3e9864c2dad2f8e2434ceb53f2ccd437e6cfbca9fd103c94dc114e284778dc2",
+    "scripts/build.sh": "4c802f1ddbdf1ac772ebaaf8750460cf4fa38f2e64b9e8c3b7ddba146a7fbadd",
+    "zkvm/scripts/verify-file.mjs": "e1e2998c8d1c714a127716111bcb2f0e25afaa01d67111460328b2a96d4a379e",
+    "web/test/file-verifier.test.mjs": "e07a09b2ee9d59dc5b2dea8ee7c697292caffdd06c85418f4dc4a11704cd6bb1",
+    "web/test/browser-evidence-page.mjs": "76b4450d7a5b1beb38da5885060e0a26eb090368f8860d39aba844434361ebca",
+    "web/pages/verify.html": "a14822bac739e34c37ba170fd02bb94338f60f79932231935371802ecf669c15",
+    "Sources/HumaCore/HostedPublicationClient.swift": "36e4b9bbcfb3cca197dfeb1f25247624e4895939e2e8131f850619bc1feb51bd",
+    "Sources/HumaCore/ExperimentalCompactCapture.swift": "a3d6fa0a4efa5c8c5b619be9f536e8959d332ef86100b6656e8a51affe10241a",
+    "Sources/HumaCore/ExperimentalCompactRecorder.swift": "43b9d931b1e3fcd66aff7cb501a80fecc24d85aaf0a7d139284487f1a053a434",
+    "Sources/Huma/CaptureSigner.swift": "b785d062b06886229a4a74f9c708fd1d1a72659c32c0986891bbaad756ab02bc",
+    "web/publication-contract.mjs": "2df25700dfa15dca1d1036a83ac7277784231c742b0703c49f89fca8974d2113",
+    "web/publication-verifier.mjs": "70345634fd8a92b728584c2e7cc230dc3c3dd757bcabdda9ec799985b228d741",
+    "web/publications.mjs": "cc637dd77eb0e63c1ce04c087db46c5b5bb6b2346b07d588f9af3dd89dd931ca",
+    "web/object-store.mjs": "a569a43913b080475e6a4362bb70a5d32b0079c1c64a7558c0e7ace93509f81c",
+    "web/share/src/main.jsx": "0f6a3e90da84ce786144aac15175ea99ce57d49c6a96c6e9e09e112f1835a303",
+    "web/share/src/Approval.jsx": "649ecddd1c11ac7c34703f88f8798726d793b632c7c9f6279503978609897425",
+    "web/share/src/share.css": "0af28369a6bf50a505733346266453551c0eb6ac929cb8c92191efd001e88606",
+    "web/share/vite.config.mjs": "88cdd30b1c8ef64a7916ca0fbb26ab225fb75cb677af240b631b533637112bd2",
+    "web/package.json": "2e15b6433396e908fd1ee3c01e5d43b36c14dc005b088a83e2ade9665dc88508",
+    "web/package-lock.json": "e801daf3e7a7f44bd5c8110e840dd8c1820b5bdf9ce345d7bbd93b817b3347b1",
+    "web/test/publications.test.mjs": "ae3190446941bd28c0faa01cd440ced2569fccf59cc603b429c1f1270256dc50",
+    "web/test/native-publication.mjs": "55e9fddb9be5ccc1719e8c4f5622a646f3740c96a21ab2fb0b826a093aaf111a",
+    "zkvm/tests/native-worker.swift": "c3be08925f354775f84920b8d11793a1aeacfc61d4f06754e9df5d12d79b43b5",
+    "zkvm/tests/native-worker.py": "878f9c064f8a4f85701b7bf18659f96bb6b0ad1ac7d398cb3a067460560416f5",
+    "experiments/noir-compact/native/src/assurance_capture.rs": "1d329a3c16d60db9d629f48e63c3c15f3155c818c4a43ac7b2543d4b2d2d65af",
+    "experiments/noir-compact/native/src/assurance.rs": "abf0881fb91e0b8c8faed4bd62c570187b3a0be998407596b3080b0df78972c3",
+    "experiments/noir-compact/native/src/ffi.rs": "a0480d749e8af5126ed66f6711df19969dcf54d0d9a8a5ecc4b471b558da954f",
+    "Tests/HumaCoreTests/HostedPublicationTests.swift": "630df68296ceec9476d9d3958567020300459eda178a2c73f82f40e81733d1ee",
+    "Tests/HumaCoreTests/ExperimentalCompactCaptureTests.swift": "9d2b21c2b2daf3b76a3a72e48ba9205bb2ac488bbde97de5b91ed4945f09b882",
+    ".env.example": "6ecd17344cce812b7db556aa8cf5186e72d3e8568e5bc510bfbf9418c9c5c000",
+    "web/upload-quotas.mjs": "e4d078e41b3e5abde92e4364f82e1f6bfbc1ec7aa0d7f4a18c4d9e19ed724b92",
+    "web/test/upload-quotas.test.mjs": "7c27baaca3ed2aa93f0b86ee3c71d341ba5f2b0f045fce74fc9478ed498295f0",
+    "Sources/HumaCore/LocalProofWorker.swift": "e9d459601a314006f0df1a52ff2cb3eb9b0c8fb71965abd9e8aa0cb25fce5983",
+    "Tests/HumaCoreTests/LocalProofWorkerTests.swift": "dd75eac8ff6e6d6e00d29652cbf2df9e116fc73fffd84a449adc88124d9265db",
+    "experiments/noir-compact/native/src/assurance_input.rs": "8279a8d09e3313b1a0bfd2dfc8399e333075b949f55d1b6a6c50bb1d3bc54919",
+    "experiments/noir-compact/native/src/main.rs": "d71714bed85f700aaebb4495b837e80e3d2b090568de8cdab164a03f2142ad81",
+    "experiments/noir-compact/live-assurance.swift": "c31a9ae7328923cef1a534f8df63394804dcbded246a8c84c2c95799a3305fdb",
+    "experiments/noir-compact/live_assurance_cases.py": "c7c8b04d986de969d2a967d3f4e629b32411604933e6e8b1eb6371f7e59a96cd",
+    "web/test/browser-evidence.mjs": "ac1129444b4e96151ebf8767356b686798510bb09e4a6e83f9d54b0d60860517",
+    "integrations/noir/worker.mjs": "8830fe38e6e97b2e89f42b050415a4953a355533595c8d8f94ce7cfa5fb31bdd",
+    "integrations/noir/package.py": "7134179485a6d637db4a379c8197bb79b4923d6e21c41833052a0fce766f93d3",
+    "integrations/noir/prepare.py": "e9ea327272ba256ba9be6c02ff4ebb836cd237f33dda9caff3da69fa5fa4770b",
+    "integrations/noir/acceptance.swift": "59f6c57e9121ec115db34d0f965977d72cc182fbfb7779658197ed9a130b229f",
+    "Sources/HumaCore/NoirWritingProofService.swift": "832ec30a37531244d2b8caa1ee190ce5a6e2c63ded82127a28ad50c1f1a5d4de",
+    "Tests/HumaCoreTests/NoirWritingProofTests.swift": "7683d1d9562a42acf8d5c43cafcf0ce6363d7c7590ad01a650cee14c59f4afb5",
+    "web/test/native-noir-publication.mjs": "46455936c84b12f5ebc3a7c7e7ad8c8ca5a1b42e2819ea6fc7b0bc394e27900e",
+    "experiments/noir-compact/algebraic_replay.py": "5999a68187338a8a1641e5f4f06c3a6899fbb3da8a94e7238ffb00a01012862d",
+    "experiments/noir-compact/bounded_replay.py": "8c6b396142963bdb676d4c1d362b863cac14b55e101a99708d2686de0e28e0cb",
+    "experiments/noir-compact/public_text_cases.py": "29e1bf0a4b9115d24fbfce27c5c8c32a71a605279c116a7d61aeca08b7fceb7e",
+    "experiments/noir-compact/native/src/public_text.rs": "2ddc457163018e6c600d090aa60ff70c92540af8b0ee74eba72209b8f1cbf56d",
+    "experiments/noir-compact/native/examples/semantic_cases.rs": "d4da857a818d8cbed119462d8b5eb46d6bb3a1b7a7827d801c65a85e657b75e2",
+    "experiments/noir-compact/profile_sources.py": "0a41f4f8f3e21eea1c28aacf7f5b1a8b5c2561763468cb56295cdc6d07c9221c",
+    "experiments/noir-compact/browser/assurance-profile.mjs": "3cbb921217b34aa5b0ce030bc9f2b063a953c5b7601aeceb68186a90ba855f9c",
+    "experiments/noir-compact/browser/assurance-core.mjs": "60581037967afe3f41553a0a8167ca26c9c36f76c47b231e4c26c6e28085bd87",
+    "experiments/noir-compact/browser/assurance-node.mjs": "04bf1f3ff799e53d107971a9d8e34722d826f594068b2c510da6d9e927b17743",
+    "experiments/noir-compact/browser/assurance-inline.mjs": "f5a5fb0ec3a39544c11962cfd872686897dc93dc7b8f6510cf69d8db5b07ec71",
+    "experiments/noir-replay/WorkerBench.swift": "c77d27b3962e74ef45f76b8c04a4a746caa02be9018b9d3974b9c51f3bac4541",
+    "web/test/compact-registry.test.mjs": "43c1805b4caa8c41b41ffdd182071323f692fb7b95d641faf48167565d450712",
+    "web/deployment-check.mjs": "1c2811da0e9f043f268e870ff8d0846f07d3bccc51ed5214817127387de18388",
+    "web/test/deployment-check.test.mjs": "d20df67421beac4fe231e0f4203e1b4350bb76e412277ad9adc22e5b4f85dcb6",
+    "web/test/evidence-registry.test.mjs": "06cffec9ace78eeeb3492c033a3d4a1174e43cda92cd4d537ceaac8e8d2d9f55",
+    "web/test/replay-registry.test.mjs": "802380d195c8b8f0606de32875ffa64353884473b4f1199d09db65ec8e184de7",
+    "web/share-assets.mjs": "d2bcd73622aa8424e0b90671f61d9bea4a9c116552bff23947200f9a6ba972f9",
+    "web/test/share-assets.test.mjs": "d293d1b43a533eed220bf5a6de31b50e63220c5e27bf9b6cf28d506d7cec9c85",
+    "hosting/package.json": "ee4419d9d27480c58fcc98e7716c64940b829a210233f140f5323ddc1ad0875b",
+    "hosting/package-lock.json": "1e743e0f223747528488784c37e18a5950abfdbcccbede9ef8fc77c945b11caa",
+    "hosting/Dockerfile": "0efa67f5dccfd27e013c92dcb763e1ffa8ab9eba0f89675501f7f0ba7e6e628a",
+    "hosting/.dockerignore": "f730da8906f35212eb91becda2bdcac5f6dd77b3d0cb4e466cc44b818ce8e75f",
+    "hosting/container-acceptance.mjs": "db624b7cfcad324c55bc0c50b481dfa714602b8aa2bdb958ce41318e53b72936",
+    "hosting/test-container.mjs": "6f64aab6a717fdcaec88219358480c1d91e521487da3a01c055a8ea960c60cc9",
+    "scripts/package-publication.mjs": "a7b39cc8fb642de2075153947d96f0153ec51c4480b4bd8d30a6f934ece51794",
+    "Sources/HumaCore/HumaTextView.swift": "d50f1ea44bbf8ca9f864ce7f2e31b3c787e3f1c1f28fecd0626d5b9b96552d0e",
+    "Sources/Huma/RichTextEditor.swift": "96aadd1e0fa3160ba28861e58a6c2f4d7c5734507953861a70a3165843423119",
+    "Tests/HumaCoreTests/HumaTextViewTests.swift": "0469b32c5090d15b3c9b054c147dbc5cc40542ddefaa98897db70504ae0b599e",
+    "experiments/noir-compact/paste_cases.py": "f0372c88109a1ff45a82b188e7c901a7c6564116e80f62645fa0af68161e632c",
+    "experiments/noir-compact/capacity_cases.py": "b2da1712df42f965b6fd7c921a97035ec5f5ab36123466cb35ba0f19df9eb106",
+    "experiments/noir-compact/native/src/profile_fit.rs": "6a69bf70e9828132938e1020b703c271b822f93b7ccb72a78b82e76cef0ef3b5",
+    "experiments/noir-compact/native/src/lib.rs": "7048787124460c8596a6f93b86982c01d6cb339d3db1ce959c03ed75cb310fe2",
+    "experiments/noir-compact/test_capacity_cases.py": "7f49aeef2313d42cb6c173f0f6ccc2d339f7629634b125914fba18dd200c051a",
+    "experiments/noir-compact/assurance_checks.py": "b98162d8b4a7ade0b98eeeafafb553beb5dadb70c547fa5bbc5e28f035381939",
+    "experiments/noir-compact/bucket_checks.py": "7c0b4c8ba3cdf7cca67833ced8fca1f7cc80e85344246e71cc7fc7720429edca",
+    "experiments/noir-compact/bucket_prove.py": "c89dc0bf129d732d688e8b250db29c5f2afcccc40152c29b9a9d0b2b65ae8e44",
+    "experiments/noir-compact/bucket_verify.mjs": "89c001216f4403ba06003b17c56d5cc1b15be21665c31e1327953f6d2d57423a",
+    "experiments/noir-compact/native/examples/bucket_boundaries.rs": "60d159c8d60c5ef59450c4b01006eae95ec3b1cdc2486b89025b620d2ec49475",
+    "integrations/noir/prepare-profiles.py": "75287e3f60abbb5db764f628e657ecebb0be03f419ba579b304adb3e3126e29e",
+    "integrations/noir/acceptance.py": "ea41547270630d606886cc93b22f41737879d0fee4408f3118fe78a799c2cf98"
+  },
+  "experimentalReports": [
+    "experiments/noir-media/results/acceptance.json",
+    "experiments/noir-compact/results/assurance-v4-acceptance.json",
+    "experiments/noir-compact/results/live-assurance-acceptance.json",
+    "integrations/noir/results/native-app-acceptance.json",
+    "integrations/noir/results/optimized-app-acceptance.json",
+    "integrations/noir/results/adaptive-app-acceptance.json",
+    "integrations/noir/results/short-bucket-sizing.json",
+    "integrations/noir/results/recursive-component-acceptance.json",
+    "integrations/noir/results/continuation-component-acceptance.json",
+    "integrations/noir/results/interaction-component-acceptance.json"
+  ],
+  "scope": "mac-master-and-proof-delivery-r2-and-independent-verification",
+  "socialIntegrationRemoved": true,
+  "blockchainRequired": false,
+  "deferred": [
+    "longer-history-scaling",
+    "real-biometric-and-manufacturer-acceptance",
+    "r2-https-configuration-and-live-provider-acceptance",
+    "remaining-moderate-sdk-dependency-review",
+    "media-mobile-network-and-base-chain-product-work"
+  ],
+  "packagedPreview": {
+    "bundle": "build/Huma.app",
+    "bundleID": "dev.swayam.huma",
+    "strictCodesignVerified": true,
+    "launchedByAutomation": false,
+    "legacyReplayEngineIncluded": false,
+    "noirFilesVerified": 103,
+    "binarySha256": "36facf9693bcd5fbc14398c2c45d4f13176c68b98fdc5513688f7f5d4332adbd",
+    "noirManifestSha256": "b5140bc84a6bf965345292b77da2953efa37d07cbc30f14ac42f6dd144feff4c",
+    "nativeHelperMatchesCompiledCodeBeyondSigningHeader": true,
+    "resources": {
+      "worker.mjs": "8830fe38e6e97b2e89f42b050415a4953a355533595c8d8f94ce7cfa5fb31bdd",
+      "bb": "8ff80f2a1add96023753a574e8db6e6a3c3bde34fd15a750bc62b252d17adba4",
+      "program64.json": "a4ae6265edd2aa788750e45c043f9c1b5ff8e2e5004e30337c609cf03e81c005",
+      "capture-input": "eb1967557567c1d8bb88fc1a825b7e49d798d8ba695b76d81ff8d018c0908bb7",
+      "program.json": "6c088963742cb23b353823f7903f378f8da384c21337fa854ba12aa9045d0b4c",
+      "program-cp32.json": "5d49ba38240dbd5be2d6d86c9a714b10b562838f04f9b5a9b12bcf424682d31a",
+      "program-v5.json": "eb3333720f0a869a12b08ea62d244d56a858e39cea3f18ae46f4f5139334ca72",
+      "node": "d20a9cd8acee76f7bd8919b6039be526225d78bd243260823dbe2c6a412c4079",
+      "program128.json": "2ca6db49b56d917120c800269b949dbff789ac4d48f58e57c8cb2cd6b3309bc0",
+      "reader/profile.mjs": "35a604fb6f2387545aad0e168633eb5e0a1ca2fa6ccd3cf156348b1d09ed84df",
+      "reader/core.mjs": "5eab06ac0ef19cc9d820d71f1a235b4fbd477f448b6f216edc8f7f37607704a0",
+      "reader/assurance-profile.mjs": "3cbb921217b34aa5b0ce030bc9f2b063a953c5b7601aeceb68186a90ba855f9c",
+      "reader/assurance-core.mjs": "60581037967afe3f41553a0a8167ca26c9c36f76c47b231e4c26c6e28085bd87",
+      "evidence/contract.mjs": "e5fb041d2801bb419db8205c2d23eba27a0742b785b71ba342ae8e16104562d1",
+      "evidence/core.mjs": "2ff668d34befb6d550710dbe2540ba400aaf17ce6739d62942d9306c561ca623",
+      "licenses/node-LICENSE": "5888dbb9a1d2b18f2c3e6c5f6af1b39de658372b402a0577b002777f14c62ace",
+      "crs/bn254_g1_compressed.dat": "bf9f1cdbe7b7bb2667c8ee5b887f6ce8b07ec99d60944e17da880ad3717e141b",
+      "crs/bn254_g1.dat": "d777711ae9fb1951c47a0eaf7e0ebcaccc39e6731d9b3a560d7ff0c2fcdf2f0d",
+      "acvm/node_modules/.package-lock.json": "5aeab9455b7e87fd4a0650113913c21608585fe4c860fae5227f4280264e207c",
+      "acvm/node_modules/pako/LICENSE": "a04665b3b2de56c66730c1f720f528175739e4104f79073614aa611da1e85539",
+      "acvm/node_modules/pako/index.js": "518602de70af58543bed79cc472fbbc07fb10a3033fe4f0eee7df25f2b84aa04",
+      "acvm/node_modules/pako/README.md": "706c43aab3ec2b6e84077f5458567c0299207af3df9e6d1752482c52ac68ab93",
+      "acvm/node_modules/pako/package.json": "d9c254197b7c7a1b00eaffb0196f10c3f48061e61d8b6c41dccd3d5d0ab3f1ea",
+      "acvm/node_modules/@noir-lang/types/package.json": "176fd36fa2498d5edba4d20efbf296c6887459c3c71f329fca50734d3b531223",
+      "acvm/node_modules/@noir-lang/acvm_js/CHANGELOG.md": "32a1fa7d5f77db05294c0640c74518b5b0432d37d1793ee0c25f7951a369cf2f",
+      "acvm/node_modules/@noir-lang/acvm_js/README.md": "a215a565997b6f435061e4720f370bb15bee5bddb6051cbd1d583d9d769455e9",
+      "acvm/node_modules/@noir-lang/acvm_js/package.json": "f6c6bd75e75835d97f71e26d6b960e379aa7b9074e0cde6494d3d5e7aa945301",
+      "acvm/node_modules/@noir-lang/noirc_abi/CHANGELOG.md": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "acvm/node_modules/@noir-lang/noirc_abi/README.md": "0ee55711ea4332229a7f9e97bddb166070c2da97bb0fbe3ebcde55b8045962f2",
+      "acvm/node_modules/@noir-lang/noirc_abi/package.json": "78976c479d3b170660dfd77ddc50e3b5af8ccea5d5467fb7f13c0bb4382f6e47",
+      "acvm/node_modules/@noir-lang/noir_js/package.json": "fdbe93ac28d525e906c8a1d64e9e64b014bb02c4c924204dfb12b9cfe176ecb7",
+      "acvm/node_modules/@noir-lang/noir_js/lib/witness_generation.cjs": "02d055e2651f9df50f5a9196c729360968f7f8240f5ca66f30ce63dda0981346",
+      "acvm/node_modules/@noir-lang/noir_js/lib/witness_generation.mjs": "c201d873ceb80034ac43949d44a919749408a991d7b15bbc25ce1053919d8f45",
+      "acvm/node_modules/@noir-lang/noir_js/lib/program.d.ts": "7e365c56f154c863147ca16dea293f4448c1d3d1c6b861f9952c99a0ae619188",
+      "acvm/node_modules/@noir-lang/noir_js/lib/debug.d.ts": "d4017c9bc5b8fd79fffb0c6bad1111e3113aaa440c2c63453ad93cdc574d8590",
+      "acvm/node_modules/@noir-lang/noir_js/lib/program.cjs": "a5acfbab2a37d07995ab6e4ccdea5d567d4f27774e5299f860f4baca10e60ec8",
+      "acvm/node_modules/@noir-lang/noir_js/lib/program.mjs": "65035477f93119914235f3cfa653931f0c672b1ea8674616c2202738d89463a4",
+      "acvm/node_modules/@noir-lang/noir_js/lib/witness_generation.d.ts": "77b8031fc3a2c006b08755fd9f3d74268938a943a426904c7050d3572e18160f",
+      "acvm/node_modules/@noir-lang/noir_js/lib/index.cjs": "07e18989229ca6721f69c1816306d029792762438baed13b213a9bd4ab274dca",
+      "acvm/node_modules/@noir-lang/noir_js/lib/base64_decode.d.ts": "61eca7cf3b8bdaae94a01ad5a6e72543bed5aecad9efd84c11b24323109035a2",
+      "acvm/node_modules/@noir-lang/noir_js/lib/index.mjs": "cefa41109f3d5cb7b6b2504c6d60f18c6fa225c9d3452e8139e12f75ec721d9e",
+      "acvm/node_modules/@noir-lang/noir_js/lib/index.d.ts": "d574bed6e95fb2a2f5f7cb8be363934e7886495285c8a76d6031383bffae1b17",
+      "acvm/node_modules/@noir-lang/noir_js/lib/base64_decode.mjs": "b5456fddbedc1cb0dd0ef0c101ee3f2dec36d8ccea82b94b9578948e7d9a1c5d",
+      "acvm/node_modules/@noir-lang/noir_js/lib/debug.mjs": "271b4be44b0b70f687262b6923781719e2fcdebabf5ccbb3c103a99397b7969a",
+      "acvm/node_modules/@noir-lang/noir_js/lib/debug.cjs": "57f2d166ccbd04139f920f3dc479e2094877d0c106f3213e300120ba48cddb6e",
+      "acvm/node_modules/@noir-lang/noir_js/lib/base64_decode.cjs": "e9d82171dbac7b6bcf0ffe9e2851713031d3cd0ab8717a8de94ef59e7a14869e",
+      "acvm/node_modules/@noir-lang/noirc_abi/nodejs/noirc_abi_wasm_bg.wasm.d.ts": "b22bf556f1d92c9d0c523e31a06603d1af71575620e55d83a727238ec3c40fbd",
+      "acvm/node_modules/@noir-lang/noirc_abi/nodejs/noirc_abi_wasm.d.ts": "30787cb4d915fc88df17d44be61a44d8635e308fa3ecaa408a9c968df9c0b778",
+      "acvm/node_modules/@noir-lang/noirc_abi/nodejs/noirc_abi_wasm_bg.wasm": "4f7b66c992a9ea0ca3f36c4d59018f762a46e7df053de318354fda064ed05664",
+      "acvm/node_modules/@noir-lang/noirc_abi/nodejs/noirc_abi_wasm.js": "652cd89af495344fb873d48e60f8e5f4bc2127fe67f2270541de4219386b47c9",
+      "acvm/node_modules/@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm.d.ts": "b22bf556f1d92c9d0c523e31a06603d1af71575620e55d83a727238ec3c40fbd",
+      "acvm/node_modules/@noir-lang/noirc_abi/web/noirc_abi_wasm.d.ts": "35360021f9e6816f6dfd1b58451f86a617062ad9f3d914232ffefd630db6f11d",
+      "acvm/node_modules/@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm": "4f7b66c992a9ea0ca3f36c4d59018f762a46e7df053de318354fda064ed05664",
+      "acvm/node_modules/@noir-lang/noirc_abi/web/noirc_abi_wasm.js": "5529033628b21a8622f743482ddee7c88011462f048e0bd4341cd34abd2b2697",
+      "acvm/node_modules/@noir-lang/acvm_js/nodejs/acvm_js_bg.wasm": "f5916dd3dbbe6f15abaa4cb6b10a04714621f9389e898d11001b701cd3e4813f",
+      "acvm/node_modules/@noir-lang/acvm_js/nodejs/acvm_js.js": "405727ff6db90495b1c26384f3665d3f4b173415f7b51e635a353a73200dba1d",
+      "acvm/node_modules/@noir-lang/acvm_js/nodejs/acvm_js.d.ts": "f02f24dde58ea3867e57606a2e87fe29e796033f840277bf414bc723c59f205e",
+      "acvm/node_modules/@noir-lang/acvm_js/nodejs/acvm_js_bg.wasm.d.ts": "0c83c9ca79d6daa5d01dd2d919b19dc65baf481a80615a5ca30705f3ab4f6994",
+      "acvm/node_modules/@noir-lang/acvm_js/web/acvm_js_bg.wasm": "f5916dd3dbbe6f15abaa4cb6b10a04714621f9389e898d11001b701cd3e4813f",
+      "acvm/node_modules/@noir-lang/acvm_js/web/acvm_js.js": "0fdb682ebf5a54fdb2eafccfc0f50034e6a809fb405d64a680d7a30c941616c3",
+      "acvm/node_modules/@noir-lang/acvm_js/web/acvm_js.d.ts": "310383b616c5c7dcc51a196c0037caa11d70fd4b25918b33d47fd8cc2bee6a35",
+      "acvm/node_modules/@noir-lang/acvm_js/web/acvm_js_bg.wasm.d.ts": "0c83c9ca79d6daa5d01dd2d919b19dc65baf481a80615a5ca30705f3ab4f6994",
+      "acvm/node_modules/@noir-lang/types/lib/tsconfig.tsbuildinfo": "64ef540e48f31a7d16b4f5f539d09a208ef784ef07c17d1c8226417636cb0fd7",
+      "acvm/node_modules/@noir-lang/types/lib/esm/types.js": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
+      "acvm/node_modules/@noir-lang/types/lib/esm/types.d.ts": "f860bdf4f73d02205360e9ecffa122662e1b1ca4ec1feb71c9fe928dbc31dcaa",
+      "acvm/node_modules/@noir-lang/types/lib/cjs/types.js": "d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230",
+      "acvm/node_modules/@noir-lang/types/lib/cjs/types.d.ts": "f860bdf4f73d02205360e9ecffa122662e1b1ca4ec1feb71c9fe928dbc31dcaa",
+      "acvm/node_modules/pako/dist/pako_inflate.es5.js": "ff9295813da328dda4fd236cd0f6efd336481c84e9e5ba75576989ede1b07f08",
+      "acvm/node_modules/pako/dist/pako_inflate.js": "2c00d4d790b08fd5d7dabdce1e28d9ee6f0df67d3f1461965f9cb00fb7b333d0",
+      "acvm/node_modules/pako/dist/pako_deflate.js": "51fbde7814a982223f89d272402e39b06b1a445657a7e7ac6f56506c5c2b5d23",
+      "acvm/node_modules/pako/dist/pako.min.js": "a5e3214ae5cfabc01b3fddbaa635b78a4f766a938b64c20d57271a297edebe92",
+      "acvm/node_modules/pako/dist/pako_deflate.min.js": "767e9e5a5de31904646f81e068ccc080d6a298201896d3c699ce88414c9d0d05",
+      "acvm/node_modules/pako/dist/pako_inflate.es5.min.js": "9fbdec3706bb739d174448a0a8c6e870f9d51255a00a39be410e4eb6fbf5e297",
+      "acvm/node_modules/pako/dist/pako.js": "8e59383452bdd910bd25acfe3ad4a59670dadae054a3759eb177704c4a8b4c53",
+      "acvm/node_modules/pako/dist/pako_deflate.es5.js": "dda18cd09a11b725ba40ce7a6f2ba41c71178d955f7ffa2e8cf2033fdbd8e31f",
+      "acvm/node_modules/pako/dist/pako.es5.js": "d4ed12ae60a6106be4e65661810a9371c3dde93d539b726f5897308c828f999e",
+      "acvm/node_modules/pako/dist/pako.es5.min.js": "7420457ec218cafec3515b75adf7dcbc8c3e46b020fa81c3c7c9f0a89973e370",
+      "acvm/node_modules/pako/dist/pako.esm.mjs": "c704f219caa9c3ddbaa23b925c078cc4390ea8c7db105c3aed8acb18c5fb248a",
+      "acvm/node_modules/pako/dist/pako_deflate.es5.min.js": "854cb03914c54b855a24c76493f980c25ecaa7ca78554a490e0fbc94224c6d9e",
+      "acvm/node_modules/pako/dist/pako_inflate.min.js": "bbcaa5e569e289b4904c7e12c45b6785bc41745977091d105086a6cbb0faf832",
+      "acvm/node_modules/pako/lib/inflate.js": "196a1c128fcc00c8a6341a2b4b57f1d47592af18fe7f2683290bc23d6cc84494",
+      "acvm/node_modules/pako/lib/deflate.js": "7312e9b13436d0a7f7b99e002903caa5847f82f8e643e3938200602c113bff39",
+      "acvm/node_modules/pako/lib/utils/strings.js": "ccd3cbec537634369d9ad8ed1a791c9df100b2ea13826afd8915fa117cfa3997",
+      "acvm/node_modules/pako/lib/utils/common.js": "830c22b5a7bba24d4ed7c0e5a7538d922f30bae7aad05e16b3a20728f187bc47",
+      "acvm/node_modules/pako/lib/zlib/constants.js": "37c65f82b9bacde2bbccc9c980a20dee7e2b7f3658304a30abe1023e02ec407b",
+      "acvm/node_modules/pako/lib/zlib/inflate.js": "644ba56a87938835c844bb5fe13924b124db932780eb61b2a77f3b88dbad78fd",
+      "acvm/node_modules/pako/lib/zlib/deflate.js": "54a36e5377a62ce36f4b5a2307f7e55962cc036d7dbc4a355f702f9de069e012",
+      "acvm/node_modules/pako/lib/zlib/crc32.js": "5452655b14329267c4c3fc58c43df53f4e6f5196fde9d2d431b1ad089e5f3742",
+      "acvm/node_modules/pako/lib/zlib/zstream.js": "5fa10c7a59ca99113cf92d1260e56cbd6282e15afa85dc8a0eb8e8d6d2321298",
+      "acvm/node_modules/pako/lib/zlib/inffast.js": "694b23b4d2c00c9d274274ecf092dc7c0c0c64125d54bda5286baf2711822d00",
+      "acvm/node_modules/pako/lib/zlib/adler32.js": "1f181b4365677dcad5bd8fcc4594707171b7317875c50e88054b75d4fa285930",
+      "acvm/node_modules/pako/lib/zlib/README": "20356aece8f36fda34645e97af3b163da0a88e253b78ffba298590d5b9121ebb",
+      "acvm/node_modules/pako/lib/zlib/inftrees.js": "d5f36d0cff9fd70ba29408a5d42ff40fbb66955df50bd4e98ab4a4b65ed06c7d",
+      "acvm/node_modules/pako/lib/zlib/trees.js": "8cebc535d46743de70530f0ac263179154e7297f42d6c8c64b5d25fee22493dd",
+      "acvm/node_modules/pako/lib/zlib/gzheader.js": "8fa0b4995cea477be96b8783a7d6c7cf5fec96765c2108c3bd52e77104bfdbd3",
+      "acvm/node_modules/pako/lib/zlib/messages.js": "eec5f5d6b8120ada9cd48a3ca0a253c64777906e835477b090e053434d38cf6c",
+      "reader/assets/assurance-cp32-abi.json": "39aa83ef3ddeb5cb43c4f424d39f9ae349cc031241e5650da3678b3f96b9d075",
+      "reader/assets/assurance-abi.json": "729cc9a345f5b8a37549cddbe3ef848edb7bfc8d051867c016928ddabbf3fdc5",
+      "reader/assets/assurance64.vk": "bf1319ff4d1bc49029fa4875a9c5f529a5d17ec85bae5547ace311bbbbc3d3df",
+      "reader/assets/assurance256-cp32.vk": "5b3a98abe325feca9d5187668fc3e97ab0486b0a0f1e5cb2f904de1c67621b11",
+      "reader/assets/assurance256.vk": "1cab7a6b3ce5947916ad8bc09616c801de66f896eecc6677dbaf43284696a496",
+      "reader/assets/assurance256-v2.vk": "9faf09ad7af8b403cd8ea02cd1f896c96971f19bc03182660cc2008c8218f714",
+      "reader/assets/assurance128-cp32.vk": "f8360140d689befc8f23b1794d5f0a9fe373a415804bd8881acdc4886af7f19c"
+    },
+    "launched": false,
+    "userTrialReported": false,
+    "automatedUIInteractionAccepted": false
+  },
+  "historicalExperimentalProofCount": 5,
+  "compactNativeRustTests": {
+    "passed": 33,
+    "failed": 0
+  },
+  "historicalRustCoreAndVerifierTests": {
+    "passed": 10,
+    "failed": 0
+  },
+  "nativeMasterPublication": {
+    "passed": true,
+    "cases": {
+      "adaptive-short": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 4,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 3079.973875,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance64-v1",
+        "proofIdentity": "7fa24a48f684de66a41c69dac3ddd9676a078438271b6fc3d884c4bad46a308a",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 2349.1964580000003,
+          "validationMs": 15.250541999999996,
+          "verifyMs": 15.930374999999913,
+          "witnessMs": 588.436708
+        },
+        "totalAcceptanceMilliseconds": 5793.785875,
+        "workerMilliseconds": 2953.9814159999996
+      },
+      "adaptive-medium": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 9,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 5931.904459,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance128-cp32-v1",
+        "proofIdentity": "0debfcf814056b5ae0a678dd780d7de7b46770d0ceb36a0a8b7003b0b2c0c958",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 4576.551083,
+          "validationMs": 25.410082999999997,
+          "verifyMs": 16.004374999999527,
+          "witnessMs": 1187.322541
+        },
+        "totalAcceptanceMilliseconds": 8901.815625,
+        "workerMilliseconds": 5780.376667
+      },
+      "adaptive-boundary": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 32,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 5895.410792,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance128-cp32-v1",
+        "proofIdentity": "0af48873770d1b1945ff0960e9b2ae49ef2ed3db77c335ca1382754ba24ab63f",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 4533.11675,
+          "validationMs": 34.381458,
+          "verifyMs": 21.740582999999788,
+          "witnessMs": 1227.436834
+        },
+        "totalAcceptanceMilliseconds": 8675.104708,
+        "workerMilliseconds": 5782.80725
+      },
+      "cp32-slow": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 24,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 10813.7965,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance256-cp32-v1",
+        "proofIdentity": "dfb15a818175c4468f744024cf52e0363e3989136209d2e5cfe1c58cc35e7c7c",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 8202.164708,
+          "validationMs": 43.588499999999996,
+          "verifyMs": 19.799000000000888,
+          "witnessMs": 2312.3269999999998
+        },
+        "totalAcceptanceMilliseconds": 14405.3095,
+        "workerMilliseconds": 10534.922875
+      }
+    },
+    "realProviderAuthorization": false,
+    "r2Remote": false
+  },
+  "credentialsInPublicArtifacts": {
+    "environmentValuesPrinted": false,
+    "scan": {
+      "kind": "huma-public-artifact-credential-check-v1",
+      "artifactsScanned": 242,
+      "configuredCredentialVariablesChecked": 4,
+      "secretValuesPrinted": false,
+      "matches": [],
+      "archiveVerifiedAgainstScannedBundle": true
+    }
+  },
+  "coinbaseUploaderApprovalImplemented": true,
+  "realCoinbaseSignInAccepted": false,
+  "realR2Accepted": false,
+  "r2Configured": false,
+  "webDependencyAudit": {
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 7,
+      "high": 0,
+      "critical": 0,
+      "total": 7
+    },
+    "path": "build/publication-npm-audit.json",
+    "beforeCounts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 9,
+      "high": 5,
+      "critical": 0,
+      "total": 14
+    },
+    "beforePath": "build/publication-npm-audit-before-quotas.json",
+    "beforeAfterBaselineVerified": true,
+    "remainingPackages": [
+      "@coinbase/cdp-core",
+      "@coinbase/cdp-hooks",
+      "@coinbase/cdp-react",
+      "@solana/web3.js",
+      "jayson",
+      "stream-json",
+      "uuid"
+    ]
+  },
+  "publicationQuotas": {
+    "durable": true,
+    "atomicGlobalAndUploaderReservation": true,
+    "localRestartAndConcurrencyTested": true,
+    "s3ConditionalETagRaceTested": true,
+    "retryIdempotent": true,
+    "storageFailuresRemainReserved": true,
+    "corruptStateFailsClosed": true,
+    "dailyDefaults": {
+      "globalCount": 1000,
+      "globalBytes": 1073741824,
+      "uploaderCount": 100,
+      "uploaderBytes": 134217728
+    },
+    "day": "server-utc",
+    "r2RemoteTested": false,
+    "localAbandonedLockNeedsOperatorRecovery": true
+  },
+  "webBuilds": {
+    "deck": true,
+    "share": true,
+    "deckTypecheck": true,
+    "vite": "6.4.4",
+    "reactPlugin": "4.7.0"
+  },
+  "nativeNoirPublication": {
+    "kind": "huma-adaptive-noir-app-acceptance-v1",
+    "passed": true,
+    "currentBaseline": "Unpublished current Noir app; no legacy prover fallback.",
+    "softwareFixturesOnly": true,
+    "ownerKeysOrBiometricsUsedByAutomation": false,
+    "actualOwnerTouchIDAcceptanceVerified": false,
+    "defaultCaptureProfile": "assurance256-cp32-v1",
+    "automaticProofProfiles": [
+      "assurance64-v1",
+      "assurance128-cp32-v1",
+      "assurance256-cp32-v1"
+    ],
+    "allOriginalSignaturesAndCompleteHistoryRetained": true,
+    "allChecksUnchanged": true,
+    "nativeCases": {
+      "adaptive-short": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 4,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 3079.973875,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance64-v1",
+        "proofIdentity": "7fa24a48f684de66a41c69dac3ddd9676a078438271b6fc3d884c4bad46a308a",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 2349.1964580000003,
+          "validationMs": 15.250541999999996,
+          "verifyMs": 15.930374999999913,
+          "witnessMs": 588.436708
+        },
+        "totalAcceptanceMilliseconds": 5793.785875,
+        "workerMilliseconds": 2953.9814159999996
+      },
+      "adaptive-medium": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 9,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 5931.904459,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance128-cp32-v1",
+        "proofIdentity": "0debfcf814056b5ae0a678dd780d7de7b46770d0ceb36a0a8b7003b0b2c0c958",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 4576.551083,
+          "validationMs": 25.410082999999997,
+          "verifyMs": 16.004374999999527,
+          "witnessMs": 1187.322541
+        },
+        "totalAcceptanceMilliseconds": 8901.815625,
+        "workerMilliseconds": 5780.376667
+      },
+      "adaptive-boundary": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 32,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 5895.410792,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance128-cp32-v1",
+        "proofIdentity": "0af48873770d1b1945ff0960e9b2ae49ef2ed3db77c335ca1382754ba24ab63f",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 4533.11675,
+          "validationMs": 34.381458,
+          "verifyMs": 21.740582999999788,
+          "witnessMs": 1227.436834
+        },
+        "totalAcceptanceMilliseconds": 8675.104708,
+        "workerMilliseconds": 5782.80725
+      },
+      "cp32-slow": {
+        "backend": "noir-assurance-v5",
+        "changedProofRejected": true,
+        "checkpointSignaturesVerified": 24,
+        "cryptoChildrenOutboundNetworkDenied": true,
+        "editInvalidatesProofAndLink": true,
+        "fullServiceMilliseconds": 10813.7965,
+        "localPublicationVerified": true,
+        "newProofGenerated": true,
+        "ownerKeysOrBiometricsUsed": false,
+        "passed": true,
+        "presenceSignaturesVerified": 2,
+        "profile": "assurance256-cp32-v1",
+        "proofIdentity": "dfb15a818175c4468f744024cf52e0363e3989136209d2e5cfe1c58cc35e7c7c",
+        "realCoinbaseAccepted": false,
+        "realR2Accepted": false,
+        "saveReopenVerified": true,
+        "softwareFixtureOnly": true,
+        "threads": 2,
+        "timings": {
+          "proveMs": 8202.164708,
+          "validationMs": 43.588499999999996,
+          "verifyMs": 19.799000000000888,
+          "witnessMs": 2312.3269999999998
+        },
+        "totalAcceptanceMilliseconds": 14405.3095,
+        "workerMilliseconds": 10534.922875
+      }
+    },
+    "tests": {
+      "swift": 47,
+      "rust": 33,
+      "node": 50,
+      "chrome": 46,
+      "smallPolicyWitnesses": 42,
+      "smallBoundaryWitnesses": 10,
+      "researchWasmProofs": 7,
+      "researchWasmTamperRejections": 14
+    },
+    "packagedApp": {
+      "bundle": "build/Huma.app",
+      "bundleID": "dev.swayam.huma",
+      "strictCodesignVerified": true,
+      "launchedByAutomation": false,
+      "legacyReplayEngineIncluded": false,
+      "noirFilesVerified": 103,
+      "binarySha256": "36facf9693bcd5fbc14398c2c45d4f13176c68b98fdc5513688f7f5d4332adbd",
+      "noirManifestSha256": "b5140bc84a6bf965345292b77da2953efa37d07cbc30f14ac42f6dd144feff4c",
+      "nativeHelperMatchesCompiledCodeBeyondSigningHeader": true
+    },
+    "publicationHost": {
+      "passed": true,
+      "platform": "linux",
+      "architecture": "arm64",
+      "uid": 1000,
+      "node": "v24.22.1",
+      "fixtureOnly": true,
+      "newProofGenerated": false,
+      "realR2Accepted": false,
+      "realCoinbaseAccepted": false,
+      "signedS3Requests": 106,
+      "cases": [
+        {
+          "name": "noir64",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 4
+        },
+        {
+          "name": "noir64-unicode",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 2
+        },
+        {
+          "name": "noir128-boundary",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 32
+        },
+        {
+          "name": "noir128-unicode",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 2
+        },
+        {
+          "name": "noir-cp32",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 24
+        },
+        {
+          "name": "image",
+          "verified": true,
+          "contentKind": "image",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 1
+        },
+        {
+          "name": "audio",
+          "verified": true,
+          "contentKind": "audio",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 1
+        },
+        {
+          "name": "video",
+          "verified": true,
+          "contentKind": "video",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 1
+        }
+      ],
+      "image": "huma-publication-host:local-v5",
+      "networkMode": "none",
+      "readOnlyRoot": true,
+      "nonRootUser": true
+    },
+    "artifactCredentialCheck": {
+      "kind": "huma-public-artifact-credential-check-v1",
+      "artifactsScanned": 242,
+      "configuredCredentialVariablesChecked": 4,
+      "secretValuesPrinted": false,
+      "matches": [],
+      "archiveVerifiedAgainstScannedBundle": true
+    },
+    "reader": {
+      "url": "http://127.0.0.1:4319/verify",
+      "pinnedAssets": 13,
+      "emptyCredentialEnvironment": true,
+      "outboundNetworkDenied": true
+    },
+    "realR2Accepted": false,
+    "realCoinbaseAccepted": false,
+    "completeServiceUnderFiveSecondsForAllSessions": false,
+    "tenThousandCharacterSupport": false,
+    "sourceSha256": {
+      "experiments/noir-compact/native/src/assurance_input.rs": "8279a8d09e3313b1a0bfd2dfc8399e333075b949f55d1b6a6c50bb1d3bc54919",
+      "experiments/noir-compact/native/src/profile_fit.rs": "6a69bf70e9828132938e1020b703c271b822f93b7ccb72a78b82e76cef0ef3b5",
+      "experiments/noir-compact/native/src/main.rs": "d71714bed85f700aaebb4495b837e80e3d2b090568de8cdab164a03f2142ad81",
+      "experiments/noir-compact/native/src/lib.rs": "7048787124460c8596a6f93b86982c01d6cb339d3db1ce959c03ed75cb310fe2",
+      "experiments/noir-compact/capacity_cases.py": "b2da1712df42f965b6fd7c921a97035ec5f5ab36123466cb35ba0f19df9eb106",
+      "experiments/noir-compact/test_capacity_cases.py": "7f49aeef2313d42cb6c173f0f6ccc2d339f7629634b125914fba18dd200c051a",
+      "experiments/noir-compact/assurance_checks.py": "b98162d8b4a7ade0b98eeeafafb553beb5dadb70c547fa5bbc5e28f035381939",
+      "experiments/noir-compact/bucket_checks.py": "7c0b4c8ba3cdf7cca67833ced8fca1f7cc80e85344246e71cc7fc7720429edca",
+      "experiments/noir-compact/bucket_prove.py": "c89dc0bf129d732d688e8b250db29c5f2afcccc40152c29b9a9d0b2b65ae8e44",
+      "experiments/noir-compact/bucket_verify.mjs": "89c001216f4403ba06003b17c56d5cc1b15be21665c31e1327953f6d2d57423a",
+      "experiments/noir-compact/native/examples/bucket_boundaries.rs": "60d159c8d60c5ef59450c4b01006eae95ec3b1cdc2486b89025b620d2ec49475",
+      "integrations/noir/worker.mjs": "8830fe38e6e97b2e89f42b050415a4953a355533595c8d8f94ce7cfa5fb31bdd",
+      "integrations/noir/package.py": "7134179485a6d637db4a379c8197bb79b4923d6e21c41833052a0fce766f93d3",
+      "integrations/noir/prepare-profiles.py": "75287e3f60abbb5db764f628e657ecebb0be03f419ba579b304adb3e3126e29e",
+      "integrations/noir/acceptance.py": "ea41547270630d606886cc93b22f41737879d0fee4408f3118fe78a799c2cf98",
+      "integrations/noir/acceptance.swift": "59f6c57e9121ec115db34d0f965977d72cc182fbfb7779658197ed9a130b229f",
+      "Sources/Huma/ReplayProofService.swift": "8f743ef7b938833654bfdbe4a6dca316adac4b150838996ae9900048c434d9bc",
+      "Sources/HumaCore/NoirWritingProofService.swift": "832ec30a37531244d2b8caa1ee190ce5a6e2c63ded82127a28ad50c1f1a5d4de",
+      "scripts/build.sh": "4c802f1ddbdf1ac772ebaaf8750460cf4fa38f2e64b9e8c3b7ddba146a7fbadd",
+      "experiments/noir-compact/browser/assurance-core.mjs": "60581037967afe3f41553a0a8167ca26c9c36f76c47b231e4c26c6e28085bd87",
+      "experiments/noir-compact/browser/assurance-profile.mjs": "3cbb921217b34aa5b0ce030bc9f2b063a953c5b7601aeceb68186a90ba855f9c",
+      "web/registry.mjs": "9d9529cb9c3280e178f2e1a64e159061d3b414ce370235a3b81768ba11f54451",
+      "web/test/native-noir-publication.mjs": "46455936c84b12f5ebc3a7c7e7ad8c8ca5a1b42e2819ea6fc7b0bc394e27900e",
+      "web/test/assurance-evidence.test.mjs": "568002dbf6ec5ba4ff12d596da73b3e0cb6b857bb88b5ec84acaca5da8be9a3f",
+      "web/test/browser-evidence.mjs": "ac1129444b4e96151ebf8767356b686798510bb09e4a6e83f9d54b0d60860517",
+      "web/test/browser-evidence-page.mjs": "76b4450d7a5b1beb38da5885060e0a26eb090368f8860d39aba844434361ebca",
+      "hosting/test-container.mjs": "6f64aab6a717fdcaec88219358480c1d91e521487da3a01c055a8ea960c60cc9"
+    }
+  },
+  "defaultNewRecordingProofBackend": "noir-assurance-v5",
+  "legacyRiscZeroVerificationRetained": false,
+  "historicalNativeNoirV4": {
+    "date": "2026-10-23",
+    "freshProof": {
+      "backend": "noir-assurance-v4",
+      "changedProofRejected": true,
+      "cryptoChildrenOutboundNetworkDenied": true,
+      "editInvalidatesProofAndLink": true,
+      "localPublicationVerified": true,
+      "newProofGenerated": true,
+      "ownerKeysOrBiometricsUsed": false,
+      "passed": true,
+      "proofIdentity": "c12a8574de25d1b53b71216e560d44d420b99598794d2c36fdd91d8fbd21a649",
+      "realCoinbaseAccepted": false,
+      "realR2Accepted": false,
+      "saveReopenVerified": true,
+      "softwareFixtureOnly": true,
+      "threads": 2,
+      "totalAcceptanceMilliseconds": 15870.25775,
+      "witnessProveVerifyMilliseconds": 11266.668375000001
+    },
+    "finalCachedAdapter": {
+      "backend": "noir-assurance-v4",
+      "changedProofRejected": true,
+      "cryptoChildrenOutboundNetworkDenied": true,
+      "editInvalidatesProofAndLink": true,
+      "localPublicationVerified": true,
+      "newProofGenerated": false,
+      "ownerKeysOrBiometricsUsed": false,
+      "passed": true,
+      "proofIdentity": "c12a8574de25d1b53b71216e560d44d420b99598794d2c36fdd91d8fbd21a649",
+      "realCoinbaseAccepted": false,
+      "realR2Accepted": false,
+      "saveReopenVerified": true,
+      "softwareFixtureOnly": true,
+      "threads": 2,
+      "totalAcceptanceMilliseconds": 4585.754875,
+      "workerMilliseconds": 175.89516699999996
+    },
+    "actualAppProofServiceUsed": true,
+    "appLaunched": false,
+    "ownerHardwareAccepted": false,
+    "finalPackagedOfflineVerificationPassed": true,
+    "originalSignaturesPreserved": true,
+    "checkpointSignatures": 7,
+    "presenceSignatures": 2,
+    "proofSha256": "3a9dc774f286d8f7c40e50e9d07a5447fc9b0383ac2cb429b459c529c2757273",
+    "programKeyHash": "1cab7a6b3ce5947916ad8bc09616c801de66f896eecc6677dbaf43284696a496",
+    "bytecodeSha256": "15d6b3c7d5db15310f56452b0d5808444daf166c6a610daffdd7ddf682c8b1c5",
+    "runtimeDependencyAudit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "historicalSwiftCaptureV4": {
+    "softwareKeysOnly": true,
+    "simulatedInputAndTimes": true,
+    "existingSignaturesPreserved": true,
+    "completeSignedSessionBinding": true,
+    "independentABIAdaptersAgree": true,
+    "proofGenerated": true,
+    "inputSha256": "534b2e20850a4b1f845afdf29906131f887d489d540dd121b1ba00677217bf85",
+    "capture": {
+      "saveReopen": true,
+      "profile": "assurance256-v1",
+      "captures": 750,
+      "manufacturerAttestation": false,
+      "softwareKeyOnly": true,
+      "checkpoints": 7,
+      "simulatedInputAndTimes": true,
+      "captureAndSignMilliseconds": 359.689666,
+      "operations": 1251
+    },
+    "witness": {
+      "wallMs": 1687.54,
+      "peakSampledRSS": 543129600
+    },
+    "artifactSha256": "13e082e07f70aa85398c91a2cbacff76eda96266fdc0dec9cd9e9dcd76af7d47",
+    "bytecodeSha256": "15d6b3c7d5db15310f56452b0d5808444daf166c6a610daffdd7ddf682c8b1c5",
+    "publicABIHash": "729cc9a345f5b8a37549cddbe3ef848edb7bfc8d051867c016928ddabbf3fdc5",
+    "programKeyHash": "1cab7a6b3ce5947916ad8bc09616c801de66f896eecc6677dbaf43284696a496",
+    "threads": 2,
+    "zeroKnowledge": true,
+    "cryptoChildrenOutboundNetworkDenied": true,
+    "verified": true,
+    "proofIdentity": "c12a8574de25d1b53b71216e560d44d420b99598794d2c36fdd91d8fbd21a649",
+    "proveMs": 8092.571334,
+    "witnessProveNativeVerifyMs": 10544.67,
+    "checkpointSignatures": 7,
+    "presenceSignatures": 2,
+    "sourceSha256": {
+      "experiments/noir-compact/live_assurance_cases.py": "c7c8b04d986de969d2a967d3f4e629b32411604933e6e8b1eb6371f7e59a96cd",
+      "experiments/noir-compact/native/src/assurance_input.rs": "8a5ed31007f8e999ae5981a5730e9240556d6076c8ca3e706d3abc6b8c24fb0b",
+      "experiments/noir-compact/live-assurance.swift": "e2dd82591156cf5c9de143b3c22da4dde3a8b6627f6d9684e16437657f5eb862"
+    },
+    "nodeSDKVerified": true,
+    "browserVerified": true,
+    "localMasterProofPublicationVerified": true,
+    "realR2Accepted": false,
+    "realCoinbaseAccepted": false,
+    "appProofBackendSelected": false,
+    "ownerBiometricUsed": false
+  },
+  "publicationDeployment": {
+    "offlineCheck": {
+      "kind": "huma-publication-deployment-check-v1",
+      "offlineOnly": true,
+      "environmentValuesPrinted": false,
+      "configuredForLiveAcceptance": false,
+      "configuration": {
+        "R2_ENDPOINT": false,
+        "R2_BUCKET": false,
+        "R2_ACCESS_KEY_ID": false,
+        "R2_SECRET_ACCESS_KEY": false,
+        "NEXT_PUBLIC_CDP_PROJECT_ID": true,
+        "CDP_API_KEY_ID": true,
+        "CDP_API_KEY_SECRET": true,
+        "HUMA_STORAGE_BACKEND": false
+      },
+      "r2ConfigurationValid": false,
+      "quotaConfigurationValid": true,
+      "httpsOriginProvided": false,
+      "missingAssets": [],
+      "mismatchedPins": [],
+      "liveAcceptanceVerified": false,
+      "manualChecks": [
+        "Configure this HTTPS origin in the CDP project.",
+        "Run one publisher instance while staging is process-local.",
+        "Approve a real Coinbase sign-in and upload, then independently download and verify both files."
+      ]
+    },
+    "shippedLegacyPostStatus": 410,
+    "legacyGetCompatibilityRetained": true,
+    "writerEnabledOnlyInDisposableCompatibilityHarnesses": true,
+    "postChangeCachedNative": {
+      "backend": "noir-assurance-v5",
+      "changedProofRejected": true,
+      "cryptoChildrenOutboundNetworkDenied": true,
+      "editInvalidatesProofAndLink": true,
+      "fullServiceMilliseconds": 1321.89725,
+      "localPublicationVerified": true,
+      "newProofGenerated": false,
+      "ownerKeysOrBiometricsUsed": false,
+      "passed": true,
+      "proofIdentity": "3fc834ba0c6cadf0c69b70435bf1275920c4d7c88fd1c5843ae92dcce5409b46",
+      "realCoinbaseAccepted": false,
+      "realR2Accepted": false,
+      "saveReopenVerified": true,
+      "softwareFixtureOnly": true,
+      "threads": 2,
+      "timings": {
+        "validationMs": 44.43275,
+        "verifyMs": 207.258042
+      },
+      "totalAcceptanceMilliseconds": 4697.655709,
+      "workerMilliseconds": 207.385083
+    },
+    "testLog": "build/publication-deployment-check-tests.log"
+  },
+  "publicationHost": {
+    "date": "2026-10-23",
+    "container": {
+      "passed": true,
+      "platform": "linux",
+      "architecture": "arm64",
+      "uid": 1000,
+      "node": "v24.22.1",
+      "fixtureOnly": true,
+      "newProofGenerated": false,
+      "realR2Accepted": false,
+      "realCoinbaseAccepted": false,
+      "signedS3Requests": 106,
+      "cases": [
+        {
+          "name": "noir64",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 4
+        },
+        {
+          "name": "noir64-unicode",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 2
+        },
+        {
+          "name": "noir128-boundary",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 32
+        },
+        {
+          "name": "noir128-unicode",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 2
+        },
+        {
+          "name": "noir-cp32",
+          "verified": true,
+          "contentKind": "text",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 24
+        },
+        {
+          "name": "image",
+          "verified": true,
+          "contentKind": "image",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 1
+        },
+        {
+          "name": "audio",
+          "verified": true,
+          "contentKind": "audio",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 1
+        },
+        {
+          "name": "video",
+          "verified": true,
+          "contentKind": "video",
+          "exactMaster": true,
+          "approvalRequired": true,
+          "privateLink": true,
+          "tamperRejected": true,
+          "checkpointSignatures": 1
+        }
+      ],
+      "image": "huma-publication-host:local-v5",
+      "networkMode": "none",
+      "readOnlyRoot": true,
+      "nonRootUser": true
+    },
+    "archive": {
+      "path": "build/HumaPublicationHost-v5.tar.gz",
+      "sha256": "8d28863ecdc64058cad4f1c0c5743ff55e8aaa6c9f96ae4ff6b8d971fcad14cd",
+      "bytes": 15453052,
+      "normalizedAndCompared": true
+    },
+    "bundle": {
+      "path": "build/HumaPublicationHost-v5",
+      "files": 97,
+      "credentialsIncluded": false,
+      "privateDraftsIncluded": false
+    },
+    "image": {
+      "tag": "huma-publication-host:local-v5",
+      "id": "sha256:98f101b302335f036968cfa285b657ba974340294f3f2727578cfd24a3dcd2a3"
+    },
+    "runtimeNpmAudit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "existingWebAudit": {
+      "moderate": 7,
+      "high": 0,
+      "critical": 0
+    },
+    "nodeTests": 50,
+    "browserTests": 46,
+    "deployed": false,
+    "offlineConfiguration": {
+      "kind": "huma-publication-deployment-check-v1",
+      "offlineOnly": true,
+      "environmentValuesPrinted": false,
+      "configuredForLiveAcceptance": false,
+      "configuration": {
+        "R2_ENDPOINT": false,
+        "R2_BUCKET": false,
+        "R2_ACCESS_KEY_ID": false,
+        "R2_SECRET_ACCESS_KEY": false,
+        "NEXT_PUBLIC_CDP_PROJECT_ID": true,
+        "CDP_API_KEY_ID": true,
+        "CDP_API_KEY_SECRET": true,
+        "HUMA_STORAGE_BACKEND": false
+      },
+      "r2ConfigurationValid": false,
+      "quotaConfigurationValid": true,
+      "httpsOriginProvided": false,
+      "missingAssets": [],
+      "mismatchedPins": [],
+      "liveAcceptanceVerified": false,
+      "manualChecks": [
+        "Configure this HTTPS origin in the CDP project.",
+        "Run one publisher instance while staging is process-local.",
+        "Approve a real Coinbase sign-in and upload, then independently download and verify both files."
+      ]
+    }
+  },
+  "historicalNoirV5EightSlot": {
+    "date": "2026-10-23",
+    "softwareFixturesOnly": true,
+    "twoThreads": true,
+    "baseline": {
+      "proveMs": 9129.067792000002,
+      "validationMs": 289.808125,
+      "verifyMs": 17.810958000000028,
+      "witnessMs": 2537.457834
+    },
+    "candidateGates": {
+      "publictext-v1": 975179,
+      "limbs-v1": 1059692,
+      "bounded-v1": 1019303,
+      "algebraic-v1": 926956
+    },
+    "selectedRelation": "algebraic",
+    "selected": {
+      "softwareFixtureOnly": true,
+      "experimental": true,
+      "relation": "algebraic",
+      "completePublicTextVerifierRequired": false,
+      "proofGenerated": true,
+      "signaturesPreserved": true,
+      "checkpointSignatures": 7,
+      "presenceSignatures": 2,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 647423,
+            "circuit_size": 926956
+          }
+        ]
+      },
+      "compileAndWitness": {
+        "wallMs": 1495.33,
+        "peakSampledRSS": 477970432
+      },
+      "bytecodeSha256": "64c7bee1b03e1538c1f86784afe1bc108df3cf603ea8628bf0e436bd197ca1c3",
+      "sourceSha256": {
+        "main.nr": "31690d7d615ae385c58c284564d00a2bd87a74ce2050f6654c38c3e3c3aaab8f",
+        "public_text.nr": "1d781cd1be6af0742ebb9494f163060c8c16f9b3b2889668491966a5436c0a6f",
+        "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+        "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+        "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870"
+      },
+      "nativeZkVerified": true,
+      "proveMs": 7637.219,
+      "warmWitness": {
+        "wallMs": 1482.02,
+        "peakSampledRSS": 485261312
+      },
+      "programKeyHash": "9faf09ad7af8b403cd8ea02cd1f896c96971f19bc03182660cc2008c8218f714",
+      "proofIdentity": "3fc834ba0c6cadf0c69b70435bf1275920c4d7c88fd1c5843ae92dcce5409b46"
+    },
+    "fullPolicyWitnessChecks": {
+      "experimental": true,
+      "softwareKeysOnly": true,
+      "artifactSha256": "c475c231e0eb22a25f9395802c1a8e92f4b895b4b83eb35d8dea360fc33fb9d4",
+      "cases": [
+        {
+          "case": "Validtyped250",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1472.94,
+          "peakSampledRSS": 478707712,
+          "policySatisfied": true,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validrollover",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1410.61,
+          "peakSampledRSS": 485441536,
+          "policySatisfied": true,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validrepeat",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1402.01,
+          "peakSampledRSS": 479330304,
+          "policySatisfied": true,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validunpaired",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1397.61,
+          "peakSampledRSS": 477904896,
+          "policySatisfied": false,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validrate",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1403.46,
+          "peakSampledRSS": 479592448,
+          "policySatisfied": false,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validdwell",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1419.61,
+          "peakSampledRSS": 485441536,
+          "policySatisfied": false,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validmissingorigin",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1472.21,
+          "peakSampledRSS": 482639872,
+          "policySatisfied": true,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validlate",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1432.42,
+          "peakSampledRSS": 478986240,
+          "policySatisfied": true,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validtimeout",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1410.27,
+          "peakSampledRSS": 481591296,
+          "policySatisfied": true,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "Validu64max",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1398.92,
+          "peakSampledRSS": 478822400,
+          "policySatisfied": false,
+          "softwareKeysOnly": true,
+          "proofGenerated": false
+        },
+        {
+          "case": "RejectOriginPID",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1126.27
+        },
+        {
+          "case": "RejectKeyboardType",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1127.49
+        },
+        {
+          "case": "RejectRepeatFlag",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1136.9
+        },
+        {
+          "case": "RejectPresenceNonce",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1137.6
+        },
+        {
+          "case": "RejectLateSeal",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1176.43
+        },
+        {
+          "case": "RejectOmittedPresenceCoverage",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1172.19
+        },
+        {
+          "case": "RejectPublicPresenceCount",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1158.63
+        },
+        {
+          "case": "RejectUnboundSampleTime",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1102.21
+        },
+        {
+          "case": "RejectUnusedOriginPadding",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1113.83
+        },
+        {
+          "case": "RejectUnusedPresenceRoot",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1142.04
+        },
+        {
+          "case": "RejectForgedHumanRhythm",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1095.65
+        },
+        {
+          "case": "RejectReusedKeySample",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1108.52
+        }
+      ],
+      "controls": []
+    },
+    "replaySemanticChecks": {
+      "experimental": true,
+      "proofGenerated": false,
+      "recomputedCommitments": true,
+      "candidate": "algebraic",
+      "weakenedOverflowControl": false,
+      "sourceSha256": "10ecf4b28d4e7596ced95ebed9f2e5ef9ac2c4e4751cae539672d61616ae63a0",
+      "cases": [
+        {
+          "case": "ValidUnicodeRevision",
+          "accepted": true,
+          "wallMs": 2006.48
+        },
+        {
+          "case": "ValidLargeAdvance",
+          "accepted": true,
+          "wallMs": 286.52
+        },
+        {
+          "case": "MoveAwayAndBack",
+          "accepted": false,
+          "wallMs": 228.06
+        },
+        {
+          "case": "InsertWithoutBegin",
+          "accepted": false,
+          "wallMs": 226.73
+        },
+        {
+          "case": "EndBeforeDeletion",
+          "accepted": false,
+          "wallMs": 226.23
+        },
+        {
+          "case": "BeginPastEnd",
+          "accepted": false,
+          "wallMs": 225.11
+        },
+        {
+          "case": "ValidSemantic",
+          "accepted": true,
+          "wallMs": 288.28
+        },
+        {
+          "case": "ElapsedOverflow",
+          "accepted": false,
+          "wallMs": 252.05
+        },
+        {
+          "case": "MidEditSample",
+          "accepted": false,
+          "wallMs": 228.85
+        },
+        {
+          "case": "SplitSurrogate",
+          "accepted": false,
+          "wallMs": 227.98
+        },
+        {
+          "case": "InvalidUnicode",
+          "accepted": false,
+          "wallMs": 226.63
+        },
+        {
+          "case": "ForgedFinalText",
+          "accepted": false,
+          "wallMs": 256.61
+        }
+      ]
+    },
+    "negativeControls": [
+      {
+        "experimental": true,
+        "proofGenerated": false,
+        "recomputedCommitments": true,
+        "candidate": "algebraic",
+        "weakenedOverflowControl": false,
+        "weakenedAlgebraicControl": "movement",
+        "sourceSha256": "a729501818df58908d4344310ca229b04e58509793d9ace98f39b8a9b8e65c83",
+        "cases": [
+          {
+            "case": "MoveAwayAndBack",
+            "accepted": true,
+            "wallMs": 1923.06
+          }
+        ]
+      },
+      {
+        "experimental": true,
+        "proofGenerated": false,
+        "recomputedCommitments": true,
+        "candidate": "algebraic",
+        "weakenedOverflowControl": false,
+        "weakenedAlgebraicControl": "unicode",
+        "sourceSha256": "ae6dd4227a642e8d74e11474dfeb407b2320b021f5a668490367688e53d0fc16",
+        "cases": [
+          {
+            "case": "InvalidUnicode",
+            "accepted": true,
+            "wallMs": 1885.49
+          }
+        ]
+      },
+      {
+        "experimental": true,
+        "proofGenerated": false,
+        "recomputedCommitments": true,
+        "candidate": "algebraic",
+        "weakenedOverflowControl": false,
+        "weakenedAlgebraicControl": "remaining",
+        "sourceSha256": "7f1fb46f7ab6f64cba872db885ffcff363bc22f9276fb36834d64b6f09ba3916",
+        "cases": [
+          {
+            "case": "EndBeforeDeletion",
+            "accepted": true,
+            "wallMs": 2011.34
+          }
+        ]
+      }
+    ],
+    "nativeApp": {
+      "backend": "noir-assurance-v5",
+      "changedProofRejected": true,
+      "cryptoChildrenOutboundNetworkDenied": true,
+      "editInvalidatesProofAndLink": true,
+      "fullServiceMilliseconds": 10869.411625,
+      "localPublicationVerified": true,
+      "newProofGenerated": true,
+      "ownerKeysOrBiometricsUsed": false,
+      "passed": true,
+      "proofIdentity": "3fc834ba0c6cadf0c69b70435bf1275920c4d7c88fd1c5843ae92dcce5409b46",
+      "realCoinbaseAccepted": false,
+      "realR2Accepted": false,
+      "saveReopenVerified": true,
+      "softwareFixtureOnly": true,
+      "threads": 2,
+      "timings": {
+        "proveMs": 7779.788166,
+        "validationMs": 44.51812499999999,
+        "verifyMs": 16.593417000000045,
+        "witnessMs": 2143.9687919999997
+      },
+      "totalAcceptanceMilliseconds": 14342.37675,
+      "workerMilliseconds": 9940.905999999999
+    },
+    "legacyV4Compatibility": {
+      "backend": "noir-assurance-v4",
+      "changedProofRejected": true,
+      "cryptoChildrenOutboundNetworkDenied": true,
+      "editInvalidatesProofAndLink": true,
+      "fullServiceMilliseconds": 254.702666,
+      "localPublicationVerified": true,
+      "newProofGenerated": false,
+      "ownerKeysOrBiometricsUsed": false,
+      "passed": true,
+      "proofIdentity": "c12a8574de25d1b53b71216e560d44d420b99598794d2c36fdd91d8fbd21a649",
+      "realCoinbaseAccepted": false,
+      "realR2Accepted": false,
+      "saveReopenVerified": true,
+      "softwareFixtureOnly": true,
+      "threads": 2,
+      "timings": {
+        "validationMs": 29.344499999999996,
+        "verifyMs": 16.164333
+      },
+      "totalAcceptanceMilliseconds": 3729.8110420000003,
+      "workerMilliseconds": 16.253292000000002
+    },
+    "legacyRiscZeroCompatibility": {
+      "passed": true,
+      "cachedPublicReceipt": true,
+      "newProofGenerated": false,
+      "realProviderAuthorization": false,
+      "r2Remote": false,
+      "masterAndProofDownloaded": true,
+      "nativeCryptographicReverification": true,
+      "linkSaveReopenAndEditInvalidation": true,
+      "externalNetworkDeniedForNative": true,
+      "deviceKeysOrBiometricsUsed": false
+    },
+    "underFiveSeconds": false,
+    "realR2Accepted": false,
+    "ownerHardwareAccepted": false,
+    "defaultThreads": 2,
+    "baselineKernel": {
+      "UltraHonkAPI::prove": [
+        {
+          "parent": "_root",
+          "milliseconds": 8394.582167,
+          "count": 1
+        }
+      ],
+      "MSM::batch_multi_scalar_mul": [
+        {
+          "parent": "CommitmentKey::batch_commit",
+          "milliseconds": 1592.026876,
+          "count": 4
+        },
+        {
+          "parent": "CommitmentKey::commit",
+          "milliseconds": 3748.037917,
+          "count": 30
+        }
+      ],
+      "sumcheck.prove": [
+        {
+          "parent": "UltraProver::construct_proof",
+          "milliseconds": 1233.7045,
+          "count": 1
+        }
+      ]
+    },
+    "kernelTimesAreNestedAndOverlapping": true,
+    "profilingOpcodeCommandStoppedWithoutResult": true,
+    "browser": {
+      "passed": 36,
+      "failed": 0,
+      "crossOriginIsolated": false,
+      "softwareFixturesOnly": true,
+      "results": [
+        {
+          "name": "RISC Zero verified through common browser worker",
+          "passed": true
+        },
+        {
+          "name": "native Mac envelope verifies with matching statement hash",
+          "passed": true
+        },
+        {
+          "name": "compact proof and every signature verify through common worker",
+          "passed": true
+        },
+        {
+          "name": "compact envelope retains proof identity",
+          "passed": true
+        },
+        {
+          "name": "Unicode fixture retains exact character policy",
+          "passed": true
+        },
+        {
+          "name": "only absolute-end ASCII space/tab ignored",
+          "passed": true
+        },
+        {
+          "name": "changed displayed text rejected",
+          "passed": true
+        },
+        {
+          "name": "changed claimed capture rejected",
+          "passed": true
+        },
+        {
+          "name": "invented policy result rejected",
+          "passed": true
+        },
+        {
+          "name": "fake manufacturer attachment rejected",
+          "passed": true
+        },
+        {
+          "name": "retired account policy rejected",
+          "passed": true
+        },
+        {
+          "name": "cancellation and single admission",
+          "passed": true
+        },
+        {
+          "name": "real image proof verifies exact master in browser",
+          "passed": true
+        },
+        {
+          "name": "real audio proof verifies exact master in browser",
+          "passed": true
+        },
+        {
+          "name": "real video proof verifies exact master in browser",
+          "passed": true
+        },
+        {
+          "name": "media envelope rejects altered master and claimed policy",
+          "passed": true
+        },
+        {
+          "name": "media browser rejects changed SNARK and unsupported freshness claim",
+          "passed": true
+        },
+        {
+          "name": "full Noir writing-policy proof verifies origin and presence in browser",
+          "passed": true
+        },
+        {
+          "name": "fresh Swift capture proof preserves all original signatures in browser",
+          "passed": true
+        },
+        {
+          "name": "optimized V5 verifies the original full signed statement in browser",
+          "passed": true
+        },
+        {
+          "name": "optional Noir history disclosure verifies proof without certifying raw history",
+          "passed": true
+        },
+        {
+          "name": "browser distinguishes valid proof from satisfied writing policy",
+          "passed": true
+        },
+        {
+          "name": "browser rejects changed V4 presence signature",
+          "passed": true
+        },
+        {
+          "name": "proof reader has no account flow or retired service bundle",
+          "passed": true
+        },
+        {
+          "name": "existing reader accepts legacy RISC Zero via shared core",
+          "passed": true
+        },
+        {
+          "name": "existing reader imports native evidence envelope",
+          "passed": true
+        },
+        {
+          "name": "existing reader imports compact evidence envelope",
+          "passed": true
+        },
+        {
+          "name": "existing reader imports full Noir writing policy with its results",
+          "passed": true
+        },
+        {
+          "name": "reader imports optimized V5 and renders its policy and presence results",
+          "passed": true
+        },
+        {
+          "name": "reader imports the optional native Noir history-disclosure file",
+          "passed": true
+        },
+        {
+          "name": "reader invalidates altered text then accepts final whitespace",
+          "passed": true
+        },
+        {
+          "name": "native envelope registry link opens and verifies automatically",
+          "passed": true
+        },
+        {
+          "name": "full Noir writing-policy registry link verifies automatically",
+          "passed": true
+        },
+        {
+          "name": "shared exact text master and V4 proof download and verify in reader",
+          "passed": true
+        },
+        {
+          "name": "shared exact text master and V5 proof download and verify in reader",
+          "passed": true
+        },
+        {
+          "name": "shared audio master and membership proof verify exact downloaded bytes in reader",
+          "passed": true
+        }
+      ],
+      "sameOriginCSP": true,
+      "externalDNSDisabled": true,
+      "osNetworkDeny": false
+    },
+    "sourceSha256": {
+      "integrations/noir/worker.mjs": "6a2f22313d1367beaf5a496bd4a73848ac2ad0f53710c75b722070aa698d21b2",
+      "experiments/noir-compact/algebraic_replay.py": "5999a68187338a8a1641e5f4f06c3a6899fbb3da8a94e7238ffb00a01012862d",
+      "experiments/noir-compact/bounded_replay.py": "8c6b396142963bdb676d4c1d362b863cac14b55e101a99708d2686de0e28e0cb",
+      "experiments/noir-compact/public_text_cases.py": "29e1bf0a4b9115d24fbfce27c5c8c32a71a605279c116a7d61aeca08b7fceb7e",
+      "Sources/HumaCore/NoirWritingProofService.swift": "a7de76f1e166854e52ccd1629f466e94e961af74894f96f2d36ba299fccf4452",
+      "Sources/Huma/ReplayProofService.swift": "575d06a541bdc061ceaf2523a4478387be1200b4a99d378dae91f6d190930fad"
+    }
+  },
+  "defaultNewRecordingProofProfile": "automatic-complete-history-sizing",
+  "noPasteRecording": {
+    "pasteAllowanceCharacters": 0,
+    "editorEntryPointsBlocked": true,
+    "circuitUnchanged": true,
+    "constraints": {
+      "policy": "huma-writing-rules-v1",
+      "pasteAllowanceCharacters": 0,
+      "circuitUnchanged": true,
+      "proofGenerated": false,
+      "ownerIdentityUsed": false,
+      "cases": [
+        {
+          "case": "PasteOneCharacterFailedPolicy",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1543.82,
+          "peakSampledRSS": 491618304
+        },
+        {
+          "case": "PasteOneCharacterForgedPass",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1156.95
+        },
+        {
+          "case": "PasteBulkTextFailedPolicy",
+          "accepted": true,
+          "expectedAccepted": true,
+          "wallMs": 1513.39,
+          "peakSampledRSS": 488390656
+        },
+        {
+          "case": "PasteBulkTextForgedPass",
+          "accepted": false,
+          "expectedAccepted": false,
+          "wallMs": 1200.26
+        }
+      ]
+    },
+    "bundle": "build/Huma.app",
+    "bundleID": "dev.swayam.huma",
+    "strictCodesignVerified": true,
+    "launchedByAutomation": false,
+    "engineManifestFiles": 103,
+    "engineManifestSha256": "b5140bc84a6bf965345292b77da2953efa37d07cbc30f14ac42f6dd144feff4c"
+  },
+  "previewLaunchedByAutomation": false,
+  "userReportedLocalTrial": false,
+  "localExportIndependentlyVerified": true,
+  "automatedReleaseTestsSoftwareFixturesOnly": true,
+  "ownerKeysOrBiometricsUsedByAutomation": false,
+  "defaultCaptureProfile": "assurance256-cp32-v1",
+  "sdkHistoricalReceiptVerificationRetained": true,
+  "legacyProverFallback": false,
+  "previousBuildCleanup": {
+    "kind": "huma-previous-build-cleanup-v1",
+    "removed": [
+      {
+        "path": "build/Huma-account-preview.app",
+        "allocatedBytes": 306442240
+      },
+      {
+        "path": "build/Huma-cadence-preview.app",
+        "allocatedBytes": 307834880
+      },
+      {
+        "path": "build/Huma-compact-capture-preview.app",
+        "allocatedBytes": 308953088
+      },
+      {
+        "path": "build/Huma-connect-preview.app",
+        "allocatedBytes": 307220480
+      },
+      {
+        "path": "build/Huma-design.app",
+        "allocatedBytes": 307453952
+      },
+      {
+        "path": "build/Huma-evidence-preview.app",
+        "allocatedBytes": 310312960
+      },
+      {
+        "path": "build/Huma-human-presence-preview.app",
+        "allocatedBytes": 309686272
+      },
+      {
+        "path": "build/Huma-integration-preview.app",
+        "allocatedBytes": 307470336
+      },
+      {
+        "path": "build/Huma-next.app",
+        "allocatedBytes": 306294784
+      },
+      {
+        "path": "build/Huma-proof-preview.app",
+        "allocatedBytes": 109449216
+      },
+      {
+        "path": "build/Huma.app",
+        "allocatedBytes": 216494080
+      },
+      {
+        "path": "build/HumaEvidenceProbe.app",
+        "allocatedBytes": 2588672
+      },
+      {
+        "path": "build/HumaNoirPublicationProbe.app",
+        "allocatedBytes": 2895872
+      },
+      {
+        "path": "build/HumaPresenceLegacyProbe.app",
+        "allocatedBytes": 2392064
+      },
+      {
+        "path": "build/HumaPresenceProbe.app",
+        "allocatedBytes": 2183168
+      },
+      {
+        "path": "build/HumaProofOnlyProbe.app",
+        "allocatedBytes": 2166784
+      },
+      {
+        "path": "build/HumaPublicationProbe.app",
+        "allocatedBytes": 2916352
+      },
+      {
+        "path": "build/HumaReplayProbe.app",
+        "allocatedBytes": 1306624
+      },
+      {
+        "path": "build/HumaWritingPreview.app",
+        "allocatedBytes": 424112128
+      },
+      {
+        "path": "build/HumaPublicationHost-v3",
+        "allocatedBytes": 51408896
+      },
+      {
+        "path": "build/HumaPublicationHost-v3.tar.gz",
+        "allocatedBytes": 15441920
+      }
+    ],
+    "latestPreserved": "build/Huma.app",
+    "runningPreserved": [],
+    "freedAllocatedBytes": 3605024768,
+    "sourceDocumentsProofsToolchainsAndCachesUntouched": true,
+    "closedAfterExplicitDiscardAuthorization": [
+      {
+        "pid": 49028,
+        "bundle": "Huma-quiet-preview.app"
+      },
+      {
+        "pid": 58452,
+        "bundle": "Huma-r2-preview.app"
+      }
+    ],
+    "remainingOldAppsRemoved": [
+      "build/Huma-quiet-preview.app",
+      "build/Huma-r2-preview.app"
+    ],
+    "supersededPastePreviewRemoved": true,
+    "remainingApps": [
+      "build/Huma.app"
+    ],
+    "supersededHostBuildsRemoved": [
+      "HumaPublicationHost-v4",
+      "HumaPublicationHost-v4.tar.gz"
+    ],
+    "supersededLocalImageTagsRemoved": [
+      "huma-publication-host:local-v3",
+      "huma-publication-host:local-v4"
+    ]
+  },
+  "reader": {
+    "url": "http://127.0.0.1:4319/verify",
+    "pinnedAssets": 13,
+    "emptyCredentialEnvironment": true,
+    "outboundNetworkDenied": true
+  },
+  "unpublishedCurrentBaseline": true,
+  "longSessionResearch": {
+    "report": "integrations/noir/results/recursive-component-acceptance.json",
+    "currentAppChanged": false,
+    "completeTenThousandCharacterSessionVerified": false,
+    "continuationReport": "integrations/noir/results/continuation-component-acceptance.json",
+    "replayContinuationComponentProved": true,
+    "selectedTenThousandCharacterReplayChunksProved": 3,
+    "allTenThousandCharacterReplayChunksProved": false,
+    "interactionReport": "integrations/noir/results/interaction-component-acceptance.json",
+    "replayBehaviorAndOriginComponentProved": true,
+    "sampledCombinedChunksNativeAndWasmVerified": 3,
+    "fullPassingTraceWitnessChunks": 17,
+    "fullPassingTraceCryptographicallyVerified": true,
+    "fullPassingTraceWasmVerified": true,
+    "portableComponentBundleVerified": true,
+    "actualChromeComponentChecks": 8,
+    "fullPassingTraceSerialValidPathMs": 11079.189
+  }
+}
