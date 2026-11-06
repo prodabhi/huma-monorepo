@@ -8,7 +8,7 @@ final class EvidenceEnvelopeTests: XCTestCase {
         var vectors: [Vector]
     }
     private func vectors() throws -> [Vectors.Vector] {
-        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         return try JSONDecoder().decode(Vectors.self, from: Data(contentsOf: root.appendingPathComponent("frontend/verify-core/fixtures/statements.json"))).vectors
     }
     func testCrossLanguageStatementPayloadsAndExactLargeIntegers() throws {

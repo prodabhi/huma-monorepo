@@ -1,15 +1,14 @@
-import { fileURLToPath, pathToFileURL } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash, generateKeyPairSync, sign } from 'node:crypto';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
-const W = fileURLToPath(new URL('../', import.meta.url));
-const { createRegistry } = await import(pathToFileURL(W + 'registry.mjs').href);
-const { publicationMessage } = await import(pathToFileURL(W + 'publications.mjs').href);
-const { deviceAuthorizationMessage } = await import(pathToFileURL(W + 'publication-contract.mjs').href);
-const { privateKeyToAccount } = await import(pathToFileURL(W + 'node_modules/viem/_esm/accounts/index.js').href);
+const W = new URL('../', import.meta.url).pathname;
+const { createRegistry } = await import(W + 'registry.mjs');
+const { publicationMessage } = await import(W + 'publications.mjs');
+const { deviceAuthorizationMessage } = await import(W + 'publication-contract.mjs');
+const { privateKeyToAccount } = await import(W + 'node_modules/viem/_esm/accounts/index.js');
 const hash = b => createHash('sha256').update(b).digest('hex');
 
 test('a sign-in code cannot be taken over and a Mac publication signature cannot be replayed', { timeout: 90000 }, async t => {

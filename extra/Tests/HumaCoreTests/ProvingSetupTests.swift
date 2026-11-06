@@ -18,7 +18,7 @@ final class ProvingSetupTests: XCTestCase {
         XCTAssertFalse(ProvingSetup.intact(link), "only a real file counts, never a link")
     }
     func testTheRealPointsAreAcceptedWhenBuilt() throws {
-        let source = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let source = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
             .appendingPathComponent("build/research/noir-crs/bn254_g1_compressed.dat")
         guard let handle = try? FileHandle(forReadingFrom: source) else { throw XCTSkip("Proving setup not built") }
         defer { try? handle.close() }

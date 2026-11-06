@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import { Avatar, Style } from '@dicebear/core';
 import dylan from '@dicebear/styles/dylan.json' with { type: 'json' };
 
-// The Mac app draws faces with Resources/Faces.js in JavaScriptCore. Run it the same way, with no web APIs
+// The Mac app draws faces with extra/Resources/Faces.js in JavaScriptCore. Run it the same way, with no web APIs
 // (no structuredClone), and check it draws exactly the face the site's /avatar/<seed>.svg serves.
 test('the app face script draws the same face as the site', async () => {
     const script = await readFile(new URL('../../extra/Resources/Faces.js', import.meta.url), 'utf8');

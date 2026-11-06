@@ -1,3 +1,4 @@
+import { POSTS, IMAGES } from '../blog.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
@@ -44,10 +45,13 @@ test('real replay receipt publishes only verified public fields and round trips 
     assert.equal((await duplicate.json()).id, id);
     const page = await fetch(base + '/verify/' + id);
     assert.equal(page.status, 200);
-    for (const route of ['/', '/verify', '/download', '/prove-you-didnt-use-ai', '/ai-detector-false-positive']) assert.equal((await fetch(base + route)).headers.get('content-type'), 'text/html');
+    for (const route of ['/', '/verify', '/download', '/prove-you-didnt-use-ai', '/ai-detector-false-positive', '/blog', ...POSTS.map(post => '/blog/' + post)]) assert.equal((await fetch(base + route)).headers.get('content-type'), 'text/html');
     // What search engines and AI assistants read: the rules, the map of pages and the plain summary.
     assert.match(await (await fetch(base + '/robots.txt')).text(), /Sitemap: https:\/\/huma\.social\/sitemap\.xml/);
     assert.match(await (await fetch(base + '/sitemap.xml')).text(), /<loc>https:\/\/huma\.social\/prove-you-didnt-use-ai<\/loc>/);
+    const sitemap = await (await fetch(base + '/sitemap.xml')).text();
+    for (const post of POSTS) assert.match(sitemap, new RegExp(`<loc>https://huma\\.social/blog/${post}</loc>`));
+    for (const image of IMAGES) assert.equal((await fetch(base + '/blog/img/' + image)).headers.get('content-type'), 'image/webp');
     assert.match(await (await fetch(base + '/llms.txt')).text(), /^# Huma\n/);
     assert.equal((await fetch(base + '/deck', { redirect: 'manual' })).headers.get('location'), '/deck/');
     for (const escape of ['/deck/..%2fpackage.json', '/deck/..%2f..%2fREADME.md', '/deck/%2e%2e%2fregistry.mjs']) assert.equal((await fetch(base + escape)).status, 404);

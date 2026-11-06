@@ -61,7 +61,7 @@ final class RemoteProverTests: XCTestCase {
     /// HUMA_PROVER_E2E_URL=http://127.0.0.1:4330 swift test --filter RemoteProverTests
     func testProvesOnTheServerAndVerifiesHere() async throws {
         guard let url = ProcessInfo.processInfo.environment["HUMA_PROVER_E2E_URL"] else { throw XCTSkip("Set HUMA_PROVER_E2E_URL to a running prover.") }
-        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let name = ProcessInfo.processInfo.environment["HUMA_PROVER_E2E_FIXTURE"] ?? "live-adaptive-short-v1"
         let fixture = root.appendingPathComponent("build/research/noir-assurance-native/\(name)/document.huma")
         let draft = try JSONDecoder().decode(Draft.self, from: Data(contentsOf: fixture))
@@ -88,7 +88,7 @@ final class FoldedLongProofTests: XCTestCase {
     /// is told plainly and the text is untouched.
     func testPagesFromHuma01AreRefusedPlainly() async throws {
         guard ProcessInfo.processInfo.environment["HUMA_LONG_E2E"] != nil else { throw XCTSkip("Set HUMA_LONG_E2E=1.") }
-        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let draft = try JSONDecoder().decode(Draft.self, from: Data(contentsOf: root.appendingPathComponent("build/research/noir-long/acceptance/long600-v3/document.huma")))
         let engine = ProcessInfo.processInfo.environment["HUMA_ENGINE_DIR"].map { URL(fileURLWithPath: $0) } ?? root.appendingPathComponent("build/prover-engine")
         let proof = try XCTUnwrap(draft.replayProof)
@@ -102,7 +102,7 @@ final class FoldedLongProofTests: XCTestCase {
     }
     func testOneProofPerPage() async throws {
         guard ProcessInfo.processInfo.environment["HUMA_LONG_E2E"] != nil else { throw XCTSkip("Set HUMA_LONG_E2E=1.") }
-        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         // HUMA_LONG_E2E_DOCUMENT proves another recorded page, e.g. a 3,000-character one for the 4,096 tier.
         let document = ProcessInfo.processInfo.environment["HUMA_LONG_E2E_DOCUMENT"].map { URL(fileURLWithPath: $0) }
             ?? root.appendingPathComponent("build/research/noir-long/acceptance/long600-v3/document.huma")
@@ -125,7 +125,7 @@ final class FoldedLongProofTests: XCTestCase {
     /// Recordings without a long-session capture still get the single short proof, at each size it comes in.
     func testShortPagesProve() async throws {
         guard ProcessInfo.processInfo.environment["HUMA_LONG_E2E"] != nil else { throw XCTSkip("Set HUMA_LONG_E2E=1.") }
-        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let engine = ProcessInfo.processInfo.environment["HUMA_ENGINE_DIR"].map { URL(fileURLWithPath: $0) } ?? root.appendingPathComponent("build/prover-engine")
         let service = NoirWritingProofService(engineURL: engine)
         for name in ["adaptive-short-v1-adaptive-v1", "adaptive-medium-v1-adaptive-v1", "cp32-slow-v1", "v5-v1"] {

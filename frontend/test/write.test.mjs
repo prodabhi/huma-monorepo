@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
@@ -12,7 +11,7 @@ import { KEYS3 } from '../../backend/integrations/noir/long/reader.mjs';
 import { der, loadRecorder, Recording } from '../write/recorder.mjs';
 import { keyCode, modifiers } from '../write/keys.mjs';
 
-const W = fileURLToPath(new URL('../', import.meta.url)), hash = b => createHash('sha256').update(b).digest('hex');
+const W = new URL('../', import.meta.url).pathname, hash = b => createHash('sha256').update(b).digest('hex');
 
 test('the browser prover pins the same programs and keys as the Mac engine and the reader', async () => {
   const worker = await readFile(W + '../backend/integrations/noir/worker.mjs', 'utf8');
@@ -61,7 +60,7 @@ test('/write is cross-origin isolated and serves only its own files', { timeout:
 });
 
 test('a recording made through the page code gives the proof inputs the Mac prover accepts', { timeout: 60000,
-  skip: !existsSync(W + 'dist/write/recorder.wasm') && 'Build web/dist/write first (node write/build.mjs).' }, async () => {
+  skip: !existsSync(W + 'dist/write/recorder.wasm') && 'Build frontend/dist/write first (node write/build.mjs).' }, async () => {
   const call = await loadRecorder(await readFile(W + 'dist/write/recorder.wasm'));
   const pair = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign', 'verify']);
   const recording = await Recording.start(call, pair);

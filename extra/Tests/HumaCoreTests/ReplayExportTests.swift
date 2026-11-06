@@ -37,7 +37,7 @@ final class ReplayExportTests: XCTestCase {
         XCTAssertNil(try log.replayExport(text: text + "x"), "Another text isn't this session's replay.")
         var open = log; open.signedCheckpoints!.removeLast()
         XCTAssertNil(try open.replayExport(text: text), "Only a sealed session has a replay.")
-        // web/test/replay.test.mjs checks this file in the browser's verifier.
+        // frontend/test/replay.test.mjs checks this file in the browser's verifier.
         if let out = ProcessInfo.processInfo.environment["HUMA_REPLAY_FIXTURE"] {
             try data.write(to: URL(fileURLWithPath: out))
             try Data(text.utf8).write(to: URL(fileURLWithPath: out + ".txt"))
