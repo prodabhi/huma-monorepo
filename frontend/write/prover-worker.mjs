@@ -3,7 +3,7 @@
 // Programs and keys are pinned; the proving points come from this site. Nothing about the writing leaves the browser.
 import { Barretenberg, BackendType } from '@aztec/bb.js';
 import { ungzip } from 'pako';
-import { PROGRAMS, POINTS } from './pins.mjs';
+import { PROGRAMS, POINTS, EVM_KEYS } from './pins.mjs';
 
 const hex = bytes => Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
 const sha256 = async bytes => hex(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)));
@@ -75,6 +75,28 @@ async function prove({ name, input, threads }) {
   if (!(await bb.circuitVerify({ verificationKey: key, publicInputs, proof, settings: SETTINGS })).verified) throw new Error('A part proof didn’t check.');
   return { ...result, witnessMs, totalMs: performance.now() - started };
 }
+// For on-chain verification (backend/onchain): the same program and witness, proved for the EVM (a keccak transcript)
+// with its pinned EVM key, which the Solidity verifiers check. Only asked for after Finish (prove.mjs, proveForChain).
+const EVM_SETTINGS = { ...SETTINGS, oracleHashType: 'keccak' };
+const evmKeys = new Map();
+function evmKey(name) {
+  if (!Object.hasOwn(EVM_KEYS, name)) throw new Error('Unknown program.');
+  if (!evmKeys.has(name)) evmKeys.set(name, (async () => {
+    const key = await fetched('long3-' + name + '-evm.vk');
+    if (await sha256(key) !== EVM_KEYS[name]) throw new Error('An on-chain checking key doesn’t match its pin.');
+    return key;
+  })().catch(error => { evmKeys.delete(name); throw error; }));
+  return evmKeys.get(name);
+}
+async function proveEvm({ name, input, threads }) {
+  const started = performance.now();
+  const [{ json, circuit }, key] = await Promise.all([program(name), evmKey(name)]);
+  const solved = await witness(json, input);
+  const bb = await backend(threads, PROGRAMS[name].log);
+  const { proof, publicInputs } = await bb.circuitProve({ witness: solved, circuit: { name, bytecode: circuit, verificationKey: key }, settings: EVM_SETTINGS });
+  if (!(await bb.circuitVerify({ verificationKey: key, publicInputs, proof, settings: EVM_SETTINGS })).verified) throw new Error('An on-chain proof didn’t check.');
+  return { proof: flat(proof), publicInputs: flat(publicInputs), totalMs: performance.now() - started };
+}
 async function verify({ proof, publicInputs, key, threads }) {
   const bb = await backend(threads, 0);
   return (await bb.circuitVerify({ verificationKey: key, publicInputs: fields(publicInputs), proof: fields(proof), settings: SETTINGS })).verified;
@@ -87,6 +109,9 @@ async function handle(data) {
   try {
     if (data.type === 'prove') {
       const result = await prove(data);
+      self.postMessage({ id: data.id, ok: true, ...result }, [result.proof.buffer, result.publicInputs.buffer]);
+    } else if (data.type === 'prove-evm') {
+      const result = await proveEvm(data);
       self.postMessage({ id: data.id, ok: true, ...result }, [result.proof.buffer, result.publicInputs.buffer]);
     } else if (data.type === 'verify') self.postMessage({ id: data.id, ok: true, verified: await verify(data) });
     else if (data.type === 'warm') {
