@@ -24,8 +24,10 @@ import { analyse, robotic } from './typing.mjs';
 import { watchAutomation, automation } from './automation.mjs';
 import { odd, retypeCheck } from './retype.mjs';
 import { confirmHuman } from './turnstile.mjs';
-import { worldIDOn, worldIDRequired, verifiedAuthor, signInWithWorldID } from './worldid.mjs';
+import { worldIDOn, worldIDRequired, verifiedAuthor, signInWithWorldID, scanAtStart, confirmStart, finishWithWorldID, prepareWorldID } from './worldid.mjs';
 import { sessionNonce } from './session.mjs';
+import { createCollector } from './collector.mjs';
+import { canaryInstruction } from './canary.mjs';
 import { provedPage, provedReport, stoppedReport, pdfTools, replayOf } from './report.mjs';
 import { account, signOut, accountDocuments, accountDocument, saveToAccount, deleteFromAccount, publish, shorten, setReplay, setTitle, setListed, removeShared, pageShown, shortTarget,
   profile, loadProfile, saveProfile, handleTaken, newFace, faceURL, addPasskey, loadPasskeys, sitePasskeys, passkeysWork, passkeyAssertion, linkedWorldID } from './account.mjs';
@@ -76,14 +78,18 @@ function say(text) {
   if (message.showPopover) try { message.hidePopover(); if (text) message.showPopover(); } catch {}
   if (text) messageTimer = setTimeout(() => say(''), 5000);
 }
+/** A control that doesn't take the focus from the page's text when pressed. */
+const keepFocus = el => el.addEventListener('mousedown', e => e.preventDefault());
 function show(state, label) { document.body.dataset.state = state; if (label !== undefined) $('state').textContent = label; }
-/** A failure the recording can't continue past: stop and keep the page. */
-function stop(reason) {
+/** A failure the recording can't continue past: stop and keep the page (`title`: the card's heading). */
+function stop(reason, title = 'Recording stopped') {
   track('recording_stopped', { reason });
   stopReason = reason; recording = null; ready = false; pausedByWriter = false; view?.setProps({});
+  collector?.stop().catch(() => {}); collector = null;
   if ($('pausedCard').open) $('pausedCard').close();
   $('proving').close(); $('finish').disabled = true; $('pause').disabled = true; $('pausedBar').hidden = true; show('stopped', 'Stopped');
   closeAll(); for (const dialog of document.querySelectorAll('dialog[open]')) dialog.close();
+  $('haltTitle').textContent = title; $('haltBarText').textContent = title + '.';
   $('haltText').textContent = reason;
   $('halt').oncancel = e => e.preventDefault();
   $('halt').showModal(); document.activeElement?.blur();
@@ -123,13 +129,13 @@ function resumeRecording() {
   $('pauseIcon').setAttribute('href', '#i-pause'); $('pauseLabel').textContent = 'Pause'; $('pause').title = 'Pause recording';
   show('writing', 'Recording'); view.focus();
 }
-$('pause').addEventListener('mousedown', e => e.preventDefault());
+keepFocus($('pause'));
 $('pause').onclick = () => (pausedByWriter ? resumeRecording() : pauseRecording());
 $('resume').onclick = $('pausedBarResume').onclick = resumeRecording;
-$('pausedFinish').onclick = () => { resumeRecording(); finish(); };
+$('pausedFinish').onclick = () => finishNow();
 $('pausedCard').onclose = () => { if (pausedByWriter) { document.body.classList.add('barred'); $('pausedBar').hidden = false; } };
 // The status opens the recording's own menu: pause or resume, finish, or start again.
-$('status').addEventListener('mousedown', e => e.preventDefault());
+keepFocus($('status'));
 $('status').onclick = () => {
   // While a page proves behind it, the status brings the progress back.
   if (sealing && !$('proving').open) { $('proving').showModal(); return; }
@@ -138,7 +144,7 @@ $('status').onclick = () => {
     idle() ? { label: 'Start recording', icon: 'radio_button_checked', run: begin }
       : pausedByWriter ? { label: 'Resume recording', icon: 'play_arrow', disabled: !recording, run: resumeRecording }
       : { label: 'Pause recording', icon: 'pause', disabled: !recording || paused || finished, run: () => pauseRecording() },
-    { label: 'Finish', icon: 'task_alt', disabled: !recording || finished, run: () => { resumeRecording(); finish(); } },
+    { label: 'Finish', icon: 'task_alt', disabled: !recording || finished, run: () => finishNow() },
     'separator',
     { label: 'Download report', icon: 'article', disabled: !proved && !stopReason, run: saveReport },
     ...(replayOn === null ? [] : [{ label: replayOn ? 'Stop showing how you wrote it' : 'Let readers watch you write', icon: 'play_arrow', run: () => toggleReplay(!replayOn) }]),
@@ -185,7 +191,7 @@ const rules = new Plugin({
       if (imeAdded + added > imeKeys * KEY_PRESS_LIMIT) { say('One key press can add at most a short word.'); return false; }
       imeAdded += added;
     } else if (label === 'format-insert') return inserted === '\n' && removed === 0;
-    else if (label === 'other' && inserted !== '') { say('Only typed or pasted text can be added.'); return false; }
+    else if (label === 'other' && inserted !== '') { refuseUntyped(); return false; }
     return true;
   },
 });
@@ -229,8 +235,7 @@ const historyCommand = command => (state, dispatch, v) => {
   historyAction = true;
   try { return command(state, dispatch, v); } finally { historyAction = false; }
 };
-const listItem = state => (edit.inside(state, nodes.check_list) ? nodes.check_item : nodes.list_item);
-const inList = state => edit.inside(state, nodes.bullet_list) || edit.inside(state, nodes.ordered_list) || edit.inside(state, nodes.check_list);
+const { listItemOf: listItem, inList } = edit;
 const fontSize = state => edit.markValue(state, marks.size)?.pt ?? STYLES[edit.currentStyle(state)]?.size ?? 11;
 const resize = by => (state, dispatch) => {
   const next = Math.max(1, Math.min(400, Math.round(fontSize(state)) + by));
@@ -261,7 +266,8 @@ const A = {
   selectAll: { label: 'Select all', icon: 'select_all', keys: '⌘A', run: () => view.dispatch(view.state.tr.setSelection(TextSelection.create(view.state.doc, 0, view.state.doc.content.size)).scrollIntoView()) },
   delete: { label: 'Delete', icon: 'delete', edit: true, command: (state, dispatch) => { if (state.selection.empty) return false; dispatch?.(state.tr.deleteSelection().scrollIntoView()); return true; } },
   find: { label: 'Find', icon: 'search', keys: '⌘F', run: () => openFind() },
-  editing: { label: 'Editing', icon: 'edit', run: () => setMode(false), checked: () => !viewing },
+  // A finished or stopped page can't change, so it stays in view only.
+  editing: { label: 'Editing', icon: 'edit', run: () => setMode(false), checked: () => !viewing, enabled: () => !finished && !stopReason },
   viewing: { label: 'Viewing', icon: 'visibility', run: () => setMode(true), checked: () => viewing },
   printLayout: { label: 'Show print layout', run: () => { printLayout = prefs.printLayout = !printLayout; savePrefs(); applyView(); applyZoom(); view.focus(); }, checked: () => printLayout },
   ruler: { label: 'Show ruler', run: () => toggleView('ruler'), checked: () => prefs.ruler },
@@ -356,7 +362,7 @@ function openMenubar(button) {
   menu(button, MENUS[button.dataset.menu](), { onClose: () => { if (menubarOpen === button) menubarOpen = null; } });
 }
 for (const button of document.querySelectorAll('#menubar button')) {
-  button.addEventListener('mousedown', e => e.preventDefault());
+  keepFocus(button);
   button.addEventListener('click', () => { if (menubarOpen === button) closeAll(); else openMenubar(button); });
   button.addEventListener('mouseenter', () => { if (menubarOpen && menubarOpen !== button) openMenubar(button); });
 }
@@ -415,7 +421,7 @@ const POPS = {
   mode: (button, level) => menu(button, [item('editing'), item('viewing')], { alignRight: true, level }),
 };
 for (const button of document.querySelectorAll('#toolbar [data-pop]')) {
-  button.addEventListener('mousedown', e => e.preventDefault());
+  keepFocus(button);
   button.addEventListener('click', () => {
     if (!view) return;
     const level = button.closest('.toolbar-more') ? 1 : 0;
@@ -436,7 +442,7 @@ function fitToolbar() {
   const last = flowing.filter(el => !el.hidden).at(-1);
   if (last?.classList.contains('sep')) { last.hidden = true; overflowed.unshift(last); }
 }
-more.addEventListener('mousedown', e => e.preventDefault());
+keepFocus(more);
 more.addEventListener('click', () => {
   if (moreOpen) { closeAll(); return; }
   const panel = document.createElement('div'), moved = [...overflowed];
@@ -454,7 +460,7 @@ new ResizeObserver(() => fitToolbar()).observe(toolbar);
 const headActions = document.querySelector('.head-actions');
 new ResizeObserver(() => document.body.style.setProperty('--actions-width', headActions.offsetWidth + 'px')).observe(headActions);
 for (const button of document.querySelectorAll('#toolbar [data-cmd]')) {
-  button.addEventListener('mousedown', e => e.preventDefault());
+  keepFocus(button);
   button.addEventListener('click', () => { if (view) act(button.dataset.cmd); });
 }
 document.querySelector('[data-cmd="paint"]').addEventListener('dblclick', () => togglePaint(true));
@@ -595,7 +601,7 @@ function openMenuSearch() {
       row.innerHTML = (A[id].icon ? icon(A[id].icon) : '<span class="i"></span>') + '<span class="menu-label"></span>' + (A[id].keys ? `<span class="menu-keys"></span>` : '');
       row.querySelector('.menu-label').textContent = A[id].label;
       if (A[id].keys) row.querySelector('.menu-keys').textContent = keys(A[id].keys);
-      row.addEventListener('mousedown', e => e.preventDefault());
+      keepFocus(row);
       row.addEventListener('click', () => act(id));
       list.append(row);
     });
@@ -782,7 +788,7 @@ function applyTheme() {
   }
 }
 for (const button of document.querySelectorAll('.theme-toggle')) {
-  button.addEventListener('mousedown', e => e.preventDefault());
+  keepFocus(button);
   button.onclick = () => setTheme(isDark() ? 'light' : 'dark');
 }
 systemDark.addEventListener('change', applyTheme);
@@ -799,7 +805,7 @@ function applyView() {
 }
 function setMode(read) {
   viewing = read;
-  $('modeLabel').textContent = read ? 'Viewing' : 'Editing';
+  $('modeLabel').textContent = read ? (finished || stopReason ? 'View Only' : 'Viewing') : 'Editing';
   $('modeIcon').setAttribute('href', read ? '#i-visibility' : '#i-edit');
   view.setProps({}); updateToolbar(view.state); view.focus();
 }
@@ -847,7 +853,7 @@ function updateRuler() {
 }
 for (const [id, which] of [['markLeft', 'left'], ['markFirst', 'first'], ['markRight', 'right']]) {
   const marker = $(id);
-  marker.addEventListener('mousedown', e => e.preventDefault());
+  keepFocus(marker);
   marker.addEventListener('pointerdown', e => {
     if (marker.disabled) return;
     e.preventDefault(); marker.setPointerCapture(e.pointerId);
@@ -995,40 +1001,25 @@ async function syncPage(record) {
 // const signInWindow = () => window.open('', 'huma-signin', 'popup,width=480,height=720');
 /** Signing in, with World ID (worldid.mjs): its QR shows over this page, so a recording here waits behind it. */
 let signingIn = null;
-/** Just signed in (`me`, the account): the page shows it, and everything already in this browser joins the account. */
-async function afterSignIn(me) {
-  updateAccount(); say('Signed in with World ID.');
-  ensureProfile({ ask: false });
-  // Everything already in this browser joins the account, unless the account already has it as new.
-  const kept = new Map((await accountDocuments().catch(() => [])).map(d => [d.id, d.updated]));
-  const pending = (await keptPages().catch(() => [])).filter(record => !(kept.get(record.id) >= record.updated));
-  await Promise.all(Array.from({ length: 3 }, async () => { while (pending.length) await syncPage(pending.shift()); }));
-  return me;
-}
 function startSignIn() {
   signingIn ??= signInWithWorldID()
-    .then(me => { if (!me?.wallet) { if (me?.reason) say(me.reason); return null; } return afterSignIn(me); })
+    .then(me => {
+      if (!me?.wallet) { if (me?.reason) say(me.reason); return null; }
+      return signedIn(me);
+    })
     .catch(e => { say(e.message); return null; })
     .finally(() => { signingIn = null; });
   return signingIn;
 }
-/** Before a new document, signed out where World ID is on: its sign-in first (a QR for World App, worldid.mjs). Go Back
- *  (or Escape) stays on /write, without a new document; Continue, or signing in, opens it (`open`). Signed in already,
- *  or World ID off, it opens straight away. Finishing still asks for World ID where it's required (humanBeforeFinish). */
-async function signInBeforeNew(open) {
-  if (account() || signingIn || !(await worldIDOn())) { open(); return; }
-  let choice = null;
-  signingIn = signInWithWorldID({ gate: true })
-    .then(me => {
-      if (me?.wallet) return afterSignIn(me);
-      choice = me?.choice ?? null;
-      if (me?.reason && !choice) say(me.reason);
-      return null;
-    })
-    .catch(e => { say(e.message); return null; })
-    .finally(() => { signingIn = null; });
-  if ((await signingIn) || choice === 'continue') open();
-  else if (choice === 'back' && !document.body.classList.contains('home-mode')) openPages();
+/** Signed in, with World ID (at Sign In, or at Start Recording): the account shows here, and everything already in
+ *  this browser joins it, unless the account already has it as new. */
+async function signedIn(me) {
+  updateAccount(); say('Signed in with World ID.');
+  ensureProfile({ ask: false });
+  const kept = new Map((await accountDocuments().catch(() => [])).map(d => [d.id, d.updated]));
+  const pending = (await keptPages().catch(() => [])).filter(record => !(kept.get(record.id) >= record.updated));
+  await Promise.all(Array.from({ length: 3 }, async () => { while (pending.length) await syncPage(pending.shift()); }));
+  return me;
 }
 $('signinCancel').onclick = () => { $('signinWait').hidden = true; };
 function updateAccount() {
@@ -1162,7 +1153,8 @@ for (const id of ['accountButton', 'homeAccount']) $(id).onclick = () => {
   if (!me) { startSignIn(); return; }
   const handle = profile()?.handle;
   menu(button, [{ heading: profile()?.name ?? me.name ?? 'Signed in' }, ...(handle ? [{ label: 'Your Page', run: () => window.open('/@' + handle, '_blank', 'noopener') }] : []),
-    { label: 'Your Profile', run: openProfile }, ...(passkeysWork() ? [{ label: 'Add Passkey', run: () => newPasskey() }] : []), { label: 'Sign out', run: () => { signOut(); updateAccount(); say('Signed out. Documents stay in this browser and in your account.'); } }], { alignRight: true });
+    { label: 'Your Profile', run: openProfile }, ...(passkeysWork() ? [{ label: 'Add Passkey', run: () => newPasskey() }] : []),
+    { label: 'Sign out', run: () => { signOut(); updateAccount(); say('Signed out. Documents stay in this browser and in your account.'); } }], { alignRight: true });
 };
 const fileName = () => pageName().replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 80) || 'Untitled document';
 function downloadBlob(blob, name) {
@@ -1215,6 +1207,7 @@ function dispatch(tr) {
   if (view.state.doc !== before.doc) {
     const text = plainText(view.state.doc);
     if (text !== lastText && recording) {
+      if (evalLog) evalLog.push(editFrame(lastText, text, label, now()));
       lastText = text; const t = latest = now();
       guarded(async () => { await recording.edit(text, label, t); await recording.checkpoint(t); });
     }
@@ -1270,7 +1263,7 @@ function createView(doc) {
         }
         // Text that arrives without a key press (dictation, autofill, another program) never reaches the page.
         if (pending === 'other' && !v.composing && /^insert(Text|ReplacementText|FromYank)$/.test(e.inputType) && (e.data ?? '') !== '') {
-          e.preventDefault(); say('Only typed or pasted text can be added.'); return true;
+          e.preventDefault(); refuseUntyped(); return true;
         }
         return false;
       },
@@ -1305,18 +1298,26 @@ function watchTyping(e, kind) {
   const result = analyse(typingLog.slice(-800));
   if (result.blatant.length) { automated(result.blatant[0]); return; }
   if (!retypePassed && !retyping && odd(result)) { retype(); return; }
-  // With enough typing: a rhythm that ignores words and hands, as random delays do.
-  if (typingChecked >= 250 && typingChecked % 25 === 0 && robotic(analyse(typingLog.slice(-4000)).signals)) automated('its rhythm ignored words and hands');
+  // With enough typing: a rhythm that ignores words and hands, or is spread flat with no rollover, as random delays are.
+  if (typingChecked >= 250 && typingChecked % 25 === 0 && robotic(analyse(typingLog.slice(-4000)).signals)) automated('its rhythm had none of a hand’s shape');
 }
+const AUTOMATED = 'Automated typing detected';
 function automated(reason) {
   if (!recording || finished) return;
-  stop(`Typing looked automated: ${reason}.`);
+  stop(`Huma detected typing a person didn’t do: ${reason}. This document can’t be proved. Start a new one to keep writing.`, AUTOMATED);
+}
+// Text that arrives with no key press is refused. Once can be dictation or the emoji picker; three times in one
+// recording is software putting text in, so the recording stops.
+let untyped = 0;
+function refuseUntyped() {
+  say('Only typed or pasted text can be added.');
+  if (++untyped >= 3) automated('text kept appearing without any key presses');
 }
 // Software driving this browser: watched from the moment the page opens, so it can't even start. Developer tools
 // (which can drive a page too) only pause the recording while they're open.
 let controlled = null, devtools = false, pausedForTools = false;
 watchAutomation((kind, reason) => {
-  if (kind === 'controlled') { controlled = reason; if (recording && !finished) stop('This browser is run by software, so it can’t record.'); return; }
+  if (kind === 'controlled') { controlled = reason; if (recording && !finished) stop('This browser is run by software, so it can’t record. Start a new document in a browser you use yourself.', AUTOMATED); return; }
   devtools = kind === 'devtools';
   if (devtools && recording && !paused && !finished) { pausedForTools = true; pauseRecording(true); say('Close developer tools to keep recording.'); }
   else if (!devtools && pausedForTools) { pausedForTools = false; resumeRecording(); }
@@ -1500,6 +1501,8 @@ function endProgress() {
  *  World ID now, once for this browser; an account without a World ID yet links one (worldid.mjs). Resolves whether
  *  Finish may go on: always where World ID is only a badge. */
 async function humanBeforeFinish() {
+  // The Start scan, if the host is still confirming it.
+  if (startConfirmed && !(await startConfirmed)) return false;
   if (!(await worldIDOn())) return true;
   const required = await worldIDRequired();
   if (!account() && !(await startSignIn())) return !required;
@@ -1509,6 +1512,8 @@ async function humanBeforeFinish() {
   return ok || !required;
 }
 let finishStarted = 0;
+/** Finish, from a button or menu: a paused recording resumes first. */
+function finishNow() { resumeRecording(); finish(); }
 async function finish() {
   if (!recording || paused || finished || sealing) return;
   if (!plainText(view.state.doc).trim()) { say('Write something first.'); return; }
@@ -1528,7 +1533,13 @@ async function finish() {
     if (!(await humanBeforeFinish())) return;
     if (!(await presence('seal'))) { say('Press Finish within 10 seconds.'); return; }
     finished = true; $('pause').disabled = true; view.setProps({}); updateToolbar(view.state);
-    await recording.finish(now());
+    try { await recording.finish(now()); } catch (e) { throw Object.assign(new Error(`The recording couldn’t be sealed (${e?.message ?? 'unknown error'})`), { cause: e }); }
+    // The last of the editor's events go to the server now, well before the page is shared; a stream that never got
+    // through is said, since the page can't then be checked as a person's.
+    if (collector) {
+      const streamed = collector; collector = null;
+      streamed.stop().then(sent => { if (!sent && !streamed.state.connected) say('The live typing check couldn’t reach huma.social. This page may show as unverified.'); }).catch(() => {});
+    }
     show('proving', 'Proving'); finishStarted = performance.now();
     planProgress('Getting ready', prover.remainingMs());
     $('provingName').value = title.value;
@@ -1545,14 +1556,19 @@ async function finish() {
     done(result);
   } catch (e) {
     if ($('proving').open) $('proving').close();
+    // Named with the step that failed (prove.mjs), and in the console with its cause, for a report.
+    console.error('Finish stopped:', e);
     if (finished) stop(`Proving stopped: ${e?.message ?? 'unknown error'}. Your text is saved.`); else say(e?.message ?? 'Couldn’t finish.');
   } finally { sealing = false; $('finish').disabled = finished; }
 }
-// After Finish: the result over the page, or the page itself with the result in a bar across the top.
-/** The page under the result: to read, with Share and the downloads in the bar across the top. */
-function viewProved() { if ($('done').open) $('done').close(); setMode(true); document.body.classList.add('barred'); $('doneBar').hidden = false; }
-// A click outside the result, or Escape, shows the page.
-onClickOutside($('done'), viewProved);
+// After Finish: the result over the page. A finished page can't change, so closing the result (a click outside it, or
+// Escape) goes to Your Documents, where the page opens again in view only, with its link and downloads in the bar.
+/** Leaves for Your Documents; a link still being made is waited for first, as leaving would stop it. */
+async function leaveProved() {
+  if (publishing) { say('Finishing your link…'); await publishing.catch(() => null); }
+  openPages();
+}
+onClickOutside($('done'), () => $('done').close());
 /** Download: the report (how it was written, with its proof) or the document itself, in the format chosen. */
 function openFormats() {
   $('formatReport').hidden = !proved && !stopReason;
@@ -1564,7 +1580,7 @@ for (const button of $('formats').querySelectorAll('[data-format]')) button.oncl
   if (button.dataset.format === 'report') saveReport(); else download(button.dataset.format);
 };
 $('formatsCancel').onclick = () => $('formats').close();
-$('done').onclose = () => { if ($('doneBar').hidden) viewProved(); };
+$('done').onclose = () => { if ($('doneBar').hidden) leaveProved(); };
 // The view link: anyone with it can read the page and check it was written in Huma. At Finish the server checks the
 // proof and keeps the page under the writer's account; Share copies the link, or makes it if that didn't happen yet.
 let publishing = null, saving = false, copiedTimer;
@@ -1604,10 +1620,11 @@ async function showShareChoices() {
   $('listedRow').hidden = !proved || (id && listedOn === null);
   $('listedToggle').checked = id ? listedOn === true : wantsListed();
   showListedHint();
-  // The account's World ID (linked before Finish) goes with every page it shares: said here, not asked for.
-  const human = proved && account() && (await worldIDOn()) ? await linkedWorldID().catch(() => null) : null;
+  // Once the page is shared, it carries the writer's World ID from its Start and Finish scans: said here, after, never
+  // before the Finish scan has been made and confirmed.
+  const human = proved && pageRecord?.shared && account() && (await worldIDOn()) ? await linkedWorldID().catch(() => null) : null;
   $('worldidRow').hidden = !human;
-  if (human) $('worldidLabel').textContent = `✓ Verified human · World ID ${human.fingerprint}`;
+  if (human) $('worldidLabel').textContent = `✓ Started and finished with World ID ${human.fingerprint}`;
 }
 /** Shown on Your Page, signed in without a handle yet: the way to pick one, so the page has an address. */
 function showListedHint() { $('listedHandle').hidden = !account() || Boolean(profile()?.handle) || !$('listedToggle').checked || $('listedRow').hidden; }
@@ -1647,8 +1664,9 @@ function publishPage(ask) {
     }
     linkStatus(''); saving = true; updateShare();
     const saveStarted = performance.now();
-    // The account's World ID, linked before Finish, goes with the page: the server adds it (publications.mjs).
-    const replay = wantsReplay(), listed = wantsListed(), named = cleanTitle(pageName()), { path, id } = await publish(proved, { replay, listed, title: named });
+    // Finished by the same human who started it: World ID again, for this page's text and proof (worldid.mjs).
+    const replay = wantsReplay(), listed = wantsListed(), named = cleanTitle(pageName()),
+      { path, id } = await publish(proved, { replay, listed, title: named, humanProof: finishWithWorldID });
     await persist({ shared: path, publication: id });
     track('page_shared', { ms: Math.round(performance.now() - saveStarted) });
     await syncPage(pageRecord);
@@ -1782,21 +1800,46 @@ async function done(result, { reopened = false } = {}) {
 }
 // A new page was already confirmed: the browser doesn't ask again on the way out.
 let leaving = false;
-function newPage() {
-  if ($('confirmNew').open) $('confirmNew').close();
-  signInBeforeNew(() => { leaving = true; persist().finally(() => { location.href = '/write?page=' + newId(); }); });
-}
+function newPage() { leaving = true; persist().finally(() => { location.href = '/write?page=' + newId(); }); }
 function confirmNew() {
   if (finished || !recording || plainText(view.state.doc) === initialText) { newPage(); return; }
   $('confirmNew').showModal();
 }
 $('confirmNewGo').onclick = newPage;
 $('confirmNewCancel').onclick = () => { $('confirmNew').close(); view.focus(); };
-$('finish').onclick = () => { resumeRecording(); finish(); };
+$('finish').onclick = () => finishNow();
 window.addEventListener('beforeunload', e => { if (!leaving && recording && !finished && plainText(view.state.doc) !== initialText) e.preventDefault(); });
 
 // The recorder and the writing key, loaded with the page; recording waits for the writer.
 let recorderCall = null, writerPair = null, beginning = false;
+// The editor's raw events, streamed to huma.social for its typing analysis while the recording runs (collector.mjs).
+let collector = null;
+// The evaluation harness (frontend/detection/eval/harness.mjs), on this computer's own server only: it reads the recording's
+// session, text and edits (as the recorder's replay has them, diffed the same way) through window.__humaEval, so a
+// session can be judged without Finish. Never on huma.social.
+const evalLog = ['localhost', '127.0.0.1'].includes(location.hostname) ? [] : null;
+let evalNonce = null;
+/** One replay frame for a text change, as the recorder diffs it (web.rs edit: UTF-16 offsets, surrogate pairs kept whole). */
+function editFrame(before, after, kind, time) {
+  let prefix = 0; while (prefix < Math.min(before.length, after.length) && before.charCodeAt(prefix) === after.charCodeAt(prefix)) prefix++;
+  if (prefix > 0 && prefix < before.length && (before.charCodeAt(prefix) & 0xfc00) === 0xdc00) prefix--;
+  let suffix = 0; while (suffix < Math.min(before.length, after.length) - prefix && before.charCodeAt(before.length - 1 - suffix) === after.charCodeAt(after.length - 1 - suffix)) suffix++;
+  if (suffix > 0 && (before.charCodeAt(before.length - suffix) & 0xfc00) === 0xdc00) suffix--;
+  return { time, kind, location: prefix, length: before.length - prefix - suffix, inserted: after.slice(prefix, after.length - suffix) };
+}
+if (evalLog) window.__humaEval = { session: () => ({ nonce: evalNonce, text: view ? plainText(view.state.doc) : '', frames: evalLog.slice(), state: document.body.dataset.state,
+  halted: $('halt').open ? $('haltText').textContent : null, retyping: $('retype').open ? $('retypePhrase').textContent : null, stream: collector?.state ?? null }) };
+// The host's confirmation of this recording's Start World ID: resolves true once it's kept, false if refused (null:
+// none was asked). Writing doesn't wait for it; Finish does.
+let startConfirmed = null;
+/** The prover, made and warmed once per page, from Start Recording: its start-up (programs, bb.js and the proving
+ *  points, about 8 s) runs while World ID is scanned, not while the writer types. */
+function warmProver() {
+  if (prover) return;
+  prover = new PageProver(new URL('prover.js', assets), assets);
+  prover.onchange = updateCounts;
+  prover.warm();
+}
 let unsupported = false;
 // Writing on the web is for computers only, until phones and tablets have a check as strong (an iPad says it's a Mac,
 // but has a touch screen).
@@ -1861,7 +1904,7 @@ async function start() {
     show('unsupported', ''); return;
   }
   if (!window.crossOriginIsolated || typeof WebAssembly !== 'object' || !window.indexedDB) { show('unsupported', ''); return; }
-  if (navigator.webdriver) { stop('This browser is run by software, so it can’t record.'); return; }
+  if (navigator.webdriver) { stop('This browser is run by software, so it can’t record. Start a new document in a browser you use yourself.', AUTOMATED); return; }
   try {
     [recorderCall, writerPair] = await Promise.all([fetch(new URL('recorder.wasm', assets)).then(r => r.arrayBuffer()).then(loadRecorder), writingKey()]);
   } catch { show('unsupported', ''); return; }
@@ -1939,7 +1982,14 @@ function when(time) {
 }
 // Search and order: shown once there are a few documents; the list keeps the last one loaded.
 let listed = [];
-$('homeSearch').oninput = $('homeSort').onchange = () => renderPages(listed);
+$('homeSearch').oninput = () => renderPages(listed);
+// The order, from Huma's own menu (a check by the current one), as in Docs.
+const SORTS = [['updated', 'Last edited'], ['name', 'Name'], ['score', 'Huma Score']];
+$('homeSort').onclick = () => {
+  const button = $('homeSort');
+  menu(button, SORTS.map(([value, label]) => ({ label, checked: button.value === value,
+    run: () => { button.value = value; button.textContent = label; renderPages(listed); } })), { className: 'sort-menu', alignRight: true });
+};
 function renderPages(all) {
   listed = all;
   $('homeTools').hidden = all.length < 4;
@@ -2021,7 +2071,7 @@ function deletePage(record, after = refreshPages) {
   $('deletePage').showModal(); $('deleteCancel').focus();
 }
 $('deleteCancel').onclick = () => $('deletePage').close();
-$('homeNew').onclick = () => signInBeforeNew(() => { location.href = '/write?page=' + newId(); });
+$('homeNew').onclick = () => { location.href = '/write?page=' + newId(); };
 /** Your Pages, with this page saved first. */
 function openPages() { persist().finally(() => { location.href = '/write?pages'; }); }
 $('pagesLink').onclick = e => { if (!hasPages) return; e.preventDefault(); openPages(); };
@@ -2041,9 +2091,15 @@ async function begin() {
     showStartAlt('new'); $('startGo').hidden = true; return;
   }
   beginning = true;
+  warmProver();
   // The session's number comes from huma.social with its start time, so sharing can check the writing took real time.
-  const nonce = await sessionNonce();
+  const issued = await sessionNonce(), nonce = issued?.nonce;
   if (!nonce) { beginning = false; say('Couldn’t reach huma.social to start. Check your connection and try again.'); return; }
+  // Every document is started by a verified human: World ID for this writing session (worldid.mjs). Writing begins as
+  // soon as World App answers; the host confirms the scan meanwhile (and signs in a writer who isn't yet), and one it
+  // refuses stops the recording. Cancelled or declined, nothing starts, and Start Recording can be pressed again.
+  const wasSignedIn = Boolean(account()), scan = await scanAtStart(nonce);
+  if (!scan.ok) { beginning = false; if (scan.reason) say(scan.reason); return; }
   $('startCard').close(); $('startBar').hidden = true; $('passkeyOffer').hidden = true; document.body.classList.remove('barred');
   // Writing picks up at the end of a kept page.
   view.dispatch(view.state.tr.setSelection(Selection.atEnd(view.state.doc)).scrollIntoView());
@@ -2054,9 +2110,18 @@ async function begin() {
     // Signed in with a passkey for this site: every check-in asks for it too, and the page shows the passkey check.
     const passkey = account() && passkeysWork() && sitePasskeys().length ? { rp_id: location.hostname, origin: location.origin } : null;
     recording = await Recording.start(recorderCall, writerPair, { initialText, passkey, nonce });
-    prover = new PageProver(new URL('prover.js', assets), assets);
-    prover.onchange = updateCounts;
-    prover.warm();
+    warmProver();
+    // From here on the editor's events stream to huma.social (collector.mjs), and the page hides its canary (canary.mjs).
+    if (issued.key) {
+      collector = createCollector({ editor: sheet, caret: () => (view ? { caret: view.state.selection.from, size: view.state.doc.content.size } : null), trap: () => $('title_alt').value });
+      collector.start(nonce, issued.key).catch(() => {});
+    }
+    if (issued.canary) $('canary').textContent = canaryInstruction(issued.canary);
+    evalNonce = nonce; if (evalLog) evalLog.length = 0;
+    startConfirmed = scan.proof ? confirmStart(nonce, scan.proof).then(me => { if (!wasSignedIn) signedIn(me); return true; }, e => {
+      if (recording && !finished) stop((e?.message || 'World ID couldn’t be confirmed.') + ' This document can’t be shared; start a new one.', 'World ID not confirmed');
+      return false;
+    }) : null;
     nextCheck = nextCheckIn(0); ready = true;
     view.setProps({}); updateToolbar(view.state); refreshGrammar(view);
     $('finish').disabled = false; $('pause').disabled = false; show('writing', 'Recording'); view.focus();
@@ -2077,5 +2142,7 @@ function showStartAlt(kind) {
   $('startAlt').onclick = kind === 'new' ? () => newPage() : () => openPages();
 }
 start();
+// World ID's config and code, ahead of the first scan (Start Recording).
+prepareWorldID();
 // Session replays (pages/replay.mjs), every word hidden, once the page has settled.
 (window.requestIdleCallback ?? setTimeout)(() => import('/write/replay.js').catch(() => {}), { timeout: 4000 });

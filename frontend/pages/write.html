@@ -24,7 +24,7 @@
 :root {
     --sans: Newsreader, Georgia, 'Times New Roman', serif;
     --z: 1;
-    --docs-bg: #f9fbfd; --bar: #edf2fa; --ui: #1f1f1f; --ui-2: #444746; --ui-3: #747775; --line: #c7c7c7; --hover: rgba(68, 71, 70, .08);
+    --docs-bg: #f9fbfd; --bar: #edf2fa; --ui: #1f1f1f; --ui-2: #444746; --ui-3: #747775; --line: #c7c7c7; --hover: rgba(68, 71, 70, .08); --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%23444746' d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
     --press: rgba(68, 71, 70, .12); --on: #d3e3fd; --on-ink: #041e49; --primary: #0b57d0; --primary-hover: #0842a0; --on-primary: #fff;
     --share: #c2e7ff; --share-ink: #001d35; --pop: #fff; --pop-shadow: 0 2px 6px 2px rgba(60, 64, 67, .15), 0 1px 2px rgba(60, 64, 67, .3);
     --menu-active: rgba(31, 31, 31, .08); --menu-sep: #dadce0; --faint: rgba(31, 31, 31, .38); --faint-fill: rgba(31, 31, 31, .12); --tint: rgba(11, 87, 208, .08);
@@ -37,7 +37,7 @@
 }
 /* Dark: when this computer is, unless the page is set to light, or when it's set to dark. */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-    --docs-bg: #131314; --bar: #282a2c; --ui: #e3e3e3; --ui-2: #c4c7c5; --ui-3: #8e918f; --line: #444746; --hover: rgba(227, 227, 227, .08);
+    --docs-bg: #131314; --bar: #282a2c; --ui: #e3e3e3; --ui-2: #c4c7c5; --ui-3: #8e918f; --line: #444746; --hover: rgba(227, 227, 227, .08); --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%23c4c7c5' d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
     --press: rgba(227, 227, 227, .12); --on: #004a77; --on-ink: #c2e7ff; --primary: #a8c7fa; --primary-hover: #d3e3fd; --on-primary: #062e6f;
     --share: #004a77; --share-ink: #c2e7ff; --pop: #282a2c; --pop-shadow: 0 2px 6px 2px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .5);
     --menu-active: rgba(227, 227, 227, .08); --menu-sep: #444746; --faint: rgba(227, 227, 227, .38); --faint-fill: rgba(227, 227, 227, .12); --tint: rgba(168, 199, 250, .08);
@@ -49,7 +49,7 @@
     color-scheme: dark;
 } }
 :root[data-theme="dark"] {
-    --docs-bg: #131314; --bar: #282a2c; --ui: #e3e3e3; --ui-2: #c4c7c5; --ui-3: #8e918f; --line: #444746; --hover: rgba(227, 227, 227, .08);
+    --docs-bg: #131314; --bar: #282a2c; --ui: #e3e3e3; --ui-2: #c4c7c5; --ui-3: #8e918f; --line: #444746; --hover: rgba(227, 227, 227, .08); --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath fill='%23c4c7c5' d='M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
     --press: rgba(227, 227, 227, .12); --on: #004a77; --on-ink: #c2e7ff; --primary: #a8c7fa; --primary-hover: #d3e3fd; --on-primary: #062e6f;
     --share: #004a77; --share-ink: #c2e7ff; --pop: #282a2c; --pop-shadow: 0 2px 6px 2px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .5);
     --menu-active: rgba(227, 227, 227, .08); --menu-sep: #444746; --faint: rgba(227, 227, 227, .38); --faint-fill: rgba(227, 227, 227, .12); --tint: rgba(168, 199, 250, .08);
@@ -61,6 +61,8 @@
     color-scheme: dark;
 }
 html, body { height: 100%; }
+/* Traps (frontend/detection/traps.mjs): off-screen, one pixel, never selectable, never reached by a pointer or a tab. */
+.trap { position: absolute; left: -10000px; top: 0; width: 1px; height: 1px; overflow: hidden; user-select: none; -webkit-user-select: none; pointer-events: none; opacity: 0; }
 body.app { margin: 0; display: flex; flex-direction: column; background: var(--docs-bg); color: var(--ui); overflow: hidden; font: 14px/1.4 var(--sans); }
 button { font: inherit; color: inherit; }
 /* Text fields show only this page's colours: Safari otherwise paints its own white field and AutoFill colour over them. */
@@ -342,12 +344,13 @@ dialog .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top
 .worldid-qr svg { display: block; width: 100%; height: 100%; }
 #worldid .countdown { text-align: center; }
 #worldid .actions a { display: inline-flex; align-items: center; text-decoration: none; }
-#worldid .actions a[hidden], #worldid .actions button[hidden] { display: none; }
+#worldid .actions a[hidden] { display: none; }
 dialog .countdown { margin-top: 12px; color: var(--ui-3); font-size: 13px; min-height: 18px; font-variant-numeric: tabular-nums; }
 .counts { width: 100%; margin-top: 16px; border-collapse: collapse; font-size: 14px; }
 .counts td { padding: 6px 0; color: var(--ui-2); }
 .counts td + td { text-align: right; color: var(--ui); font-variant-numeric: tabular-nums; }
 .done-name { margin-top: 18px; font-size: 16px; }
+/* Plans: Free or Plus, at the first link. */
 .check-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 14px; }
 .check-row input { width: 18px; height: 18px; accent-color: var(--primary); margin: 0; }
 /* The done dialog's choices for the link, side by side when they fit. */
@@ -494,7 +497,11 @@ body.barred .head { padding-top: 48px; }
 .home-search { flex: 1; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 20px; background: var(--bar); color: var(--ui-2); }
 .home-search:focus-within { box-shadow: 0 0 0 2px var(--primary); }
 .home-search input { flex: 1; min-width: 0; border: 0; outline: none; background: none; color: var(--ui); font: 14px var(--sans); }
-.home-tools select { height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: none; color: var(--ui); font: 14px var(--sans); }
+.home-tools .sort-button { flex: none; height: 40px; padding: 0 40px 0 16px; border: 0; border-radius: 20px; -webkit-appearance: none; appearance: none;
+    background: var(--chevron) no-repeat right 12px center / 20px 20px, var(--bar); color: var(--ui); font: 14px var(--sans); cursor: pointer; }
+.home-tools .sort-button:hover, .home-tools .sort-button[aria-expanded="true"] { background: var(--chevron) no-repeat right 12px center / 20px 20px, linear-gradient(var(--hover), var(--hover)), var(--bar); }
+.home-tools .sort-button:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--primary); }
+.menu.sort-menu { min-width: 180px; }
 body[data-state="unsupported"] .notice { display: block; }
 body[data-state="unsupported"] .work, body[data-state="unsupported"] .toolbar, body[data-state="unsupported"] #pause, body[data-state="unsupported"] #finish { display: none; }
 
@@ -616,7 +623,7 @@ body.pageless .outline-button { top: 16px; }
     </header>
     <div class="home-tools" id="homeTools" hidden>
         <label class="home-search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input id="homeSearch" type="search" placeholder="Search your documents" aria-label="Search your documents" autocomplete="off" spellcheck="false"></label>
-        <select id="homeSort" aria-label="Order"><option value="updated">Last edited</option><option value="name">Name</option><option value="score">Huma Score</option></select>
+        <button class="sort-button" type="button" id="homeSort" value="updated" aria-haspopup="menu" title="Order">Last edited</button>
     </div>
     <ul class="page-list" id="pageList"></ul>
     <p class="pages-empty" id="pagesEmpty" hidden>No documents yet.</p>
@@ -736,6 +743,11 @@ body.pageless .outline-button { top: 16px; }
                 <button class="marker right" type="button" id="markRight" title="Right indent" aria-label="Right indent"></button>
             </div></div>
             <div class="pages" id="pages"><div class="backs" id="backs"></div><div id="editor"></div></div>
+            <!-- Traps for software writing here (frontend/detection/traps.mjs): a note only a program reading the page would follow,
+                 and a field only a program filling the page would fill. Off-screen, hidden from assistive tech, inert, never
+                 selectable or copied, outside the editor. -->
+            <div class="trap" id="canary" aria-hidden="true" inert></div>
+            <div class="trap" aria-hidden="true" inert><label>Alternate title <input id="title_alt" name="title_alt" type="text" tabindex="-1" autocomplete="off" aria-hidden="true"></label></div>
         </div>
     </main>
 </div>
@@ -783,12 +795,11 @@ body.pageless .outline-button { top: 16px; }
 </dialog>
 <dialog id="worldid" aria-labelledby="worldidTitle">
     <h2 id="worldidTitle">Verify You’re Human</h2>
-    <p>Huma accounts are for real people. Scan with World App once on this browser to sign in: every page you share then shows the same anonymous World ID, so you can show they’re yours. It never says who you are.</p>
+    <p id="worldidLead"></p>
     <div class="worldid-qr" id="worldidQR" role="img" aria-label="World ID QR code"></div>
     <p class="countdown" id="worldidStatus" role="status"></p>
     <div class="actions">
         <button class="text-button" type="button" id="worldidSkip">Cancel</button>
-        <button class="text-button" type="button" id="worldidContinue" hidden>Continue</button>
         <a class="filled-button" id="worldidOpen" href="#" target="_blank" rel="noopener noreferrer" hidden>Open World App</a>
     </div>
 </dialog>
@@ -831,7 +842,7 @@ body.pageless .outline-button { top: 16px; }
 <dialog id="startCard" class="halt" aria-labelledby="startTitle" aria-describedby="startText">
     <span class="logo-mark start-mark" aria-hidden="true"></span>
     <h2 id="startTitle">Prove you wrote it</h2>
-    <p id="startText">Huma records your typing as proof.</p>
+    <p id="startText">Huma records your typing as proof. Huma analyzes typing rhythm inside the editor to verify human authorship.</p>
     <div class="actions">
         <button class="text-button outlined" type="button" id="startAlt" hidden>Your Documents</button>
         <button class="filled-button" type="button" id="startGo">Start Recording</button>
