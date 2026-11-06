@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- tags: a shared page (/p/…) has its own (registry.mjs) -->
+<title>Verify a Huma Link · Huma</title>
+<meta name="description" content="Check a Huma link or Report: see that a person typed the text, and how much was pasted. Runs in your browser; nothing is uploaded.">
+<link rel="canonical" href="https://huma.social/verify">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Huma">
+<meta property="og:title" content="Verify a proof · Huma">
+<meta property="og:description" content="Check that a person wrote it. Runs in your browser; nothing is uploaded.">
+<meta property="og:image" content="https://huma.social/img/og-home.jpg?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@huma_social">
+<!-- /tags -->
+<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/foundation-logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/brand/icon-512.png">
+<link rel="stylesheet" href="/site.css">
+<link rel="modulepreload" href="/verify.js">
+<link rel="modulepreload" href="/verify-core/browser.mjs">
+<link rel="modulepreload" href="/verify-core/contract.mjs">
+<link rel="modulepreload" href="/publication-contract.mjs">
+<style>
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Drop zone */
+.drop {
+    display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: 10px; cursor: pointer;
+    border: 1.5px dashed color-mix(in srgb, var(--text) 18%, transparent); transition: border-color .15s, background-color .15s;
+}
+.drop:hover, .drop.over { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.drop:focus-within { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+.drop .glyph { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--fill); color: var(--accent); }
+.drop .glyph svg { width: 22px; height: 22px; }
+.drop strong { display: block; font-weight: 450; font-size: 20px; line-height: 24px; color: var(--text); }
+.drop span { display: block; color: var(--secondary); font-size: 14px; margin-top: 2px; overflow-wrap: anywhere; }
+.drop.loaded { border-style: solid; border-color: var(--separator); }
+.drop.loaded .glyph { background: var(--green-fill); color: var(--green); }
+.drop .done, .drop.loaded .up { display: none; }
+.drop.loaded .done { display: inline; }
+
+.field { margin-top: 22px; }
+#text { min-height: 180px; resize: vertical; font: 16px/1.6 var(--sans); }
+.code-input { min-height: 96px; resize: vertical; font: 12px/1.5 var(--mono) !important; letter-spacing: 0; }
+input[type=text] { font: 13px var(--mono); letter-spacing: 0; }
+input[type=file] { font-size: 13px; max-width: 100%; color: var(--secondary); }
+#verify { width: 100%; margin-top: 22px; }
+
+/* Result */
+#result {
+    margin-top: 22px; padding: 16px 18px 16px 52px; border-radius: 10px; position: relative;
+    background: var(--fill); color: var(--secondary); font-size: 15px; line-height: 1.45; min-height: 52px;
+}
+#result::before {
+    content: "i"; position: absolute; left: 16px; top: 15px; width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center; font: 700 13px var(--book); background: color-mix(in srgb, var(--text) 12%, transparent); color: var(--secondary);
+}
+#result[data-state=valid] { background: var(--green-fill); color: var(--green-text); }
+#result[data-state=valid]::before { content: "✓"; font: 700 12px var(--sans); background: var(--green); color: #fff; }
+#result[data-state=invalid] { background: var(--red-fill); color: var(--red-text); }
+/* Checks out, but not all typed (some text pasted). */
+#result[data-state=partial] { background: color-mix(in srgb, var(--orange) 12%, transparent); color: var(--text); }
+#result[data-state=partial]::before { content: "–"; font: 700 13px var(--sans); background: var(--orange); color: #fff; }
+#result[data-state=invalid]::before { content: "!"; font: 700 13px var(--sans); background: var(--red); color: #fff; }
+
+/* Report */
+#report { margin-top: 22px; }
+#report h2 { font: 400 12px/15px var(--mono); color: var(--tertiary); text-transform: uppercase; margin: 28px 0 10px 2px; letter-spacing: .01em; }
+#report dl { margin: 0; background: var(--card); border: 1px solid var(--separator); border-radius: 14px; padding: 2px 18px; }
+.fact { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-top: 1px solid var(--separator); font-size: 14px; line-height: 1.45; letter-spacing: -0.01em; }
+.fact:first-child { border-top: 0; }
+dt { color: var(--secondary); }
+dd { margin: 0; overflow-wrap: anywhere; }
+
+/* The details toggle only appears once a check has produced a report. */
+.details:not(:has(#report:not([hidden]))) { display: none; }
+.details + .advanced { margin-top: 8px; }
+/* Advanced */
+.advanced { margin-top: 30px; }
+.advanced > summary, .sub > summary { cursor: pointer; list-style: none; color: var(--grey); font: 400 12px/15px var(--mono); text-transform: uppercase; letter-spacing: .01em; padding: 8px 0; transition: color .2s; }
+.advanced > summary:hover { color: var(--ink); }
+.advanced > summary::-webkit-details-marker, .sub > summary::-webkit-details-marker { display: none; }
+.advanced > summary::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 9px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: translateY(-3px) rotate(45deg); transition: transform .4s var(--out); }
+.advanced[open] > summary::after { transform: translateY(0) rotate(-135deg); }
+.advanced .card { margin-top: 12px; }
+.sub { border-top: 1px solid var(--separator); margin-top: 22px; padding-top: 14px; }
+.sub > summary { color: var(--text); }
+.sub > summary::before { content: "+ "; color: var(--secondary); font-weight: 400; }
+.sub[open] > summary::before { content: "− "; }
+.check { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 14px; }
+.inline-actions { margin-top: 12px; }
+/* Reader view for shared links: the text and one status line; the tool stays out of the way. */
+body.reader .drop, body.reader .field, body.reader #verify, body.reader .advanced:not(.details) { display: none; }
+.checks a { color: var(--accent-text); white-space: nowrap; }
+#article { overflow-wrap: break-word; font-size: 17px; line-height: 1.75; color: var(--text); padding: 2px 2px 4px; }
+#article p { margin: 0; white-space: pre-wrap; }
+#article p + p { margin-top: 1em; }
+/* "Typed by a person" above the text, once the page checks out. */
+.author { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin: -4px 0 18px; padding-bottom: 16px; border-bottom: 1px solid var(--separator); font-size: 14px; }
+.author strong { font-weight: 500; color: var(--green-text); }
+.author .writer { display: inline-flex; align-items: center; gap: 8px; margin-right: 6px; }
+.author .writer b { font-weight: 500; color: var(--text); }
+.author a.writer { color: inherit; text-decoration: none; }
+.author a.writer:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.author .human { flex-basis: 100%; font-size: 13px; }
+.author .human summary { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text); font-weight: 500; list-style: none; }
+.author .human summary::-webkit-details-marker { display: none; }
+.human-mark { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--green); color: #fff; font: 700 11px var(--sans); }
+.human-body { margin-top: 10px; max-width: 640px; }
+.human-body p { margin: 0 0 8px; }
+.human-body pre { margin: 8px 0; padding: 10px 12px; max-height: 180px; overflow: auto; white-space: pre-wrap; word-break: break-all; border-radius: 6px; background: var(--fill); font: 12px/18px ui-monospace, monospace; }
+.human-body button { font: inherit; padding: 4px 12px; border-radius: 14px; border: 1px solid var(--separator); background: none; color: var(--text); cursor: pointer; }
+.human-body button:disabled { opacity: .5; cursor: default; }
+.human-body a { color: var(--accent-text); font-family: ui-monospace, monospace; font-size: 12px; }
+.stored-mark { background: var(--fill); color: var(--text); font-size: 9px; }
+.author .face { width: 28px; height: 28px; border-radius: 50%; background: var(--fill); }
+.author-mark { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--green); color: #fff; font: 700 11px var(--sans); }
+/* How the text was made, from the writer's replay: a thin bar and one line. */
+/* Pasted (light blue) on the left, typed (ink) on the right; the page's pasted text is marked in the same blue. */
+.author .mix { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; font-size: 13px; font-variant-numeric: tabular-nums; }
+.author .mix-pasted { color: var(--paste-ink); font-weight: 500; }
+.author .mix-typed { color: var(--text); font-weight: 500; }
+.author .mix-bar { display: inline-flex; width: 96px; height: 10px; border-radius: 4px; overflow: hidden; gap: 2px; }
+.author .mix-bar i { display: block; min-width: 3px; background: var(--text); }
+.author .mix-bar i.pasted { background: var(--paste); }
+.author .mix-bar i.external { background: color-mix(in srgb, var(--text) 55%, transparent); }
+/* Checked, but not all typed: no green tick. */
+.author.is-partial strong { color: var(--text); font-weight: 450; }
+.author.is-partial .author-mark { background: var(--orange); }
+/* Pasted parts of the text, from the replay. */
+:root { --paste: #aed3f8; --paste-ink: #2f6db5; }
+#article mark.pasted { background: color-mix(in srgb, var(--paste) 60%, transparent); color: inherit; border-radius: 3px; padding: 0 1px; }
+.pasted-legend { margin: 10px 2px 0; }
+.author .mix-bar i.before, .author .mix-bar i.other { background: color-mix(in srgb, var(--text) 25%, transparent); }
+/* The replay player: controls above the text, the text redrawn as it was written. */
+.player { margin: -4px 0 16px; }
+.replay-controls { display: flex; align-items: center; gap: 10px; }
+.replay-play { flex: none; min-width: 72px; height: 32px; border: 1px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper); font: 400 12px/1 var(--mono); text-transform: uppercase; cursor: pointer; transition: background .3s, color .3s; }
+.replay-play:hover { background: transparent; color: var(--ink); }
+.replay-scrubber { position: relative; flex: 1; min-width: 80px; height: 32px; display: flex; align-items: center; }
+.replay-scrub { width: 100%; margin: 0; accent-color: var(--accent); }
+.replay-track { position: absolute; left: 8px; right: 8px; top: 3px; height: 6px; pointer-events: none; }
+.replay-track i { position: absolute; top: 0; width: 2px; height: 6px; border-radius: 1px; background: var(--paste-ink); }
+.replay-time { flex: none; font: 12px var(--mono); font-variant-numeric: tabular-nums; color: var(--secondary); }
+.replay-speeds { flex: none; display: inline-flex; border: 1px solid var(--separator); border-radius: 999px; padding: 2px; }
+.replay-speeds button { border: 0; background: none; border-radius: 999px; padding: 5px 9px; font: 400 11.5px/1 var(--mono); color: var(--secondary); cursor: pointer; }
+.replay-speeds button[aria-pressed=true] { background: var(--ink); color: var(--paper); }
+.replay-done { flex: none; border: 0; background: none; color: var(--grey); font: 400 12px/1 var(--mono); text-transform: uppercase; cursor: pointer; padding: 4px 2px; }
+.replay-done:hover { color: var(--ink); }
+.replay-legend { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 12.5px; color: var(--tertiary); }
+.replay-legend .swatch { width: 12px; height: 12px; border-radius: 3px; background: color-mix(in srgb, var(--paste) 60%, transparent); }
+.replay-text { white-space: pre-wrap; min-height: 8em; }
+.replay-text mark.pasted { background: color-mix(in srgb, var(--paste) 60%, transparent); color: inherit; border-radius: 3px; }
+.replay-text .caret { display: inline-block; width: 2px; height: 1.15em; margin: 0 -1px; vertical-align: -0.2em; background: var(--accent); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .replay-text .caret { animation: none; } }
+@media (max-width: 560px) {
+    .replay-controls { flex-wrap: wrap; gap: 8px; }
+    .replay-play { min-width: 60px; }
+    .replay-scrubber { order: 5; flex-basis: 100%; }
+    .replay-done { margin-left: auto; }
+}
+body.reader #result { display: none; }
+/* A shared link is served already in reader view (registry.mjs), so the tool never flashes up first. Until the
+   text, checks and buttons arrive, grey shapes hold their places, so nothing jumps when they do. */
+body:not(.reader) .reader-only { display: none; }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.skeleton i, .actions .pill { display: block; border-radius: 6px; background: linear-gradient(90deg, var(--fill) 30%, rgba(34, 34, 34, .09) 50%, var(--fill) 70%) 0 0 / 200% 100%; animation: shimmer 1.4s ease-in-out infinite; }
+.skeleton i { height: 13px; margin: 0 0 16px; }
+.skeleton i:last-child { margin-bottom: 4px; }
+.skeleton .head { width: 42%; height: 20px; margin-bottom: 26px; }
+.skeleton .short { width: 64%; }
+.actions .pill { width: 104px; height: 32px; border-radius: 999px; }
+@media (prefers-reduced-motion: reduce) { .skeleton i, .actions .pill { animation: none; } }
+/* The text card waits for the text, so it never shows empty once there's nothing left to wait for. */
+body.reader .page-body > .card:has(#article[hidden]):not(:has(.skeleton)) { display: none; }
+/* Share: one button that opens a short menu (or the phone's own share sheet). */
+.share { position: relative; }
+.share > summary { list-style: none; }
+.share > summary::-webkit-details-marker { display: none; }
+.share-menu { position: absolute; z-index: 5; top: calc(100% + 6px); left: 0; min-width: 210px; display: flex; flex-direction: column; padding: 6px;
+    background: var(--card); border: 1px solid var(--separator); border-radius: 12px; box-shadow: 0 12px 32px rgba(0, 0, 0, .08); animation: open .18s cubic-bezier(.2, .8, .2, 1) both; }
+.share-menu a, .share-menu button { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 0; border-radius: 8px; background: none; color: var(--text);
+    font: 14px/1.2 var(--sans); text-align: left; text-decoration: none; cursor: pointer; }
+.share-menu a:hover, .share-menu button:hover, .share-menu :focus-visible { background: var(--fill); outline: none; }
+.share-menu svg { flex: none; width: 16px; height: 16px; color: var(--secondary); }
+/* On phones the menu rises from the bottom of the screen, with rows big enough to tap. */
+@media (max-width: 560px) {
+    .share-menu { position: fixed; left: 12px; right: 12px; top: auto; bottom: max(12px, env(safe-area-inset-bottom)); min-width: 0; padding: 8px; border-radius: 16px; box-shadow: 0 -8px 40px rgba(0, 0, 0, .14); }
+    .share-menu a, .share-menu button { padding: 14px 12px; font-size: 16px; }
+}
+.author.is-checking strong { color: var(--secondary); font-weight: 400; }
+.author.is-checking .author-mark { background: none; border: 2px solid var(--separator); border-top-color: var(--accent); animation: spin .8s linear infinite; box-sizing: border-box; }
+main .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+main .actions .button { gap: 6px; }
+main .actions svg { width: 14px; height: 14px; }
+/* In the reader, the "All details" button opens the report; the toggle itself stays hidden. */
+body.reader .details > summary { display: none; }
+body.reader .details { margin-top: 0; }
+/* What was checked, one line each: a mark, a name, one plain sentence, and a ⌃ for the details. */
+/* The checks are one group, like the app's share window: icon column 20px, 12px gap, dividers start at the text. */
+.checks { list-style: none; margin: 16px 0 0; padding: 0; background: var(--card); border: 1px solid var(--separator); border-radius: 14px; }
+.checks > li { position: relative; display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; column-gap: 12px; row-gap: 2px; padding: 14px 12px 14px 16px; }
+.checks > li + li::after { content: ""; position: absolute; top: 0; left: 48px; right: 0; border-top: 1px solid var(--separator); }
+.checks > li::before {
+    content: ""; grid-column: 1; grid-row: 1 / span 2; width: 20px; height: 20px; border-radius: 50%; box-sizing: border-box; margin-top: 2px;
+    display: grid; place-items: center; font: 700 12px var(--sans); color: #fff;
+}
+.checks > li[data-state=pending]::before { border: 2px solid var(--separator); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+.checks > li[data-state=ok]::before { content: "✓"; background: var(--green); }
+.checks > li[data-state=no]::before { content: "!"; background: var(--red); }
+.checks > li[data-state=partial]::before { content: "–"; background: var(--orange); }
+.checks > li[data-state=info]::before { content: "–"; background: color-mix(in srgb, var(--text) 14%, transparent); color: var(--secondary); }
+.checks > li > strong { grid-column: 2; font-size: 15px; font-weight: 500; color: var(--text); }
+.checks > li > span { grid-column: 2; font-size: 14px; line-height: 1.5; color: var(--secondary); overflow-wrap: break-word; }
+.checks > li[data-state=no] > span { color: var(--red-text); }
+.checks .more { grid-column: 3; grid-row: 1 / span 2; align-self: center; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--secondary); cursor: pointer; display: grid; place-items: center; }
+.checks .more:hover { background: var(--fill); color: var(--text); }
+.checks .more:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.checks .more svg { width: 16px; height: 16px; transition: transform .15s; }
+.checks .more[aria-expanded=true] svg { transform: rotate(180deg); }
+.checks .explain { grid-column: 2 / -1; margin: 10px 0 0; padding: 12px 16px 12px 30px; background: var(--fill); border-radius: 10px; font-size: 14px; line-height: 1.55; color: var(--secondary); }
+.checks .explain li + li { margin-top: 6px; }
+.checks .explain code { font: 12.5px var(--mono); color: var(--text); overflow-wrap: anywhere; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.verifying { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 18px 20px; background: var(--card); border: 1px solid var(--separator); border-radius: 14px; color: var(--secondary); font: 400 12px/15px var(--mono); text-transform: uppercase; letter-spacing: .01em; }
+.verifying .spinner { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--separator); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+/* Motion: things arrive softly as the checks finish. Ease-out, short, and off for reduced motion. */
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.12); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes open { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+body.reader #article:not([hidden]) { animation: rise .45s cubic-bezier(.2, .8, .2, 1) both; }
+body.reader .checks { animation: rise .45s .08s cubic-bezier(.2, .8, .2, 1) both; }
+.author { animation: rise .4s cubic-bezier(.2, .8, .2, 1) both; }
+.author-mark, .checks > li[data-state=ok]::before, .checks > li[data-state=no]::before { animation: pop .42s cubic-bezier(.2, .8, .2, 1) both; }
+.checks > li > span { transition: color .2s; }
+.checks .explain:not([hidden]) { animation: open .22s cubic-bezier(.2, .8, .2, 1) both; }
+.checks .more { transition: background-color .15s, color .15s; }
+.actions .button { transition: background-color .15s, transform .12s; }
+.actions .button:active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) {
+    .verifying .spinner { animation-duration: 2.4s; }
+    body.reader #article, body.reader .checks, .author, .author-mark, .checks > li::before, .checks .explain { animation: none !important; }
+    .actions .button:active { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .checks > li[data-state=pending]::before { animation: none; } .checks .more svg { transition: none; } }
+.note { margin: 40px 0 0; max-width: 330px; color: var(--tertiary); font-size: 12.5px; line-height: 1.45; }
+@media (max-width: 560px) {
+    .checks .explain { grid-column: 1 / -1; padding-left: 26px; }
+    .fact { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+    <div class="nav_blur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <a class="nav_logo" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
+    <a class="nav_cta" href="/write">Start Writing</a>
+</nav>
+
+<main class="split">
+    <header class="page-head">
+        <h1 class="page-title">Verify a proof.</h1>
+        <p class="page-lead">Runs in your browser. Nothing is uploaded.</p>
+    </header>
+
+    <div class="page-body">
+    <div class="card">
+        <div class="skeleton reader-only" aria-hidden="true"><i class="head"></i><i></i><i></i><i></i><i class="short"></i></div>
+        <article id="article" hidden></article>
+        <label class="drop" id="dropZone" for="proof">
+            <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><g class="up"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 14.5V18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3.5"/></g><path class="done" d="M6 12.5l4 4L18 8"/></svg></span>
+            <span><strong id="proofTitle">Drop a proof file or report</strong><span id="proofName">or click to choose</span></span>
+            <input type="file" id="proof" class="sr" accept="application/json,.json,application/pdf,.pdf">
+        </label>
+
+        <div class="field">
+            <label for="text">Text</label>
+            <textarea id="text" spellcheck="false" placeholder="Filled in from the proof"></textarea>
+        </div>
+
+        <button id="verify" class="button">Verify</button>
+        <div id="result" role="status" aria-live="polite">Add a proof to begin.</div>
+    </div>
+    <ul class="checks reader-only">
+        <li data-state="pending" data-check="typed"><strong>Typed in Huma</strong><span>Checking…</span></li>
+        <li data-state="pending" data-check="score"><strong>Huma Score</strong><span>Checking…</span></li>
+    </ul>
+    <div class="actions reader-only" aria-hidden="true"><i class="pill"></i><i class="pill"></i></div>
+
+    <details class="advanced details">
+        <summary>Details</summary>
+        <section id="report" hidden aria-label="Verification details"></section>
+    </details>
+
+    <details class="advanced">
+        <summary>Advanced</summary>
+        <div class="card">
+            <div class="field" style="margin-top:0">
+                <label for="expectedKey">Expected signing key</label>
+                <input type="text" id="expectedKey" spellcheck="false" autocomplete="off" placeholder="SHA-256 fingerprint">
+            </div>
+
+            <details class="sub" id="jsonImport"><summary>Paste proof JSON</summary>
+                <div class="field">
+                    <label for="proofJSON">Proof JSON</label>
+                    <textarea id="proofJSON" class="code-input" spellcheck="false"></textarea>
+                </div>
+                <div class="inline-actions"><button id="loadJSON" class="button small secondary">Load JSON</button></div>
+            </details>
+
+            <details class="sub" id="deviceImport"><summary>Apple device evidence</summary>
+                <label class="check"><input type="checkbox" id="checkDevice"> Check device evidence</label>
+                <div class="field"><label for="deviceFile">Device-evidence file</label><input type="file" id="deviceFile" accept="application/json,.json"></div>
+                <div class="field"><label for="deviceJSON">or paste it</label><textarea id="deviceJSON" class="code-input" spellcheck="false"></textarea></div>
+                <div class="field"><label for="policyFile">Trusted app policy file</label><input type="file" id="policyFile" accept="application/json,.json"></div>
+                <div class="field"><label for="policyJSON">or paste it</label><textarea id="policyJSON" class="code-input" spellcheck="false" placeholder='{"appID":"PREFIX.bundle.id","environment":"production","versions":["1"]}'></textarea></div>
+                <span class="hint">Does not show who typed or when.</span>
+            </details>
+
+
+        </div>
+    </details>
+    </div>
+</main>
+<footer class="footer compact">
+    <div class="footer_bar mono">
+        <a class="footer_mini" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
+        <nav aria-label="Footer"><a href="/#story">Why</a><a href="/download">Get Huma</a><a href="/verify">Verify a link</a><a href="/ask">Ask for a link</a><a href="/deck/">Research</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://x.com/huma_social" target="_blank" rel="me noopener" aria-label="Huma on X">@huma_social</a></nav>
+        <span class="footer_note">The human-first internet.</span>
+    </div>
+</footer>
+<script type="module" src="/verify.js"></script>
+<script type="module" src="/visit.js"></script>
+</body>
+</html>

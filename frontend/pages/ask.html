@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask for a Huma Link · Huma</title>
+<meta name="description" content="Get writing back that you know a person typed. Send one link; every page comes back checked.">
+<meta property="og:title" content="Ask for writing that’s really theirs · Huma">
+<meta property="og:description" content="Send one link. Every page comes back checked: typed in Huma, confirmed with Touch ID.">
+<meta property="og:image" content="https://huma.social/img/og-page.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@huma_social">
+<link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="/foundation-logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/brand/icon-512.png">
+<link rel="stylesheet" href="/site.css">
+<style>
+/* One page, three views: make a request, write for one, and the requester's inbox. */
+[data-view]:not(.active) { display: none; }
+.field { margin-top: 20px; }
+.field:first-child { margin-top: 0; }
+.field label .optional { color: var(--tertiary); }
+textarea { min-height: 84px; resize: vertical; }
+.card > .button.wide { width: 100%; margin-top: 24px; }
+.page-body > .card + .card { margin-top: 16px; }
+.error { color: var(--red-text); font-size: 14px; margin: 12px 0 0; }
+.error:empty { display: none; }
+/* A link to copy: the address and one button. */
+.copy { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.copy code { flex: 1; min-width: 0; padding: 9px 12px; border-radius: 8px; background: var(--fill); font: 12.5px var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.made h2 { font-size: 20px; line-height: 24px; margin: 0; }
+.made h2 + p { color: var(--secondary); font-size: 14px; margin: 6px 0 0; }
+.made section + section { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--separator); }
+.warn { margin-top: 10px; font-size: 13px; color: var(--orange); }
+/* For the writer. */
+.ask:not(.loading) .from:empty { display: none; }
+.ask .note { white-space: pre-wrap; }
+/* Numbered like the landing page's rows: 01, 02, 03 in mono. */
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding: 14px 0; font-size: 15px; line-height: 1.45; }
+.steps li:first-child { padding-top: 0; }
+.steps li + li { border-top: 1px solid var(--separator); }
+.steps li::before { content: counter(step, decimal-leading-zero); padding-top: 3px; color: var(--tertiary); font: 400 12px/15px var(--mono); }
+.ctas { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+.paste { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--separator); }
+.paste .copy input { flex: 1; min-width: 0; }
+.sent[hidden] { display: none; }
+.sent { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: var(--green-fill); color: var(--green-text); font-size: 14.5px; }
+/* Inbox. */
+.list { list-style: none; margin: 0; padding: 0; background: var(--card); border: 1px solid var(--separator); border-radius: 14px; }
+.list li { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 14px; }
+.list li + li { border-top: 1px solid var(--separator); }
+.list .face { width: 36px; height: 36px; border-radius: 50%; background: var(--fill); }
+.list strong { display: block; font-size: 15px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.list span { display: block; font-size: 13px; color: var(--secondary); }
+.list .mac { color: var(--green-text); }
+.list li.empty { display: block; padding: 36px 20px; text-align: center; color: var(--secondary); font-size: 15px; }
+/* While a request or inbox loads, grey shapes stand where its title and pages will be, so nothing jumps. */
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.loading .kicker:empty, .loading .page-title:empty, .loading .page-lead:empty, .list .ghost i {
+    display: block; border-radius: 6px; background: linear-gradient(90deg, var(--fill) 30%, rgba(34, 34, 34, .09) 50%, var(--fill) 70%) 0 0 / 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite; }
+.loading .kicker:empty { width: 150px; height: 15px; }
+.loading .page-title:empty { width: min(100%, 420px); height: 1.08em; }
+.loading .page-lead:empty { width: min(70%, 320px); height: 15px; }
+.list .ghost .face { border-radius: 50%; }
+.list .ghost i:not(.face) { width: 46%; height: 13px; }
+.list .ghost i + i { width: 28%; height: 11px; margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) { .loading .kicker:empty, .loading .page-title:empty, .loading .page-lead:empty, .list .ghost i { animation: none; } }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+    <div class="nav_blur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <a class="nav_logo" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
+    <a class="nav_cta" href="/write">Start Writing</a>
+</nav>
+<main>
+    <!-- Make a request -->
+    <div data-view="create" class="split">
+        <header class="page-head">
+            <h1 class="page-title">Ask for writing that’s really theirs.</h1>
+            <p class="page-lead">Send one link. Every page comes back checked.</p>
+        </header>
+        <div class="page-body">
+        <form class="card" id="createForm">
+            <div class="field"><label for="title">What should they write?</label><input type="text" id="title" maxlength="120" placeholder="Essay: What I learned this summer" required></div>
+            <div class="field"><label for="from">Your name</label><input type="text" id="from" maxlength="60" placeholder="Ms. Lee" required></div>
+            <div class="field"><label for="note">Note <span class="optional">(optional)</span></label><textarea id="note" maxlength="400" placeholder="500 words. Due Friday."></textarea></div>
+            <button class="button wide" type="submit">Create Link</button>
+            <p class="error" id="createError" role="alert"></p>
+        </form>
+        <div class="card made" id="made" hidden>
+            <section>
+                <h2>Send this link to your writers</h2>
+                <div class="copy"><code id="shareLink"></code><button class="button small secondary" type="button" data-copy="shareLink">Copy</button></div>
+            </section>
+            <section>
+                <h2>Your inbox</h2>
+                <div class="copy"><code id="inboxLink"></code><button class="button small secondary" type="button" data-copy="inboxLink">Copy</button><a class="button small" id="openInbox">Open</a></div>
+                <p class="warn">Save this link. It’s the only way into your inbox.</p>
+            </section>
+        </div>
+        </div>
+    </div>
+
+    <!-- Write for a request -->
+    <div data-view="write" class="ask split">
+        <header class="page-head">
+            <span class="kicker mono from" id="askFrom"></span>
+            <h1 class="page-title" id="askTitle"></h1>
+            <p class="page-lead note" id="askNote"></p>
+        </header>
+        <div class="page-body">
+        <div class="card">
+            <ol class="steps">
+                <li><span>Get Huma for Mac. It’s free.</span></li>
+                <li><span>Press <b>Open in Huma</b>. Your page starts with this title.</span></li>
+                <li><span>Write it, then press <b>Finish</b> and <b id="sendLabel">Send</b>.</span></li>
+            </ol>
+            <div class="ctas">
+                <a class="button" id="openApp">Open in Huma</a>
+                <a class="button secondary" href="/download">Download for Mac</a>
+            </div>
+            <form class="paste" id="pasteForm">
+                <div class="field"><label for="pasted">Already shared it? Paste your link.</label></div>
+                <div class="copy"><input type="url" id="pasted" placeholder="https://huma.social/p/…" required><button class="button small" type="submit">Send</button></div>
+                <p class="error" id="pasteError" role="alert"></p>
+            </form>
+            <div class="sent" id="sent" hidden>✓ <span id="sentText"></span></div>
+        </div>
+        </div>
+    </div>
+
+    <!-- The requester's inbox -->
+    <div data-view="inbox" class="split">
+        <header class="page-head">
+            <span class="kicker mono">Inbox</span>
+            <h1 class="page-title" id="inboxTitle"></h1>
+            <p class="page-lead" id="inboxCount"></p>
+            <div class="page-actions"><button class="button small secondary" type="button" id="copyShare">Copy Link for Writers</button></div>
+        </header>
+        <div class="page-body">
+            <ul class="list" id="inboxList"></ul>
+            <p class="error" id="inboxError" role="alert"></p>
+        </div>
+    </div>
+</main>
+<footer class="footer compact">
+    <div class="footer_bar mono">
+        <a class="footer_mini" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
+        <nav aria-label="Footer"><a href="/#story">Why</a><a href="/download">Get Huma</a><a href="/verify">Verify a link</a><a href="/ask">Ask for a link</a><a href="/deck/">Research</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://x.com/huma_social" target="_blank" rel="me noopener" aria-label="Huma on X">@huma_social</a></nav>
+        <span class="footer_note">The human-first internet.</span>
+    </div>
+</footer>
+<script type="module" src="/ask.js"></script>
+</body>
+</html>
