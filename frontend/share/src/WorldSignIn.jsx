@@ -21,7 +21,9 @@ async function qrPath(uri) {
   return { size: rows.length, path };
 }
 
-export default function WorldSignIn({ secret, world }) {
+export default function WorldSignIn({ secret, world, fromWeb, returnTo }) {
+  // Opened from Huma on the web: back to that /write page, not to the Mac app's huma:// link.
+  const back = fromWeb ? returnTo ?? '/write' : 'huma://signed-in';
   const [code, publicKey] = secret.split('.');
   const fromApp = /^[a-f0-9]{64}$/.test(code), device = /^04[0-9a-f]{128}$/.test(publicKey ?? '') ? publicKey : null;
   const [shortCode, setShortCode] = useState(''), [state, setState] = useState(''), [error, setError] = useState('');
@@ -49,7 +51,7 @@ export default function WorldSignIn({ secret, world }) {
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error ?? 'Signing in didn’t finish. Start again from Huma.');
       setState('sent');
-      location.href = 'huma://signed-in'; // Back to the app; the first time, the browser asks whether to open Huma.
+      location.href = back; // Back to the app; the first time, the browser asks whether to open Huma.
     } catch (e) {
       setState(''); setQR(null);
       setError(signal.aborted ? 'World ID wasn’t completed. Try again.' : e.message || 'World ID couldn’t be confirmed.');
@@ -63,8 +65,8 @@ export default function WorldSignIn({ secret, world }) {
   if (state === 'sent') return <>
     <Check />
     <h1>You're signed in.</h1>
-    <p>Huma is open again. You can close this tab.</p>
-    <a className="button secondary" href="huma://signed-in">Open Huma</a>
+    <p>{fromWeb ? 'Taking you back to your writing.' : 'Huma is open again. You can close this tab.'}</p>
+    <a className="button secondary" href={back}>Open Huma</a>
   </>;
   if (!shortCode) return <Skeleton label="Loading sign-in…" />;
   return <>

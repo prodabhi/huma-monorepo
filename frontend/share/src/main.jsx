@@ -62,7 +62,7 @@ function App() {
     </nav>
     <main><div className="card">
       {error ? <><h1>{signIn ? 'Sign in to Huma.' : 'Share your writing.'}</h1><p role="alert">{error}</p></>
-        : data ? <Suspense fallback={loading}><WorldSignIn secret={secret} {...data} /></Suspense> : loading}
+        : data ? <Suspense fallback={loading}><WorldSignIn secret={secret} fromWeb={fromWeb} returnTo={returnTo} {...data} /></Suspense> : loading}
         {/* Privy: <Approval id={id} secret={secret} signIn={signIn} fromWeb={fromWeb} returnTo={returnTo} {...data} /> */}
     </div></main>
     <footer className="footer compact">
