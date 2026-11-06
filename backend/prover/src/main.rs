@@ -125,7 +125,7 @@ async fn main() {
     let pages = match pages {
         Some(Ok(prover)) => Some(prover),
         Some(Err(why)) => { log(format_args!("page proving off: {why}")); None }
-        None => { log("page proving off: set HUMA_ENGINE_DIR to a staged engine (backend/integrations/noir/package.py)"); None }
+        None => { log("page proving off: set HUMA_ENGINE_DIR to a staged engine (integrations/noir/package.py)"); None }
     };
     let app = Arc::new(App { jobs: jobs::Jobs::new(config.memory_gb, config.queue), pages,
         limiter: Limiter { per_hour: config.pages_per_hour, seen: Mutex::new(HashMap::new()) } });
