@@ -25,25 +25,15 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to prove you didn’t use AI", "description": "Accused of using ChatGPT on work you wrote yourself? What counts as evidence, how to present it, and how to make it easy next time with a Huma link.", "url": "https://huma.social/prove-you-didnt-use-ai", "datePublished": "2026-11-02", "dateModified": "2026-11-02", "author": {"@type": "Organization", "name": "Huma", "url": "https://huma.social/"}, "publisher": {"@type": "Organization", "name": "Huma", "logo": {"@type": "ImageObject", "url": "https://huma.social/brand/icon-512.png"}}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can an AI detector prove I used AI?", "acceptedAnswer": {"@type": "Answer", "text": "No. AI detectors estimate how likely text is to be machine-written, and they make mistakes, especially with writing by non-native English speakers."}}, {"@type": "Question", "name": "Does Huma work for work I’ve already handed in?", "acceptedAnswer": {"@type": "Answer", "text": "No. Huma records writing as it happens, so it covers what you write in it from now on. For earlier work, use your version history and drafts."}}, {"@type": "Question", "name": "Is Huma free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, on the web and on Mac."}}]}</script>
 <style>
-/* A guide reads like the privacy page: a title on the left, short sections split by rules on the right. */
-.updated { margin: 14px 0 0; color: var(--tertiary); }
-.prose h2 { font-size: 20px; line-height: 24px; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--separator); }
+/* A guide's extras on top of site.css's reading-page styles. */
 .prose h2:first-child { margin-top: 0; }
 .prose h3 { font-size: 16px; line-height: 21px; font-weight: 500; margin: 22px 0 6px; }
-.prose p, .prose li { color: var(--grey); font-size: 15px; line-height: 1.5; }
-.prose p { margin: 0 0 10px; }
 .prose ul, .prose ol { margin: 0 0 10px; padding-left: 20px; }
-.prose li { margin: 0 0 6px; }
-.prose strong { color: var(--ink); font-weight: 500; }
 .prose .page-actions { margin: 18px 0 0; }
 </style>
 </head>
 <body>
-<nav class="nav" aria-label="Main">
-    <div class="nav_blur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-    <a class="nav_logo" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
-    <a class="nav_cta" href="/write">Start Writing</a>
-</nav>
+<!--#include nav-->
 <main class="split">
     <header class="page-head">
         <span class="kicker mono">Guide</span>
@@ -75,20 +65,6 @@
         <p>Yes, on the web and on Mac.</p>
     </article>
 </main>
-<footer class="footer">
-    <nav class="grid footer_menu mono" aria-label="Footer">
-        <div class="f1"><a class="head" href="/#story">Why</a><a href="/#story">The story</a><a href="/#evidence">The evidence</a><a href="/deck/">Research note</a></div>
-        <div class="f2"><a class="head" href="/#how">Product</a><a href="/#how">How it works</a><a href="/#faq">Questions</a><a href="/download">Get Huma</a><a href="/verify">Verify a link</a><a href="/ask">Ask for a Huma Link</a></div>
-        <div class="f3"><a class="head" href="/prove-you-didnt-use-ai">Guides</a><a href="/prove-you-didnt-use-ai">Prove you didn’t use AI</a><a href="/ai-detector-false-positive">Flagged by an AI detector</a></div>
-        <div class="f4"><a class="head" href="/">Huma home</a></div>
-        <div class="f5"><a class="head" href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
-        <div class="f6"><a class="head" href="/deck/">Research</a></div>
-    </nav>
-    <div class="grid footer_brand">
-        <div class="footer_logo"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></div>
-        <p class="mono footer_tag">The human-first internet.</p>
-        <a class="mono footer_social" href="https://x.com/huma_social" target="_blank" rel="me noopener" aria-label="Huma on X"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.2 1.5h2.2L9.6 7l5.6 7.5h-4.4L7.4 10l-3.9 4.5H1.3l5.1-5.9L1 1.5h4.5l3.1 4.1z" fill="currentColor"/></svg>@huma_social</a>
-    </div>
-</footer>
+<!--#include footer-->
 </body>
 </html>
