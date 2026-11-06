@@ -10,12 +10,12 @@ import { ASSETS as ASSURANCE } from '../../extra/experiments/noir-compact/browse
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const names = (prefix, files) => files.split(' ').map(file => prefix + file);
 export const fixed = [
-  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs hash-record.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs'),
+  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs hash-record.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs onchain.mjs arkiv-store.mjs'),
   // Writing in the browser: the page, its pins (the server checks the proving points against them) and its build.
   'frontend/pages/write.html', 'frontend/write/pins.mjs',
   ...names('frontend/dist/write/', 'write.js prover.js bb-thread.js replay.js grammar.js writer-actions.js recorder.wasm witness.wasm grammar.wasm barretenberg-threads.wasm g2.dat'
     + ' long-chunk.vk long-final1024.vk long-final4096.vk long-final10000.vk long2-final1024.vk long2-final4096.vk long2-final10000.vk'
-    + ['chunk1024', 'final1024', 'chunk4096', 'final4096', 'chunk10000', 'final10000'].map(n => ` long3-${n}.json long3-${n}.vk`).join('')),
+    + ['chunk1024', 'final1024', 'chunk4096', 'final4096', 'chunk10000', 'final10000'].map(n => ` long3-${n}.json long3-${n}.vk long3-${n}-evm.vk`).join('')),
   ...names('frontend/verify-core/', 'browser.mjs worker.mjs core.mjs contract.mjs node.mjs node-worker.mjs node-engine.mjs'),
   ...names('frontend/pages/', 'ask.html ask.js guide-prove.html guide-detector.html robots.txt sitemap.xml llms.txt download.html download.js privacy.html terms.html notfound.html appcast.xml verify.html verify.mjs writer.html writer.mjs track.mjs visit.mjs replay-player.mjs site.css replay-worker.mjs brand/huma-mark.svg brand/icon-512.png fonts/inter.woff2 fonts/OFL.txt fonts/newsreader-latin.woff2 fonts/newsreader-latin-ext.woff2 fonts/NEWSREADER-OFL.txt img/og-page.png img/og-home.jpg'),
   // A shared page's PDF report: its maker, fonts, QR code (MIT) and PDF library (MIT), loaded only when it's made.
