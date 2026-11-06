@@ -2,17 +2,12 @@
 // from what it just proved, with the proof and the signed writing replay attached so the PDF alone checks out at
 // huma.social/verify. A recording that stopped gets a report too: no score or proof, and why it stopped.
 import { makeReport, REPLAY_FILE, VERIFY_URL } from '../pages/report-pdf.mjs';
-import { humaScore, replayRhythm, percentLabel, checkTier, passkeyRow, WRITING_RULES } from '../publication-contract.mjs';
+import { humaScore, replayRhythm, percentLabel, checkTier, passkeyRow, duration, digest, WRITING_RULES } from '../publication-contract.mjs';
+import { fromBase64 } from '../verify-core/contract.mjs';
 import { verifyReplay, REPLAY_KIND } from '../replay-core.mjs';
 
 const encoder = new TextEncoder();
-const sha256 = async value => [...new Uint8Array(await crypto.subtle.digest('SHA-256', typeof value === 'string' ? encoder.encode(value) : value))]
-  .map(b => b.toString(16).padStart(2, '0')).join('');
-const fromBase64 = value => Uint8Array.from(atob(value), c => c.charCodeAt(0));
-export const duration = milliseconds => {
-  const seconds = Math.max(1, Math.round(Number(milliseconds) / 1000)), minutes = Math.floor(seconds / 60);
-  return minutes ? `${minutes} min${seconds % 60 ? ' ' + (seconds % 60) + ' s' : ''}` : `${seconds} s`;
-};
+const sha256 = value => digest(typeof value === 'string' ? encoder.encode(value) : value);
 
 /** The signed writing replay (replay-core.mjs) from a finished recording: every edit and the final signed checkpoint. */
 export function replayOf(recording) {

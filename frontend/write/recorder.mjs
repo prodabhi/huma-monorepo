@@ -1,8 +1,9 @@
-// The page's side of the recorder (Rust, web.rs in experiments/noir-compact/native, as WebAssembly): it passes text
+// The page's side of the recorder (Rust, web.rs in extra/experiments/noir-compact/native, as WebAssembly): it passes text
 // and key events in, and signs what the recorder asks with this browser's writing key, which can't be exported.
+import { fromBase64 as unb64 } from '../verify-core/contract.mjs';
+
 const decoder = new TextDecoder(), encoder = new TextEncoder();
 export const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(s); };
-const unb64 = text => Uint8Array.from(atob(text), c => c.charCodeAt(0));
 
 /** WebCrypto's P-256 signature (r ‖ s) in the DER form the recorder and every reader check. */
 export function der(raw) {

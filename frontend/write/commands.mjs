@@ -116,8 +116,9 @@ export function spaceOf(state, side) {
   return node.attrs[side] ?? STYLES[styleOf(node)]?.[side] ?? 0;
 }
 
-const listItemOf = state => (inside(state, nodes.check_list) ? nodes.check_item : nodes.list_item);
+export const listItemOf = state => (inside(state, nodes.check_list) ? nodes.check_item : nodes.list_item);
 const LISTS = [nodes.bullet_list, nodes.ordered_list, nodes.check_list];
+export const inList = state => LISTS.some(list => inside(state, list));
 export const toggleList = (listType, itemType) => (state, dispatch, view) => {
   if (inside(state, listType)) return liftListItem(itemType)(state, dispatch, view);
   // In another kind of list: the nearest list changes kind, its items and their text as they are.
@@ -136,12 +137,12 @@ export const toggleList = (listType, itemType) => (state, dispatch, view) => {
   return wrapInList(listType)(state, dispatch, view);
 };
 export const indent = (state, dispatch, view) => {
-  if (inside(state, nodes.bullet_list) || inside(state, nodes.ordered_list) || inside(state, nodes.check_list))
+  if (inList(state))
     return sinkListItem(listItemOf(state))(state, dispatch, view);
   return changeBlocks(node => ({ indent: Math.min(MAX_INDENT, (Math.floor(node.attrs.indent / INDENT_STEP) + 1) * INDENT_STEP) }))(state, dispatch);
 };
 export const outdent = (state, dispatch, view) => {
-  if (inside(state, nodes.bullet_list) || inside(state, nodes.ordered_list) || inside(state, nodes.check_list))
+  if (inList(state))
     return liftListItem(listItemOf(state))(state, dispatch, view);
   return changeBlocks(node => ({ indent: Math.max(0, (Math.ceil(node.attrs.indent / INDENT_STEP) - 1) * INDENT_STEP) }))(state, dispatch);
 };

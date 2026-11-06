@@ -1,8 +1,8 @@
-// Builds huma.social/write into web/dist/write: the page script, the prover worker and bb.js's thread worker, the
-// three Rust WebAssembly modules (the recorder from experiments/noir-compact/native, the witness solver from
-// integrations/noir/witness, Harper's grammar checks from integrations/grammar), bb.js's threaded WebAssembly, and
+// Builds huma.social/write into frontend/dist/write: the page script, the prover worker and bb.js's thread worker, the
+// three Rust WebAssembly modules (the recorder from extra/experiments/noir-compact/native, the witness solver from
+// backend/integrations/noir/witness, Harper's grammar checks from backend/integrations/grammar), bb.js's threaded WebAssembly, and
 // the pinned programs and keys. Every pin is checked.
-// Usage (from web/): node write/build.mjs
+// Usage (from frontend/): node write/build.mjs
 import { build } from 'esbuild';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -84,4 +84,4 @@ await build({
 });
 const files = ['write.js', 'prover.js', 'bb-thread.js', 'replay.js', 'grammar.js', 'writer-actions.js', 'recorder.wasm', 'witness.wasm', 'grammar.wasm'];
 const sizes = await Promise.all(files.map(async f => (await readFile(path.join(out, f))).length));
-console.log('Built web/dist/write: ' + files.map((f, i) => `${f} ${(sizes[i] / 1024).toFixed(0)} KB`).join(', '));
+console.log('Built frontend/dist/write: ' + files.map((f, i) => `${f} ${(sizes[i] / 1024).toFixed(0)} KB`).join(', '));

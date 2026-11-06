@@ -3,6 +3,7 @@
 // Programs and keys are pinned; the proving points come from this site. Nothing about the writing leaves the browser.
 import { Barretenberg, BackendType } from '@aztec/bb.js';
 import { ungzip } from 'pako';
+import { fromBase64 } from '../verify-core/contract.mjs';
 import { PROGRAMS, POINTS, EVM_KEYS } from './pins.mjs';
 
 const hex = bytes => Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
@@ -21,7 +22,7 @@ function program(name) {
     const { bytecode } = JSON.parse(new TextDecoder().decode(json));
     if (await sha256(new TextEncoder().encode(bytecode)) !== PROGRAMS[name].bytecode || await sha256(key) !== PROGRAMS[name].vk)
       throw new Error('A proving program doesn’t match its pin.');
-    return { json, key, circuit: ungzip(Uint8Array.from(atob(bytecode), c => c.charCodeAt(0))) };
+    return { json, key, circuit: ungzip(fromBase64(bytecode)) };
   })().catch(error => { programs.delete(name); throw error; }));
   return programs.get(name);
 }
@@ -64,10 +65,13 @@ async function backend(threads, log) {
 const fields = bytes => Array.from({ length: bytes.length / 32 }, (_, i) => bytes.slice(i * 32, i * 32 + 32));
 const flat = list => { const out = new Uint8Array(list.length * 32); list.forEach((f, i) => out.set(f, i * 32)); return out; };
 
-async function prove({ name, input, threads }) {
+/** The witness for `input` to program `name`, for a prover to use (prove.mjs makes the next part's while one proves). */
+async function solve({ name, input }) { return witness((await program(name)).json, input); }
+async function prove({ name, input, witness: made, threads }) {
   const started = performance.now();
   const { json, key, circuit } = await program(name);
-  const solved = await witness(json, input), witnessMs = performance.now() - started;
+  // The witness, unless one was made ahead and sent along.
+  const solved = made ?? await witness(json, input), witnessMs = performance.now() - started;
   const bb = await backend(threads, PROGRAMS[name].log);
   const { proof, publicInputs } = await bb.circuitProve({ witness: solved, circuit: { name, bytecode: circuit, verificationKey: key }, settings: SETTINGS });
   const result = { proof: flat(proof), publicInputs: flat(publicInputs) };
@@ -114,6 +118,7 @@ async function handle(data) {
       const result = await proveEvm(data);
       self.postMessage({ id: data.id, ok: true, ...result }, [result.proof.buffer, result.publicInputs.buffer]);
     } else if (data.type === 'verify') self.postMessage({ id: data.id, ok: true, verified: await verify(data) });
+    else if (data.type === 'witness') { const solved = await solve(data); self.postMessage({ id: data.id, ok: true, witness: solved }, [solved.buffer]); }
     else if (data.type === 'warm') {
       // While the writer starts typing: the first tier's programs, bb.js and its proving points, about 8 s that
       // would otherwise wait for the first part.

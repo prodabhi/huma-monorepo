@@ -1,6 +1,6 @@
-// Pins for the browser prover: the same programs and keys the Mac engine pins (long3 in integrations/noir/worker.mjs;
+// Pins for the browser prover: the same programs and keys the Mac engine pins (long3 in backend/integrations/noir/worker.mjs;
 // a web test keeps them equal), and the proving points this site serves (the first 2^19 or 2^20 of the setup the Mac
-// app downloads, scripts/upload-engine.mjs). `log`: each program's proving size, 2^log, which needs 2^log points.
+// app downloads, backend/scripts/upload-engine.mjs). `log`: each program's proving size, 2^log, which needs 2^log points.
 export const PROGRAMS = {
   chunk1024: { bytecode: '7fb97a2452c2d421f3728f891ce981e3da41f4b7f1ced019acf4c0549c0a4300', vk: '8d8a3bae78664b1b3883b94a1e361d56ee573b7102acc5c18bfd6e721490396b', log: 19 },
   final1024: { bytecode: '0ef8d2d4be19b51eb1727484703837e59d229cea631177b5b4b100cd8a1f3a44', vk: 'c9ce374434fdda60af5c436336410bacc83bdadfaef034ac33432d82a1b3cc28', log: 19 },
