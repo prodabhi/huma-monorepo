@@ -1,7 +1,7 @@
 import Foundation
 
-/// Harper (Automattic, Apache-2.0), an offline English grammar checker, built from integrations/grammar into
-/// Resources/Grammar/libhuma_grammar.dylib. It runs on every Mac, without Apple Intelligence, and finds agreement,
+/// Harper (Automattic, Apache-2.0), an offline English grammar checker, built from backend/integrations/grammar into
+/// extra/Resources/Grammar/libhuma_grammar.dylib. It runs on every Mac, without Apple Intelligence, and finds agreement,
 /// tense, a/an, then/than and similar mistakes with few false alarms. Spelling is left to the Mac.
 public final class HarperGrammar: @unchecked Sendable {
     // Harper keeps one linter behind a lock (backend/integrations/grammar), so calls from any thread are safe.

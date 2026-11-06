@@ -1,6 +1,6 @@
-Harper, the grammar checker in Huma (Resources/Grammar/libhuma_grammar.dylib), is made by Automattic and
+Harper, the grammar checker in Huma (extra/Resources/Grammar/libhuma_grammar.dylib), is made by Automattic and
 licensed under the Apache License, Version 2.0: https://github.com/automattic/harper (harper-core 2.11.0).
-Huma calls it unchanged through integrations/grammar.
+Huma calls it unchanged through backend/integrations/grammar.
 
                                 Apache License
                            Version 2.0, January 2004

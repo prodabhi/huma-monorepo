@@ -1,4 +1,4 @@
-//! Harper's offline English grammar checks for the Huma Mac app (extra/Sources/Huma/GrammarChecker.swift loads this
+//! Harper's offline English grammar checks for the Huma Mac app (Sources/Huma/GrammarChecker.swift loads this
 //! library from the app's Resources/Grammar). Two functions: lint some text, and free the reply.
 //!
 //! The reply is a JSON array of problems: `{"start", "end", "kind", "message", "fix"}`. `start` and `end` are UTF-16
