@@ -70,7 +70,7 @@ struct FaceView: View {
     }
 }
 
-/// The site's face code (DiceBear and its Dylan style, built from web/faces/entry.mjs into Resources/Faces.js),
+/// The site's face code (DiceBear and its Dylan style, built from frontend/faces/entry.mjs into extra/Resources/Faces.js),
 /// run in JavaScriptCore, so a face is the same SVG a reader's page gets from huma.social for that seed.
 @MainActor enum FaceDrawing {
     private static let draw: JSValue? = {
