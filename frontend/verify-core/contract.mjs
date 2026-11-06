@@ -74,6 +74,8 @@ export async function statementHash(value) {
   return hex(await crypto.subtle.digest('SHA-256', statementBytes(value)));
 }
 export function hex(bytes) { return Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2, '0')).join(''); }
+/** Base64 text as bytes. */
+export const fromBase64 = text => Uint8Array.from(atob(text), c => c.charCodeAt(0));
 export function contentBytes(text) {
   if (typeof text !== 'string' || text.length > 65536) throw new Error('Invalid reader text.');
   for (let i = 0; i < text.length; i++) {

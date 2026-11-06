@@ -1,12 +1,9 @@
-import { createHash } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 import { exactKeys, fullMatch } from './verify-core/contract.mjs';
 import { MASTER_LIMIT, PROOF_LIMIT } from './publication-contract.mjs';
+import { sha256Hex as hash, fail, isHash as validHash } from './server-util.mjs';
 
-const hash = value => createHash('sha256').update(value).digest('hex');
-const validHash = value => fullMatch(/^[a-f0-9]{64}$/, value);
 const validDay = value => fullMatch(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/, value) && new Date(value + 'T00:00:00.000Z').toISOString().slice(0, 10) === value;
-const fail = (status, message) => Object.assign(new Error(message), { status });
 const MAX_RESERVATIONS = 2000;
 
 export function publicationLimits(env = process.env) {

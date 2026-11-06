@@ -1,9 +1,8 @@
 // Writing requests: a teacher or editor makes a link, writers send back pages they shared from Huma, and the
 // requester's private inbox lists them. No accounts: the inbox opens with a key only its creator has.
-import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import { randomBytes, timingSafeEqual } from 'node:crypto';
+import { sha256Hex as hash, fail } from './server-util.mjs';
 
-const hash = value => createHash('sha256').update(value).digest('hex');
-const fail = (status, message) => Object.assign(new Error(message), { status });
 const clean = (value, limit) => typeof value === 'string' ? value.normalize('NFC').replace(/\p{C}+/gu, ' ').replace(/\s+/g, ' ').trim().slice(0, limit) : '';
 export const MAX_SUBMISSIONS = 500;
 const storageKey = id => 'requests/' + hash('huma-request-v1\0' + id);
