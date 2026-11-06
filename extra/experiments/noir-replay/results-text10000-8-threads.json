@@ -1,0 +1,39 @@
+{
+  "case": "text10000",
+  "experimental": true,
+  "proofGenerated": true,
+  "statement": "SHA-256 preimage only, NOT Huma replay",
+  "compiler": {
+    "wallMs": 1365.17,
+    "peakSampledRSS": 453640192
+  },
+  "gateCounter": {
+    "wallMs": 1037.02,
+    "peakSampledRSS": 1203863552
+  },
+  "gates": {
+    "functions": [
+      {
+        "acir_opcodes": 15449,
+        "circuit_size": 644401
+      }
+    ]
+  },
+  "threads": 8,
+  "nice": 10,
+  "verified": true,
+  "proveMs": 3049.50925,
+  "proofBytes": 14656,
+  "publicInputsBytes": 1024,
+  "sourceSha256": {
+    "signature.nr": "bbe5018d9f39319b3d3e5bedc52a4043932fe98cdd9d9e68cd214b2f5995bd44",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "77bf62dfe6cf8554443a404b97469a73a28c940eb8846fbdff404cdf1c8ef21c"
+  },
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "verifierTarget": "noir-recursive",
+  "zeroKnowledge": true,
+  "vkSha256": "8f583c74c3ecc77e6aee18b513ea82108918671bd4f6a4edecc6756d54ed02fa",
+  "artifactSha256": "f63ff14a84e84a8f396fd4b991eecd73ada17eae1ab225e314f37706cdd6bf7a"
+}

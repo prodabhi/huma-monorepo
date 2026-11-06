@@ -1,0 +1,185 @@
+{
+  "date": "2026-10-22",
+  "machine": {
+    "cpu": "Apple M4 Max",
+    "physicalCores": 16,
+    "memoryGiB": 48
+  },
+  "conditions": "One proof per profile, shared interactive Mac, cached CRS, precomputed VK, nice10 and Huma exclusive/thermal/timeout controls. This is the 48-byte public software-key Swift fixture in one exact-count bucket, not max-length app acceptance.",
+  "gateCount": {
+    "functions": [
+      {
+        "acir_opcodes": 388926,
+        "circuit_size": 1568841
+      }
+    ]
+  },
+  "vkSha256": "a74582adade7314b97d2f888001d565cfdd2c2bb0ab7868131919c2e785a53e0",
+  "sourceSha256": {
+    "bytes.nr": "a7ebcf1743341c4579f774be1a7b7a0aebb6340ceb0d28601b345a4a7b3f8e82",
+    "main.nr": "8bf05e2f9568f19b091943cf38dd17e9c3013016ca9bd5d201a05b5fe917b2cb",
+    "signature.nr": "bbe5018d9f39319b3d3e5bedc52a4043932fe98cdd9d9e68cd214b2f5995bd44"
+  },
+  "sourceNote": "Source hash is the measured pre-comment snapshot; a later Safety comment changes no constraints.",
+  "profiles": [
+    {
+      "configuredThreads": 2,
+      "proveMs": 13300.633083,
+      "verified": true,
+      "publicFieldsMatchNativeReference": true,
+      "proofBytes": 14656,
+      "publicInputBytes": 7584
+    },
+    {
+      "configuredThreads": 8,
+      "proveMs": 5396.823625,
+      "verified": true,
+      "publicFieldsMatchNativeReference": true,
+      "proofBytes": 14656,
+      "publicInputBytes": 7584
+    },
+    {
+      "configuredThreads": 16,
+      "proveMs": 4668.595709,
+      "verified": true,
+      "publicFieldsMatchNativeReference": true,
+      "proofBytes": 14656,
+      "publicInputBytes": 7584
+    }
+  ],
+  "constraintCases": [
+    {
+      "case": "Valid",
+      "accepted": true,
+      "elapsedMs": 1013.32
+    },
+    {
+      "case": "SplitSurrogate",
+      "accepted": false,
+      "elapsedMs": 659.53
+    },
+    {
+      "case": "ChangedEdit",
+      "accepted": false,
+      "elapsedMs": 641.77
+    },
+    {
+      "case": "ChangedKeyTiming",
+      "accepted": false,
+      "elapsedMs": 680.01
+    },
+    {
+      "case": "WrongCaptureIndex",
+      "accepted": false,
+      "elapsedMs": 686.7
+    },
+    {
+      "case": "WrongCaptureSequence",
+      "accepted": false,
+      "elapsedMs": 685.52
+    },
+    {
+      "case": "WrongCheckpointPrefix",
+      "accepted": false,
+      "elapsedMs": 762.37
+    },
+    {
+      "case": "ChangedClock",
+      "accepted": false,
+      "elapsedMs": 768.86
+    },
+    {
+      "case": "ChangedKey",
+      "accepted": false,
+      "elapsedMs": 748.31
+    },
+    {
+      "case": "ChangedDER",
+      "accepted": false,
+      "elapsedMs": 761.01
+    },
+    {
+      "case": "ChangedSignedBytes",
+      "accepted": false,
+      "elapsedMs": 769.77
+    },
+    {
+      "case": "MissingSeal",
+      "accepted": false,
+      "elapsedMs": 763.53
+    },
+    {
+      "case": "ChangedPublicTextHash",
+      "accepted": false,
+      "elapsedMs": 787.8
+    },
+    {
+      "case": "ChangedPublicCounts",
+      "accepted": false,
+      "elapsedMs": 778.09
+    },
+    {
+      "case": "ChangedJSONEscaping",
+      "accepted": false,
+      "elapsedMs": 672.47
+    }
+  ],
+  "readerNegativeCases": [
+    "changed rejected",
+    "newline rejected",
+    "nbsp rejected",
+    "NFC rejected",
+    "ChangedProof rejected",
+    "ChangedPublicInputs rejected"
+  ],
+  "decimalHintCases": [
+    {
+      "case": "0",
+      "accepted": true
+    },
+    {
+      "case": "1",
+      "accepted": true
+    },
+    {
+      "case": "9",
+      "accepted": true
+    },
+    {
+      "case": "10",
+      "accepted": true
+    },
+    {
+      "case": "253402300799999",
+      "accepted": true
+    },
+    {
+      "case": "18446744073709551615",
+      "accepted": true
+    },
+    {
+      "case": "WrongValue",
+      "accepted": false
+    },
+    {
+      "case": "LeadingZero",
+      "accepted": false
+    },
+    {
+      "case": "NonDigit",
+      "accepted": false
+    },
+    {
+      "case": "Empty",
+      "accepted": false
+    },
+    {
+      "case": "NonzeroPadding",
+      "accepted": false
+    },
+    {
+      "case": "AboveU64",
+      "accepted": false
+    }
+  ]
+}

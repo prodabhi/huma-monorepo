@@ -1,0 +1,157 @@
+{
+  "experimental": true,
+  "componentSizingOnly": true,
+  "proofGenerated": false,
+  "note": "Isolated component circuits; gate costs are not additive because shared checks/overhead differ.",
+  "bb": "5.2.1",
+  "noir": "1.0.0-beta.25",
+  "threads": 2,
+  "nice": 10,
+  "sourceSha256": {
+    "signature.nr": "bbe5018d9f39319b3d3e5bedc52a4043932fe98cdd9d9e68cd214b2f5995bd44",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "8bf05e2f9568f19b091943cf38dd17e9c3013016ca9bd5d201a05b5fe917b2cb"
+  },
+  "results": [
+    {
+      "component": "sample",
+      "multiplicity": 1,
+      "compileAndWitnessMs": 233.98,
+      "gateCounterWallMs": 35.37,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 3689,
+            "circuit_size": 33944
+          }
+        ]
+      }
+    },
+    {
+      "component": "sample",
+      "multiplicity": 8,
+      "compileAndWitnessMs": 424.5,
+      "gateCounterWallMs": 101.98,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 29309,
+            "circuit_size": 130127
+          }
+        ]
+      }
+    },
+    {
+      "component": "capture",
+      "multiplicity": 1,
+      "compileAndWitnessMs": 246.65,
+      "gateCounterWallMs": 35.58,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 6228,
+            "circuit_size": 33944
+          }
+        ]
+      }
+    },
+    {
+      "component": "capture",
+      "multiplicity": 8,
+      "compileAndWitnessMs": 672.56,
+      "gateCounterWallMs": 141.91,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 49502,
+            "circuit_size": 182177
+          }
+        ]
+      }
+    },
+    {
+      "component": "edit_json",
+      "multiplicity": 1,
+      "compileAndWitnessMs": 654.45,
+      "gateCounterWallMs": 57.59,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 15892,
+            "circuit_size": 57728
+          }
+        ]
+      }
+    },
+    {
+      "component": "edit_json",
+      "multiplicity": 8,
+      "compileAndWitnessMs": 2075.74,
+      "gateCounterWallMs": 313.93,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 126814,
+            "circuit_size": 433250
+          }
+        ]
+      }
+    },
+    {
+      "component": "text_edit",
+      "multiplicity": 1,
+      "compileAndWitnessMs": 1005.33,
+      "gateCounterWallMs": 43.18,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 17039,
+            "circuit_size": 33944
+          }
+        ]
+      }
+    },
+    {
+      "component": "text_edit",
+      "multiplicity": 8,
+      "compileAndWitnessMs": 2879.96,
+      "gateCounterWallMs": 209.16,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 136109,
+            "circuit_size": 244787
+          }
+        ]
+      }
+    },
+    {
+      "component": "checkpoint",
+      "multiplicity": 1,
+      "compileAndWitnessMs": 6571.49,
+      "gateCounterWallMs": 171.96,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 48628,
+            "circuit_size": 205895
+          }
+        ]
+      }
+    },
+    {
+      "component": "checkpoint",
+      "multiplicity": 8,
+      "compileAndWitnessMs": 14065.67,
+      "gateCounterWallMs": 1194.37,
+      "gates": {
+        "functions": [
+          {
+            "acir_opcodes": 388359,
+            "circuit_size": 1613869
+          }
+        ]
+      }
+    }
+  ]
+}

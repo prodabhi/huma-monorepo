@@ -1,0 +1,857 @@
+{
+  "constraintChecksOnly": true,
+  "proofGenerated": false,
+  "sourceSha256": "ef2ab86e6a06250ec3f46d3696fc3bcde76a9304b0cedf7578e1df5f3623c6e9",
+  "results": [
+    {
+      "capacity": 1,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 1,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 1,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 1,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 1,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 1,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 1,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 55,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 55,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 55,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 55,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 55,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 55,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 55,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 55,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 55,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 56,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 56,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 56,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 56,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 56,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 56,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 56,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 56,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 56,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 56,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "Length57",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "Length63",
+      "accepted": true
+    },
+    {
+      "capacity": 63,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 63,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 63,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 63,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 63,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length57",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length63",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "Length64",
+      "accepted": true
+    },
+    {
+      "capacity": 64,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 64,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 64,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 64,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 64,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length57",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length63",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length64",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "Length65",
+      "accepted": true
+    },
+    {
+      "capacity": 65,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 65,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 65,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 65,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 65,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length57",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length63",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length64",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length65",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length118",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length119",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length120",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length121",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length127",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length128",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length129",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "Length160",
+      "accepted": true
+    },
+    {
+      "capacity": 160,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 160,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 160,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 160,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 160,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length57",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length63",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length64",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length65",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length118",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length119",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length120",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length121",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length127",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length128",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length129",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length447",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "Length448",
+      "accepted": true
+    },
+    {
+      "capacity": 448,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 448,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 448,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 448,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 448,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length57",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length63",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length64",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length65",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length118",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length119",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length120",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length121",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length127",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length128",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length129",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length447",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length448",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length511",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length512",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length631",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length632",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length639",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "Length640",
+      "accepted": true
+    },
+    {
+      "capacity": 640,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 640,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 640,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 640,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 640,
+      "case": "UnusedSuffix",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length0",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length1",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length54",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length55",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length56",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length57",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length63",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length64",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length65",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length118",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length119",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length120",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length121",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length127",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length128",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length129",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length447",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length448",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length511",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length512",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length631",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length632",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length639",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length640",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length767",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "Length768",
+      "accepted": true
+    },
+    {
+      "capacity": 768,
+      "case": "BadDigest",
+      "accepted": false
+    },
+    {
+      "capacity": 768,
+      "case": "BadPrefix",
+      "accepted": false
+    },
+    {
+      "capacity": 768,
+      "case": "OverCapacity",
+      "accepted": false
+    },
+    {
+      "capacity": 768,
+      "case": "BadLength",
+      "accepted": false
+    },
+    {
+      "capacity": 768,
+      "case": "UnusedSuffix",
+      "accepted": true
+    }
+  ]
+}

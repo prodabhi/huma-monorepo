@@ -1,0 +1,69 @@
+{
+  "experimental": true,
+  "statement": "Complete bounded native V2 replay; not app release",
+  "fixture": "swift-timed.json",
+  "fixtureSha256": "5649ff967696fd6734897990ad55f1f370117648709bb8b3e30e2462c3dda1d9",
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "verifierTarget": "noir-recursive",
+  "zeroKnowledge": true,
+  "threads": 2,
+  "nice": 10,
+  "compileAndWitnessMs": 28335.28,
+  "gateCount": {
+    "elapsedMs": 1440.6674170000001,
+    "result": {
+      "functions": [
+        {
+          "acir_opcodes": 438883,
+          "circuit_size": 1472958
+        }
+      ]
+    }
+  },
+  "setupMs": 5910.1565,
+  "proveMs": 13011.804541,
+  "verifyAndBindMs": 31.94,
+  "proofBytes": 14656,
+  "publicInputBytes": 7584,
+  "witnessSha256": "144fee2fed87fc1d612f73f6a491f798d8771530eb4a50a866ab851bfd9a8750",
+  "vkSha256": "382ca4f55ea87102631dd1c4de13eb0de7a64dc0f0833c6cdd0a6d61191c6b28",
+  "artifactSha256": "f6d837fc13cedab5eee3faa269c161d02b71e81f5dd59d06513400dc6f4a6928",
+  "sourceSha256": {
+    "bounded_sha256.nr": "ef2ab86e6a06250ec3f46d3696fc3bcde76a9304b0cedf7578e1df5f3623c6e9",
+    "bytes.nr": "01e4d6386f2d606fb6a497c50144dd6336b7d6569f1c6903a7547632de73ea59",
+    "main.nr": "33f259b45f22cdf59dc8bdd91172b86be5674237f55247257a88bfa129a0d29a",
+    "signature.nr": "bbe5018d9f39319b3d3e5bedc52a4043932fe98cdd9d9e68cd214b2f5995bd44"
+  },
+  "referenceJournal": {
+    "boundInputSamples": 10,
+    "byteLength": 46,
+    "captureHead": "806cf6f7a5312f3c2f420dd2b449202b5527627f5a662791f1275d769b972874",
+    "captureKeyHash": "2ee5f5f4c4c9b46f870d898785684ac05e4758590985bbde0015d93e934204e0",
+    "captureRecordCount": 15,
+    "checkpointHash": "1b8a498777fccbf87a8a5bad8427d80f62a368d120befb4266d30cbbf2619367",
+    "deviceReportedTime": {
+      "clockMovedBackwards": false,
+      "elapsedMilliseconds": 15,
+      "endUnixMilliseconds": 1792627200015,
+      "startUnixMilliseconds": 1792627200000
+    },
+    "editCount": 5,
+    "editHead": "3e5467f7b967daa1c746205fe6a9201297e75efab91eaf0cbc4ca50a0154dcdf",
+    "initialByteLength": 0,
+    "pasteEditCount": 1,
+    "rawByteLength": 48,
+    "rawTextHash": "4dddea48e6f7cf929f242b83bd16ba673f36790e4c5e4f503ca2778075a50616",
+    "relation": "huma-native-replay-v2",
+    "sessionIDHash": "35f213a1dcb0d1bb8fd8df5e3bca35d5d356b137a1b646347b13d1b4a7129ed5",
+    "signedCheckpointCount": 3,
+    "textPolicy": "trailing-ascii-space-tab-v1",
+    "typingLabeledEdits": 4,
+    "verifiedTextHash": "c9ecbc6774b732da94d7da74d0ef68b04062d9f41252bcc742a14a9ceb79374f",
+    "version": 2
+  },
+  "publicFieldsMatch": true,
+  "verified": true,
+  "adopted": false,
+  "reason": "6.1percent fewer gates, but a single-run prove13.012s vs13.301s is not a reliable latency improvement, and compilation was slower. Retain official SHA by default."
+}

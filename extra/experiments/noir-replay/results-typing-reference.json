@@ -1,0 +1,89 @@
+{
+  "synthetic": true,
+  "hardwareAttested": false,
+  "executionOnly": true,
+  "proofGenerated": false,
+  "noirProofGenerated": false,
+  "capture": "one character/edit, down/edit/up; software P-256; legacy32 vs current 10s/256-record cadence",
+  "sourceSha256": "de16b166d1e63dad08cddcb45de4cfa2a674888a4f27c8dcd964a2449fba5856",
+  "results": [
+    {
+      "fixture": "typing-50.json",
+      "cadence": "legacy32",
+      "fixtureSha256": "f1ce82108ff38e018472fe1a23eb0c4b3f5c47cd0cf3981970a663fe4fa5ad00",
+      "bytes": 50,
+      "edits": 50,
+      "samples": 100,
+      "records": 150,
+      "checkpoints": 6,
+      "executeWallMs": 163.7,
+      "cycles": 5456660,
+      "segments": 6
+    },
+    {
+      "fixture": "typing-250.json",
+      "cadence": "legacy32",
+      "fixtureSha256": "f1b90af1bc726430a4f59041bd06930afbafa8b4eb591026212595753a2fda4e",
+      "bytes": 250,
+      "edits": 250,
+      "samples": 500,
+      "records": 750,
+      "checkpoints": 25,
+      "executeWallMs": 390.99,
+      "cycles": 26277486,
+      "segments": 28
+    },
+    {
+      "fixture": "typing-1024.json",
+      "cadence": "legacy32",
+      "fixtureSha256": "ec3331e8ec1699d44f0d236d97b11ddb3b996a8bde8475547a6a748399362025",
+      "bytes": 1024,
+      "edits": 1024,
+      "samples": 2048,
+      "records": 3072,
+      "checkpoints": 98,
+      "executeWallMs": 1574.44,
+      "cycles": 120626609,
+      "segments": 126
+    },
+    {
+      "fixture": "typing-50-current.json",
+      "cadence": "current",
+      "fixtureSha256": "9e2a988dd56f3b547bdeb07ba24f9f459bedb20186e1d139b36ea3e633fdc8b5",
+      "bytes": 50,
+      "edits": 50,
+      "samples": 100,
+      "records": 150,
+      "checkpoints": 2,
+      "executeWallMs": 95.31,
+      "cycles": 4520183,
+      "segments": 5
+    },
+    {
+      "fixture": "typing-250-current.json",
+      "cadence": "current",
+      "fixtureSha256": "f68dc414941fabb53ed5b6d714a34e7d3c6d5c7a06a2a4524fe2d670378df28c",
+      "bytes": 250,
+      "edits": 250,
+      "samples": 500,
+      "records": 750,
+      "checkpoints": 5,
+      "executeWallMs": 285.82,
+      "cycles": 21568491,
+      "segments": 23
+    },
+    {
+      "fixture": "typing-1024-current.json",
+      "cadence": "current",
+      "fixtureSha256": "e82c975135f9e03f2e302e2cc1278195cb50b6275ecff2e451169d34a10cac74",
+      "bytes": 1024,
+      "edits": 1024,
+      "samples": 2048,
+      "records": 3072,
+      "checkpoints": 16,
+      "executeWallMs": 1097.33,
+      "cycles": 101308421,
+      "segments": 106
+    }
+  ]
+}

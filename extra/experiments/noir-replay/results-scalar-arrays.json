@@ -1,0 +1,66 @@
+{
+  "experimental": true,
+  "statement": "Complete bounded native V2 replay; not app release",
+  "fixture": "swift-timed.json",
+  "fixtureSha256": "5649ff967696fd6734897990ad55f1f370117648709bb8b3e30e2462c3dda1d9",
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "verifierTarget": "noir-recursive",
+  "zeroKnowledge": true,
+  "threads": 2,
+  "nice": 10,
+  "compileAndWitnessMs": 15685.48,
+  "gateCount": {
+    "elapsedMs": 1161.701375,
+    "result": {
+      "functions": [
+        {
+          "acir_opcodes": 388190,
+          "circuit_size": 1558327
+        }
+      ]
+    }
+  },
+  "setupMs": 5964.7275,
+  "proveMs": 13654.65425,
+  "verifyAndBindMs": 29.66,
+  "proofBytes": 14656,
+  "publicInputBytes": 7584,
+  "witnessSha256": "ce48f584833f4143c04b51b038205f9a0b05c4b241019d0ebda57883c49b1b0b",
+  "vkSha256": "4687d411188250af89a87dfda6f3db53502998bc2bb14cd5152450828db46c21",
+  "artifactSha256": "201467012dc35b40c5d8e063ef6eee678897cf565219d745dfded87249f06fb0",
+  "sourceSha256": {
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "89fe8c90000d10d0f74de69c37a32e8d0333c2bbfbc3dc80e4d0e82e3d8c0ab3",
+    "signature.nr": "bbe5018d9f39319b3d3e5bedc52a4043932fe98cdd9d9e68cd214b2f5995bd44"
+  },
+  "referenceJournal": {
+    "boundInputSamples": 10,
+    "byteLength": 46,
+    "captureHead": "806cf6f7a5312f3c2f420dd2b449202b5527627f5a662791f1275d769b972874",
+    "captureKeyHash": "2ee5f5f4c4c9b46f870d898785684ac05e4758590985bbde0015d93e934204e0",
+    "captureRecordCount": 15,
+    "checkpointHash": "1b8a498777fccbf87a8a5bad8427d80f62a368d120befb4266d30cbbf2619367",
+    "deviceReportedTime": {
+      "clockMovedBackwards": false,
+      "elapsedMilliseconds": 15,
+      "endUnixMilliseconds": 1792627200015,
+      "startUnixMilliseconds": 1792627200000
+    },
+    "editCount": 5,
+    "editHead": "3e5467f7b967daa1c746205fe6a9201297e75efab91eaf0cbc4ca50a0154dcdf",
+    "initialByteLength": 0,
+    "pasteEditCount": 1,
+    "rawByteLength": 48,
+    "rawTextHash": "4dddea48e6f7cf929f242b83bd16ba673f36790e4c5e4f503ca2778075a50616",
+    "relation": "huma-native-replay-v2",
+    "sessionIDHash": "35f213a1dcb0d1bb8fd8df5e3bca35d5d356b137a1b646347b13d1b4a7129ed5",
+    "signedCheckpointCount": 3,
+    "textPolicy": "trailing-ascii-space-tab-v1",
+    "typingLabeledEdits": 4,
+    "verifiedTextHash": "c9ecbc6774b732da94d7da74d0ef68b04062d9f41252bcc742a14a9ceb79374f",
+    "version": 2
+  },
+  "publicFieldsMatch": true,
+  "verified": true
+}

@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-22",
+  "experimental": true,
+  "bb": "5.2.1",
+  "noir": "1.0.0-beta.25",
+  "threads": 2,
+  "nice": 10,
+  "statement": "Complete native V2 replay for bounded public Swift fixture, before serialization optimization",
+  "fixture": "swift-timed.json",
+  "utf8Bytes": 48,
+  "edits": 5,
+  "inputSamples": 10,
+  "captureRecords": 15,
+  "checkpoints": 3,
+  "includesHighSDER": true,
+  "proveMs": 20738.175833,
+  "gateCount": {
+    "functions": [
+      {
+        "acir_opcodes": 975896,
+        "circuit_size": 2512833
+      }
+    ]
+  },
+  "verified": true,
+  "proofBytes": 14656,
+  "vkSha256": "d29393e6863915cbfad76b023a1167dfc79d8fa143162139ff748b024b0ff60e",
+  "sourceSha256": {
+    "signature.nr": "bbe5018d9f39319b3d3e5bedc52a4043932fe98cdd9d9e68cd214b2f5995bd44",
+    "bytes.nr": "8fac03c4b80f05c6ad3a15a7327a72baf5aeb630d25d13d855200b550e1ef9ce",
+    "main.nr": "86e684c695a6755177a7f0e1a8d24083e5bb73318f62bd7c8ebc84feff23eafb"
+  },
+  "conditions": "One proof, cached public assets and precomputed VK, two threads, nice10, Huma exclusive/thermal controls. Shared interactive M4Max16cores48GiB. Not app acceptance or max-length cast benchmark."
+}

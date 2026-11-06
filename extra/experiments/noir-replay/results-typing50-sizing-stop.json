@@ -1,0 +1,20 @@
+{
+  "stopped": true,
+  "reason": "rss",
+  "peakSampledRSS": 6921043968,
+  "wallMs": 39075.6,
+  "proofAttempted": false,
+  "case": "typing50-current",
+  "statement": "Resource-limited full replay compilation, not a Noir size limit",
+  "byteCapacity": 64,
+  "editCount": 50,
+  "sampleCount": 100,
+  "captureCount": 150,
+  "checkpointCount": 2,
+  "proofGenerated": false,
+  "sourceSha256": {
+    "signature.nr": "bbe5018d9f39319b3d3e5bedc52a4043932fe98cdd9d9e68cd214b2f5995bd44",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "9abd5e223d4c18ba91903e54bdc07dea9f7127c8b83e604e7334c6855e0c5370"
+  }
+}

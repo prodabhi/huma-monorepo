@@ -1,0 +1,7 @@
+[package]
+name = "huma_replay_experiment"
+type = "bin"
+authors = []
+compiler_version = ">=1.0.0"
+[dependencies]
+sha256 = { path = "../../../build/research/noir-sha256" }

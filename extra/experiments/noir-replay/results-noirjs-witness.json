@@ -1,0 +1,10 @@
+{
+  "sdk": "1.0.0-beta.25",
+  "loadMs": 6.947499999999998,
+  "executeMs": 1607.462667,
+  "totalMs": 1619.077,
+  "witnessBytes": 1016322,
+  "sameDecompressedWitnessAsNargo": true,
+  "timerStartsAfterSDKModuleImport": true,
+  "processAndModuleStartupAdditional": true
+}
