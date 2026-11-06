@@ -3,22 +3,24 @@ import { spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import { brotliCompress, gzip, constants as zlib } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import { configuredObjectStore, QUOTA_STATE_LIMIT } from './object-store.mjs';
-import { worldIDSigninMessage, accountSignal, validateManifest, publicationMessage, removalMessage, replayMessage, requestMessage, listedMessage, titleMessage, signinMessage, cleanTitle, shortTitle, writerProfile, deviceAuthorizationMessage, humaScore, writtenInBrowser, MASTER_LIMIT, PROOF_LIMIT, UPLOAD_LIMIT, REPLAY_LIMIT } from './publication-contract.mjs';
+import { worldIDSigninMessage, worldIDSessionMessage, accountSignal, sessionSignal, validateManifest, publicationMessage, removalMessage, replayMessage, requestMessage, listedMessage, titleMessage, signinMessage, cleanTitle, shortTitle, writerProfile, deviceAuthorizationMessage, humaScore, writtenInBrowser, MASTER_LIMIT, PROOF_LIMIT, UPLOAD_LIMIT, REPLAY_LIMIT } from './publication-contract.mjs';
 import { PublicationQuotas } from './upload-quotas.mjs';
 import { hashRecord, checkHashRecord, attestationKey, recordBytes } from './hash-record.mjs';
 import { verifyMessage, getAddress } from 'viem';
 import { verifyReplay } from './replay-core.mjs';
 import { configuredTurnstile, requestHostname, NOT_CONFIRMED } from './turnstile-verify.mjs';
-import { configuredWorldID, pageSignal, publicWorldID, NOT_VERIFIED, WORLD_ID_REQUIRED, WORLD_ID_LIMIT } from './worldid-verify.mjs';
+import { configuredWorldID, pageSignal, publicWorldID, NOT_VERIFIED, WORLD_ID_LIMIT, WORLD_ID_START, WORLD_ID_FINISH, WORLD_ID_SOMEONE_ELSE, WORLD_ID_UNCONFIGURED } from './worldid-verify.mjs';
 import { createSessions, sessionClaim, clientAddress } from './sessions.mjs';
+import { createStreams } from './detection/stream.mjs';
+import { judgeSession, publicDetection, holdsScore, withBaseline, storableDetection } from './detection/judge.mjs';
+import { updateBaseline, valuesOf, BASELINE_PROBABILITY, emptyBaseline } from './detection/baseline.mjs';
 import { clientIP } from './client-ip.mjs';
 import { deviceOwnerKey, deviceOwner, profileKey, writersIndexKey, readState, changeState, accountWorldID, worldIDKey, WRITER_PAGES } from './documents.mjs';
+import { sha256Hex as hash, fail, isHash as strictHash } from './server-util.mjs';
 const brotli = promisify(brotliCompress), gzipped = promisify(gzip);
 
-const hash = bytes => createHash('sha256').update(bytes).digest('hex');
-const fail = (status, message) => Object.assign(new Error(message), { status });
-const strictHash = value => typeof value === 'string' && value.match(/^[a-f0-9]{64}$/)?.[0] === value;
 const sameToken = (token, expected) => typeof token === 'string' && token.length <= 8192 &&
   typeof expected === 'string' && timingSafeEqual(Buffer.from(hash(token), 'hex'), Buffer.from(expected, 'hex'));
 const bearer = req => req.headers.authorization?.match(/^Bearer ([A-Za-z0-9._~-]{1,8192})$/)?.[1];
@@ -32,21 +34,26 @@ export const shortCode = value => typeof value === 'string' && /^[A-Za-z0-9]{8,1
 // A reader who opened a short link sends "<code>.<key>" where a full link sends its token.
 const shortBearer = token => token?.match(/^([A-Za-z0-9]{8,12})\.([A-Za-z0-9]{16})$/);
 /** A page's Huma score and check tier, worked out here from what the verifier checked (publication-verifier.mjs), the
- *  way a reader does (verify.mjs): never what the uploader says. Pages without a page proof's journal have neither. */
-export function verifiedScore(scoring) {
+ *  way a reader does (verify.mjs): never what the uploader says. Pages without a page proof's journal have neither.
+ *  `detection` is the page's verdict (detection/judge.mjs): a browser page's on its streamed session, a Mac page's on its
+ *  replay. Unless `enforced` is off (HUMA_DETECTION_MODE=shadow), a verdict that holds the score (holdsScore) caps it at 50. */
+export function verifiedScore(scoring, detection = null, enforced = true) {
   const j = scoring?.journal;
   if (!j || typeof j !== 'object') return { score: null, tier: null };
   const browser = writtenInBrowser(j), passkey = browser && scoring.passkey === true;
-  // A browser page whose uploaded replay's rhythm looked automated (replayRhythm, worked out by the verifier) is held at 50.
+  // A browser page whose uploaded replay's rhythm looked automated (replayRhythm, worked out by the verifier), or whose
+  // session the detection couldn't verify as a person's, is held at 50.
   const { value } = humaScore({ composition: scoring.composition ?? null, typingEdits: Number(j.typing), edits: Number(j.edits),
     rules: Array.isArray(j.rules) ? j.rules : [], presenceCount: Number(j.presence_count), onTime: Number(j.on_time), browser, passkey,
-    rhythmAutomated: scoring.rhythmAutomated === true });
+    rhythmAutomated: scoring.rhythmAutomated === true, automated: enforced && holdsScore(detection) });
   return { score: Number.isInteger(value) ? value : null, tier: browser ? (passkey ? 'passkey' : 'web') : 'mac' };
 }
 /** The title a writer gave their page (up to 120 characters), or else its first line. */
 /** The writer's title for a page, or a short name from its first line. */
 const pageTitle = (title, text) => cleanTitle(title) || shortTitle((text ?? '').split('\n').find(line => line.trim()) ?? '');
 const listedKey = id => 'listed/' + id;
+/** A writer's typing profile (detection/baseline.mjs), by account: aggregates of a few features, never events. */
+export const baselineKey = owner => 'documents/' + hash('huma-baseline-v1\0' + owner);
 
 /** A request's body, up to `limit` bytes. A client that stops sending for `idle` ms, or takes longer than `total`, is
  *  cut off, so a stalled upload can't hold a place for long. */
@@ -161,10 +168,13 @@ export function privyAuthenticator(env = process.env) {
 }
 
 // A stored record may carry a World ID proof (worldid-verify.mjs), so it is read with room for one.
-const RECORD_LIMIT = 16384 + WORLD_ID_LIMIT;
+// A page written in a browser keeps two: the one scanned at its Start and the one at its Finish.
+const RECORD_LIMIT = 16384 + 2 * WORLD_ID_LIMIT;
 export function createPublications({ directory, objectStore = configuredObjectStore(directory),
   authenticate = privyAuthenticator(), verifyUpload = verifyPublicationUpload, checkReplay = verifyReplay, now = Date.now,
-  quotaLimits, turnstile = configuredTurnstile(), worldId = configuredWorldID() } = {}) {
+  quotaLimits, turnstile = configuredTurnstile(), worldId = configuredWorldID(), streamsDirectory = path.join(directory, '..', 'streams'),
+  // 'enforce': the detection's verdict holds a browser page's score (verifiedScore); 'shadow': it's judged, kept and shown, but changes no score.
+  detectionMode = process.env.HUMA_DETECTION_MODE === 'shadow' ? 'shadow' : 'enforce' } = {}) {
   // Authenticators return an owner hash, or { owner, wallets } when they also know the user's wallets.
   const identify = async token => {
     const value = await authenticate(token);
@@ -172,6 +182,9 @@ export function createPublications({ directory, objectStore = configuredObjectSt
   };
   const quotas = new PublicationQuotas(objectStore, { now, ...(quotaLimits ? { limits: quotaLimits } : {}) });
   const sessions = createSessions({ objectStore, now });
+  // The editor's event stream while a browser page is written (detection/stream.mjs): one file per session beside the
+  // publications, checked at Finish.
+  const streams = createStreams({ directory: streamsDirectory, secret: sessions.secret, live: sessions.live, now });
   const pending = new Map(); let retained = 0, preparing = 0, publishing = 0, replaying = 0;
   // Onboarding sign-in: the app makes a secret code, the browser signs in and posts it with the
   // Privy token, and the app reads back who signed in. Keyed by the code's hash; ten minutes.
@@ -215,17 +228,32 @@ export function createPublications({ directory, objectStore = configuredObjectSt
     return { status: item.result ? 'published' : 'awaiting-approval', expiresAt: item.expires,
       manifest: item.manifest, ...(item.text !== undefined ? { text: item.text } : {}),
       ...(item.approvalError ? { approvalError: item.approvalError } : {}),
+      ...(item.detection ? { detection: publicDetection(item.detection, detectionMode === 'enforce') } : {}),
       ...(item.result ? item.result : {}), storage: objectStore.kind };
   }
   async function removed(id) {
     try { await objectStore.get('removed/' + id, 4096); return true; } catch { return false; }
   }
-  async function record(req, id) {
-    if (await removed(id)) throw fail(410, 'The writer removed this page.');
+  /** A shared page's kept record, checked against its id, and whether its writer took it down: both read at once (each
+   *  is a round trip to the object store). */
+  async function storedRecord(id) {
+    // A record may carry a World ID proof, so it's read with room for one (RECORD_LIMIT).
+    const [gone, stored] = await Promise.all([removed(id), objectStore.get('records/' + id, RECORD_LIMIT).catch(() => null)]);
+    if (gone) return { gone, value: null };
     let value;
-    try { value = JSON.parse(await objectStore.get('records/' + id, RECORD_LIMIT)); }
+    try { value = JSON.parse(stored ?? ''); }
     catch { throw fail(404, 'Publication not found.'); }
-    if (typeof value.manifest !== 'string' || hash(value.manifest) !== id) throw fail(422, 'Stored manifest changed.');
+    if (typeof value?.manifest !== 'string' || hash(value.manifest) !== id) throw fail(422, 'Stored manifest changed.');
+    return { gone, value };
+  }
+  /** The record of a page that's still up, or a 410. */
+  async function liveRecord(id) {
+    const { gone, value } = await storedRecord(id);
+    if (gone) throw fail(410, 'The writer removed this page.');
+    return value;
+  }
+  async function record(req, id) {
+    const value = await liveRecord(id);
     const manifest = validateManifest(JSON.parse(value.manifest));
     const token = bearer(req), short = shortBearer(token);
     if (manifest.access === 'link' && !sameToken(token, value.tokenHash)) {
@@ -233,7 +261,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
       if (alias?.id !== id || !sameToken(short[2], alias.keyHash)) throw fail(404, 'Publication not found.');
     }
     return { source: value.manifest, manifest, owner: value.owner, ownerHash: value.ownerHash, profile: value.profile ?? null, replay: value.replay ?? null, worldId: value.worldId ?? null,
-      serverStart: Number.isFinite(value.serverStart) ? value.serverStart : null, stored: value.stored ?? null };
+      serverStart: Number.isFinite(value.serverStart) ? value.serverStart : null, stored: value.stored ?? null, detection: value.detection ?? null };
   }
   /** Where Arkiv keeps a page's text and proof, for its record: { stored: { network, chainId, explorer, rpc, owner, master,
    *  proof } }, each file { entity, tx, chunks, at, expires }. Nothing for another store, or when a write gave no entity. */
@@ -290,7 +318,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
       json(res, 200, await sessions.issue(clientAddress(req)));
       return true;
     }
-    if (!pathname.startsWith('/api/publications') && pathname !== '/api/worldid/signin') return false;
+    if (!pathname.startsWith('/api/publications') && pathname !== '/api/worldid/signin' && pathname !== '/api/worldid/session') return false;
     const reply = (status, data) => json(res, status, data);
     // Proofs are base64 JSON, so they travel compressed when the reader accepts it: a 140 KB page proof sends 86 KB.
     // Browsers and the Mac app undo the encoding before anything reads or hashes the bytes.
@@ -305,7 +333,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
         ...(attachment ? { 'Content-Disposition': `attachment; filename="${attachment}"` } : {}) }); res.end(body);
     };
     const issue = req.method === 'POST' && pathname === '/api/publications/prepare';
-    const ticketID = pathname.match(/^\/api\/publications\/pending\/([a-f0-9]{64})(\/publish|\/publish-device)?$/);
+    const ticketID = pathname.match(/^\/api\/publications\/pending\/([a-f0-9]{64})(\/publish|\/publish-device|\/worldid)?$/);
     const publishedID = pathname.match(/^\/api\/publications\/([a-f0-9]{64})(?:\/(master|proof|replay|receipt|worldid|remove|short|listed|title))?$/);
     // Which page a short link's code names (its id, which opens nothing by itself without the key after the #): how a
     // browser finds the page it's renaming or deleting from the link it kept.
@@ -319,6 +347,27 @@ export function createPublications({ directory, objectStore = configuredObjectSt
     // key, and the request signed by that key. World confirms the proof here; the account is the World ID's own
     // (worldIDAccount), so one person has one account, the same on every device. The browser's key is linked to it as a
     // Privy sign-in linked it, and the account keeps its World ID for the pages it shares (documents.mjs).
+    // Start Recording, with World ID (frontend/write/worldid.mjs): a World ID made for this writing session and this browser's
+    // key, the request signed by that key. It also signs the browser in, as /api/worldid/signin does, so a writer who
+    // isn't signed in yet scans once. The page this session makes is shared only with a World ID from the same person
+    // at Finish (confirmWorldID).
+    if (pathname === '/api/worldid/session') {
+      if (req.method !== 'POST') throw fail(405, 'Method not allowed.');
+      if (!worldId.enabled) throw fail(404, 'World ID is off.');
+      const raw = await readBody(req, WORLD_ID_LIMIT + 1024, 'World ID proof is too large.');
+      let body = null;
+      try { body = JSON.parse(raw.toString('utf8')); } catch {}
+      const publicKey = deviceKey(body?.publicKey), nonce = body?.nonce;
+      if (!publicKey || !body.proof || typeof body.proof !== 'object' || Array.isArray(body.proof)) throw fail(400, 'Invalid request.');
+      if (!deviceSigned(publicKey, worldIDSessionMessage(publicKey, hash(raw)), req.headers['x-huma-signature'])) throw fail(403, 'The request signature does not match.');
+      if (!(await sessions.live(nonce))) throw fail(403, 'This writing session has ended. Start a new document.');
+      const result = await worldId.verify(body.proof, sessionSignal(nonce, publicKey));
+      if (!result.ok) throw fail(result.status === 400 ? 403 : result.status, NOT_VERIFIED);
+      const { owner, wallet, account, shown } = await linkWorldDevice(publicKey, result.record, { browser: true });
+      const kept = await sessions.startedBy(nonce, { owner, record: result.record });
+      if (kept?.record.nullifier !== result.record.nullifier) throw fail(409, 'This writing session was started by someone else.');
+      reply(200, { status: 'signed-in', wallet, account, worldId: shown }); return true;
+    }
     if (pathname === '/api/worldid/signin') {
       if (req.method !== 'POST') throw fail(405, 'Method not allowed.');
       if (!worldId.enabled) throw fail(404, 'World ID is off.');
@@ -355,12 +404,19 @@ export function createPublications({ directory, objectStore = configuredObjectSt
         const publicKey = deviceKey(body.publicKey);
         if (!worldId.enabled) throw fail(404, 'World ID is off.');
         if (!publicKey || !body.worldId || typeof body.worldId !== 'object' || Array.isArray(body.worldId)) throw fail(400, 'Invalid sign-in.');
-        const result = await worldId.verify(body.worldId, accountSignal(publicKey));
+        // At Start Recording the Mac also sends the session the host issued (body.nonce): the World ID is made for
+        // that session and its key, and kept with the session, as /api/worldid/session does for a browser.
+        const nonce = body.nonce;
+        if (nonce !== undefined && !(await sessions.live(nonce))) throw fail(403, 'This writing session has ended. Start again from Huma.');
+        const result = await worldId.verify(body.worldId, nonce === undefined ? accountSignal(publicKey) : sessionSignal(nonce, publicKey));
         if (!result.ok) throw fail(result.status === 400 ? 403 : result.status, NOT_VERIFIED);
         const { owner, wallet, account } = await linkWorldDevice(publicKey, result.record, { browser: false });
+        if (nonce !== undefined && (await sessions.startedBy(nonce, { owner, record: result.record }))?.record.nullifier !== result.record.nullifier)
+          throw fail(409, 'This writing session was started by someone else.');
         if (signins.has(hash(code))) throw fail(409, 'This sign-in code was already used. Start again from Huma.');
         signins.set(hash(code), { account, wallet, device: true, owner, ip, publicKey, expires: now() + ttl });
-        reply(200, { status: 'signed-in', account }); return true;
+        // Who signed in, here too: a Mac that sent its Start scan itself needn't read it back with the code.
+        reply(200, { status: 'signed-in', account, wallet, device: true }); return true;
       }
       // Privy, off for now on the web and the Mac (World ID signs in instead): no page sends its token any more.
       const { owner, wallets = [], account = null } = await identify(bearer(req));
@@ -412,15 +468,35 @@ export function createPublications({ directory, objectStore = configuredObjectSt
         if (retained + bytes > pendingLimit) throw fail(429, 'Publication queue is full; retry later.');
         const id = randomBytes(32).toString('hex'), ticket = randomBytes(32).toString('hex');
         const browser = Boolean(scoring?.journal && writtenInBrowser(scoring.journal));
+        const text = manifest.statement.contentKind === 'text' ? new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(master) : undefined;
+        // The page's session, judged now (detection/judge.mjs): a browser page's streamed events against this replay and
+        // text; a Mac page's replay alone. A judging error never stops a share; the page is then unjudged, which the
+        // score treats as unverified for a browser page.
+        const session = scoring?.journal ? sessionClaim(scoring.journal) : null;
+        const detection = scoring?.journal && (browser ? session?.nonce : replay) ? await judgeSession({ streams, secret: sessions.secret, nonce: session?.nonce ?? null, journal: scoring.journal,
+          replay: replay ?? null, text: text ?? '', platform: browser ? 'web' : 'mac' })
+          .catch(error => { console.error(new Date().toISOString(), 'detection', String(error?.stack ?? error).split('\n').slice(0, 4).join('\n')); return null; }) : null;
         pending.set(id, { ip, manifest, proof: Buffer.from(proof), master, bytes, ticketHash: hash(ticket), expires: now() + ttl,
-          ...verifiedScore(scoring), browser, ...(browser ? { session: sessionClaim(scoring.journal) } : {}), ...(replay ? { replay: Buffer.from(replay) } : {}),
-          ...(manifest.statement.contentKind === 'text' ? { text: new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(master) } : {}) });
+          ...verifiedScore(scoring, detection, detectionMode === 'enforce'), browser, ...(session ? { session } : {}), ...(replay ? { replay: Buffer.from(replay) } : {}),
+          ...(detection ? { detection, scoring } : {}), ...(text !== undefined ? { text } : {}) });
         retained += bytes;
         reply(201, { id, ticket, expiresAt: now() + ttl, storage: objectStore.kind });
       } finally { preparing--; }
       return true;
     }
     if (ticketID && req.method === 'GET' && !ticketID[2]) { reply(200, summary(find(req, ticketID[1]))); return true; }
+    // The World ID that finishes a page shared from the Mac (frontend/share/src/WorldSignIn.jsx, in Huma's World ID window):
+    // made for this page's text and proof, checked with World now, and kept with the waiting page for its publish.
+    if (ticketID?.[2] === '/worldid' && req.method === 'POST') {
+      const item = find(req, ticketID[1], req.headers['x-huma-ticket']);
+      if (!worldId.enabled) throw fail(404, 'World ID is off.');
+      const body = await readSmallJSON(req, WORLD_ID_LIMIT + 1024);
+      if (!body.worldId || typeof body.worldId !== 'object' || Array.isArray(body.worldId)) throw fail(400, 'Invalid request.');
+      const result = await worldId.verify(body.worldId, pageSignal(item.manifest));
+      if (!result.ok) throw fail(result.status === 400 ? 403 : result.status, NOT_VERIFIED);
+      item.finished = result.record;
+      reply(200, { status: 'finished' }); return true;
+    }
     if (ticketID?.[2] && req.method === 'POST') {
       const item = find(req, ticketID[1], req.headers['x-huma-ticket']);
       if (publishing >= 2 || item.publishing) throw fail(409, 'Publication is already in progress.');
@@ -436,6 +512,13 @@ export function createPublications({ directory, objectStore = configuredObjectSt
         await confirmWorldID(item, body.worldId);
         await confirmTime(item);
         await claimWriter(item.manifest.statement.captureKeyHash, ownerHash);
+        // The writer's own typing profile (detection/baseline.mjs), now that the account is known: the verdict gains the
+        // session's distance from it, and the score follows. Best effort: a store that can't be read leaves the verdict as judged.
+        if (item.detection?.raw && !item.proposed) {
+          const baseline = await readState(objectStore, baselineKey(ownerHash), null).then(state => state.value, () => null);
+          const judged = withBaseline(item.detection, baseline);
+          if (judged !== item.detection) { item.detection = judged; Object.assign(item, verifiedScore(item.scoring, judged, detectionMode === 'enforce')); }
+        }
         const manifest = JSON.stringify(item.manifest), id = hash(manifest);
         item.quotaDay ??= quotas.day();
         try {
@@ -460,7 +543,8 @@ export function createPublications({ directory, objectStore = configuredObjectSt
           item.proposed = { result: { id, path: '/original/' + id + (token ? '#' + token : '') }, token, listed: body.listed === true, title: pageTitle(body.title, item.text),
             fields: { manifest, tokenHash: token ? hash(token) : null, ownerHash,
               ...(signed ? { owner: signed } : {}), ...(profile ? { profile } : {}), ...(item.serverStart ? { serverStart: item.serverStart } : {}), ...(item.worldId ? { worldId: item.worldId } : {}),
-              ...(item.replay ? { replay: { hash: hash(item.replay), byteLength: item.replay.length } } : {}) } };
+              ...(item.replay ? { replay: { hash: hash(item.replay), byteLength: item.replay.length } } : {}),
+              ...(item.detection ? { detection: storableDetection(item.detection) } : {}) } };
         }
         const [master, proof] = await Promise.all([objectStore.put('objects/' + item.manifest.master.hash, item.master),
           objectStore.put('objects/' + item.manifest.proof.hash, item.proof),
@@ -477,6 +561,11 @@ export function createPublications({ directory, objectStore = configuredObjectSt
         const [short] = await Promise.all([shortLink(id, item.proposed.token).catch(() => null),
           objectStore.put('records/' + id, item.proposed.record).then(() => addToRecord(ownerHash, id, item))]);
         item.result = { ...item.proposed.result, ...(short ? { short } : {}) };
+        // A session scored as surely a person's, with its integrity intact, joins the writer's profile (aggregates only).
+        if (item.detection?.integrity === 'pass' && item.detection.band === 'likely_human' && item.detection.humanProbability >= BASELINE_PROBABILITY) {
+          const values = valuesOf(item.detection.features);
+          await changeState(objectStore, baselineKey(ownerHash), emptyBaseline(), baseline => updateBaseline(baseline, values)).catch(() => {});
+        }
         // Its files are stored now: only its status stays, for whoever is waiting on it.
         retained -= item.bytes; item.bytes = 0; delete item.master; delete item.proof; delete item.replay;
         reply(200, summary(item));
@@ -506,7 +595,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
       return true;
     }
     if (publishedID && req.method === 'GET') {
-      const { source, manifest, owner, ownerHash, profile, replay: shared, serverStart, worldId: human, stored } = await record(req, publishedID[1]);
+      const { source, manifest, owner, ownerHash, profile, replay: shared, serverStart, worldId: human, stored, detection } = await record(req, publishedID[1]);
       const part = publishedID[2];
       if (part === 'receipt') {
         // Who shared the page (as this host says), the writer's name and face, whether its replay is shared, the
@@ -515,16 +604,20 @@ export function createPublications({ directory, objectStore = configuredObjectSt
         // Arkiv has stored: the entities and transactions holding its text and proof, so a reader can look them up there.
         const [replay, handle, listed, anchor] = await Promise.all([currentReplay(publishedID[1], shared), currentHandle(ownerHash), isListed(publishedID[1]), attestation(publishedID[1], source)]);
         reply(200, { owner: owner ?? null, profile, replay: Boolean(replay), handle, listed, ...(serverStart !== null ? { serverStart } : {}),
-          ...(human ? { worldId: publicWorldID(human) } : {}), ...(stored ? { stored } : {}), ...(anchor ? { attestation: anchor } : {}) });
+          ...(human ? { worldId: publicWorldID(human) } : {}), ...(stored ? { stored } : {}), ...(anchor ? { attestation: anchor } : {}),
+          // The verdict on its streamed session (detection/judge.mjs), and whether it held the score.
+          ...(detection ? { detection: publicDetection(detection, detectionMode === 'enforce') } : {}) });
       } else if (part === 'worldid') {
         // What anyone needs to check the badge themselves: the proof as World's verify endpoint takes it, and the signal it was made for.
         if (!human) throw fail(404, 'No World ID was shared with this page.');
-        reply(200, { rpId: worldId.rpId, action: human.action, environment: human.environment, signal: human.signal ?? pageSignal(manifest), result: human.result });
+        reply(200, { rpId: worldId.rpId, action: human.action, environment: human.environment, signal: human.signal ?? pageSignal(manifest), result: human.result,
+          // The one scanned at the page's Start, checkable the same way.
+          ...(human.started ? { started: { signal: human.started.signal, result: human.started.result } } : {}) });
       } else if (!part) await raw(Buffer.from(source), 'application/json');
       else if (part === 'replay') {
         // The writer's replay; readers check it against the page proof themselves (replay-core.mjs).
         const replay = await currentReplay(publishedID[1], shared);
-        if (!replay || !/^[a-f0-9]{64}$/.test(replay.hash) || !(replay.byteLength <= REPLAY_LIMIT)) throw fail(404, 'This page has no replay.');
+        if (!replay || !strictHash(replay.hash) || !(replay.byteLength <= REPLAY_LIMIT)) throw fail(404, 'This page has no replay.');
         const bytes = await objectStore.get('objects/' + replay.hash, REPLAY_LIMIT);
         if (bytes.length !== replay.byteLength || hash(bytes) !== replay.hash) throw fail(422, 'Stored replay changed.');
         await raw(bytes, 'application/json');
@@ -557,15 +650,17 @@ export function createPublications({ directory, objectStore = configuredObjectSt
    *  shares (documents.mjs). A key already linked to another account stays with it. */
   async function linkWorldDevice(publicKey, record, { browser }) {
     const { owner, wallet } = worldIDAccount(record.nullifier, worldId.environment), shown = publicWorldID(record);
-    const bound = await deviceOwner(objectStore, publicKey), device = deviceRecord(publicKey, wallet);
-    if (bound && bound.owner !== owner) throw fail(409, 'This device is already linked to another account.');
-    let existing = null;
-    try { existing = JSON.parse((await objectStore.get(device, 16384)).toString('utf8')); } catch {}
-    if (existing && existing.owner !== owner) throw fail(409, 'This device is already linked to another account.');
-    if (!existing) await objectStore.put(device, Buffer.from(JSON.stringify({ wallet, owner, publicKey, authorization: { worldId: shown.fingerprint } })));
-    if (browser && !bound) await objectStore.put(deviceOwnerKey(publicKey), Buffer.from(JSON.stringify({ owner, wallet })));
-    if (!(await accountWorldID(objectStore, owner, worldId.environment)))
-      await objectStore.put(worldIDKey(owner, worldId.environment), Buffer.from(JSON.stringify(record)));
+    const device = deviceRecord(publicKey, wallet);
+    // What's there already, read at once: on Arkiv each is a round trip.
+    const [bound, existing, linked] = await Promise.all([deviceOwner(objectStore, publicKey),
+      objectStore.get(device, 16384).then(bytes => JSON.parse(bytes.toString('utf8')), () => null),
+      accountWorldID(objectStore, owner, worldId.environment)]);
+    if ((bound && bound.owner !== owner) || (existing && existing.owner !== owner)) throw fail(409, 'This device is already linked to another account.');
+    // What's missing, written at once (a first sign-in): on Arkiv each is a transaction, several seconds to confirm.
+    await Promise.all([
+      existing ? null : objectStore.put(device, Buffer.from(JSON.stringify({ wallet, owner, publicKey, authorization: { worldId: shown.fingerprint } }))),
+      browser && !bound ? objectStore.put(deviceOwnerKey(publicKey), Buffer.from(JSON.stringify({ owner, wallet }))) : null,
+      linked ? null : objectStore.put(worldIDKey(owner, worldId.environment), Buffer.from(JSON.stringify(record)))]);
     return { owner, wallet, account: 'World ID ' + shown.fingerprint, shown };
   }
   /** The World ID a page is kept with: its account's (linked before the writer's first Finish, documents.mjs), so every
@@ -575,13 +670,39 @@ export function createPublications({ directory, objectStore = configuredObjectSt
    *  asked). One that doesn't check out stops the share, so a badge is never half-given. Checked once per request to share. */
   async function confirmWorldID(item, proof) {
     if (item.worldId || item.proposed) return;
-    const linked = worldId.enabled ? await accountWorldID(objectStore, item.ownerHash, worldId.environment) : null;
-    if (linked) { item.worldId = linked; return; }
-    if (proof === undefined || proof === null) {
-      if (worldId.required && item.browser) throw fail(403, WORLD_ID_REQUIRED);
+    // A production host without World ID shares nothing, from a browser or a Mac: the human check is never quietly off.
+    if (worldId.missing) throw fail(503, WORLD_ID_UNCONFIGURED);
+    if (!worldId.enabled) { if (proof !== undefined && proof !== null) throw fail(409, 'World ID is not turned on here.'); return; }
+    const linked = await accountWorldID(objectStore, item.ownerHash, worldId.environment);
+    // Written in a session (a browser's, or a Mac's): one unique human scanned World ID at its Start (bound to the
+    // session: /api/worldid/session, or the Mac's World ID window) and again at its Finish (bound to its text and
+    // proof: this `proof`, or the one the Mac's window sent, item.finished), and that human is the account's. Where
+    // World ID is only a badge (HUMA_WORLD_REQUIRED=false), a page without them is shared with the account's, if any.
+    if (item.browser || item.session?.nonce) {
+      const started = await sessions.started(item.session?.nonce);
+      let finished = item.finished ?? null;
+      if (!finished && proof !== undefined && proof !== null) {
+        if (JSON.stringify(proof).length > WORLD_ID_LIMIT) throw fail(413, 'World ID proof is too large.');
+        const result = await worldId.verify(proof, pageSignal(item.manifest));
+        if (!result.ok) throw fail(result.status === 400 ? 403 : result.status, NOT_VERIFIED);
+        finished = result.record;
+      }
+      if (!finished) {
+        if (worldId.required) throw fail(403, started ? WORLD_ID_FINISH : WORLD_ID_START);
+        if (linked) item.worldId = linked;
+        return;
+      }
+      if (started && started.record.nullifier !== finished.nullifier) throw fail(403, WORLD_ID_SOMEONE_ELSE);
+      if (worldIDAccount(finished.nullifier, worldId.environment).owner !== item.ownerHash && linked?.nullifier !== finished.nullifier)
+        throw fail(403, 'This World ID isn’t your account’s.');
+      if (!started && worldId.required) throw fail(403, WORLD_ID_START);
+      item.startedSession = Boolean(started);
+      item.worldId = { ...finished, ...(started ? { started: { signal: started.record.signal, verifiedAt: started.record.verifiedAt, result: started.record.result } } : {}) };
       return;
     }
-    if (!worldId.enabled) throw fail(409, 'World ID is not turned on here.');
+    // A page without a writing session: the account's, or a World ID sent for this page alone.
+    if (linked) { item.worldId = linked; return; }
+    if (proof === undefined || proof === null) return;
     if (JSON.stringify(proof).length > WORLD_ID_LIMIT) throw fail(413, 'World ID proof is too large.');
     const result = await worldId.verify(proof, pageSignal(item.manifest));
     if (!result.ok) throw fail(result.status === 400 ? 403 : result.status, NOT_VERIFIED);
@@ -590,7 +711,8 @@ export function createPublications({ directory, objectStore = configuredObjectSt
   /** A browser page's writing time, against when this server issued its session nonce (sessions.mjs): checked once
    *  per request to share, like confirmPerson. Mac pages aren't asked. */
   async function confirmTime(item) {
-    if (!item.browser || item.serverStart) return;
+    // Browser pages, and Mac pages started with the host's session (their World ID was scanned for it).
+    if (!(item.browser || item.startedSession) || item.serverStart) return;
     item.serverStart = await sessions.confirm(item.session ?? {}, item.manifest.proof.hash);
   }
   /** A browser reading back its sign-in shows it holds the publishing key the account linked (signinMessage); only then
@@ -639,11 +761,8 @@ export function createPublications({ directory, objectStore = configuredObjectSt
   /** The writer takes a link down from the device that shared it, or another of their signed-in browsers: the page's
    *  text and proof are deleted and the link stops working. */
   async function removePublication(req, id) {
-    if (await removed(id)) return { status: 'removed' };
-    let value;
-    try { value = JSON.parse(await objectStore.get('records/' + id, RECORD_LIMIT)); }
-    catch { throw fail(404, 'Publication not found.'); }
-    if (typeof value.manifest !== 'string' || hash(value.manifest) !== id) throw fail(422, 'Stored manifest changed.');
+    const { gone, value } = await storedRecord(id);
+    if (gone) return { status: 'removed' };
     const manifest = validateManifest(JSON.parse(value.manifest));
     const body = await readSmallJSON(req);
     const publicKey = deviceKey(body.publicKey);
@@ -706,11 +825,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
   /** The writer renames a shared page, from the device that shared it: the name its writer page shows (the page's
    *  text and proof don't change). */
   async function setTitle(req, id) {
-    if (await removed(id)) throw fail(410, 'The writer removed this page.');
-    let value;
-    try { value = JSON.parse(await objectStore.get('records/' + id, RECORD_LIMIT)); }
-    catch { throw fail(404, 'Publication not found.'); }
-    if (typeof value.manifest !== 'string' || hash(value.manifest) !== id) throw fail(422, 'Stored manifest changed.');
+    const value = await liveRecord(id);
     const body = await readSmallJSON(req), publicKey = deviceKey(body.publicKey), title = cleanTitle(body.title);
     if (!title || title !== body.title) throw fail(400, 'Choose a title up to 80 characters.');
     if (!(await mayChange(value, publicKey))) throw fail(403, 'Only your account can rename this page. Sign in on this browser first.');
@@ -723,14 +838,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
     return { title };
   }
   async function setListed(req, id) {
-    // Whether it was taken down and its record, read at once (each is a round trip to the object store).
-    // A record may carry a World ID proof, so it's read with room for one (RECORD_LIMIT).
-    const [gone, stored] = await Promise.all([removed(id), objectStore.get('records/' + id, RECORD_LIMIT).catch(() => null)]);
-    if (gone) throw fail(410, 'The writer removed this page.');
-    let value;
-    try { value = JSON.parse(stored ?? ''); }
-    catch { throw fail(404, 'Publication not found.'); }
-    if (typeof value.manifest !== 'string' || hash(value.manifest) !== id) throw fail(422, 'Stored manifest changed.');
+    const value = await liveRecord(id);
     const body = await readSmallJSON(req), publicKey = deviceKey(body.publicKey);
     if (typeof body.listed !== 'boolean') throw fail(400, 'Invalid request.');
     if (!(await mayChange(value, publicKey))) throw fail(403, 'Only your account can change where this page shows. Sign in on this browser first.');
@@ -747,11 +855,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
    *  the page's exact text with its capture key's signatures (readers check that again themselves). Turning it off
    *  deletes it here; anyone who already watched may have kept a copy. */
   async function setReplay(req, id) {
-    if (await removed(id)) throw fail(410, 'The writer removed this page.');
-    let value;
-    try { value = JSON.parse(await objectStore.get('records/' + id, RECORD_LIMIT)); }
-    catch { throw fail(404, 'Publication not found.'); }
-    if (typeof value.manifest !== 'string' || hash(value.manifest) !== id) throw fail(422, 'Stored manifest changed.');
+    const value = await liveRecord(id);
     const manifest = validateManifest(JSON.parse(value.manifest));
     // Only a page a device shared can change its replay: refused before its (up to 8 MB) body is read.
     if (!deviceKey(value.owner?.device?.publicKey)) throw fail(403, 'Only the device that shared this page can change its replay.');
@@ -786,7 +890,7 @@ export function createPublications({ directory, objectStore = configuredObjectSt
     if (previous?.hash && previous.hash !== next.hash) await deleteUnused(id, [previous]);
     return { replay: replay !== null };
   }
-  return { handle, close: () => { clearInterval(cleanup); pending.clear(); retained = 0; objectStore.close(); }, storage: objectStore.kind,
+  return { handle, streams, close: () => { clearInterval(cleanup); streams.close(); pending.clear(); retained = 0; objectStore.close(); }, storage: objectStore.kind,
     releaseURL: (key, seconds, at) => objectStore.releaseURL?.(key, seconds, at) ?? null,
     releaseExists: async key => (await objectStore.releaseExists?.(key)) === true,
     /** A shared page sent to a writing request: checked like a reader opening the link (token, not removed), with

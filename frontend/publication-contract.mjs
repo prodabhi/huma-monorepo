@@ -14,6 +14,10 @@ export const pageSignal = manifest => 'huma-page:' + manifest.master.hash + ':' 
 export const accountSignal = publicKey => 'huma-account:' + publicKey;
 /** What a browser signs, with its publishing key, to sign in with World ID: its key and the request body's hash. */
 export const worldIDSigninMessage = (publicKey, bodyHash) => `huma-worldid-signin-v1\n${publicKey}\n${bodyHash}`;
+/** What a World ID scanned at Start is made for: this writing session (its nonce, sessions.mjs) on this browser's key. */
+export const sessionSignal = (nonce, publicKey) => 'huma-session:' + nonce + ':' + publicKey;
+/** What a browser signs, with its publishing key, to send that Start scan: its key and the request body's hash. */
+export const worldIDSessionMessage = (publicKey, bodyHash) => `huma-worldid-session-v1\n${publicKey}\n${bodyHash}`;
 export const isPageLink = path => typeof path === 'string' && (FULL_LINK.test(path) || SHORT_LINK.test(path));
 /** Where a browser keeps the sign-in it started (write/account.mjs), so the sign-in page links only its own. */
 export const SIGNIN_PENDING = 'huma-signin-pending';
@@ -86,10 +90,10 @@ export const EXTERNAL_WEIGHT = 0.6;
 export const WEIGHTS = [70, 20, 10];
 /** Where a page was written, and how strong that check is: the label shown with every score. */
 export const CHECK_TIERS = {
-  web: { name: 'Web browser', label: 'Web browser · basic check',
-    about: 'A browser can’t confirm key presses came from a real keyboard. A passkey raises it to the passkey check; the Mac app, to the strong check.' },
+  web: { name: 'Web browser', label: 'Web browser · basic check (typing rhythm only)',
+    about: 'Only the typing was checked: it came key by key, in a rhythm like a person’s. Nothing confirmed a person was at the keyboard: a browser can’t tell a real keyboard from software that sends keys. A passkey raises it to the passkey check (the writer’s own device approved each check-in); the Mac app, to the strong check (every key press from its keyboard).' },
   passkey: { name: 'Web browser', label: 'Web browser · passkey check',
-    about: 'The writer’s passkey approved every check-in.' },
+    about: 'The writer’s passkey approved every check-in: a person was at the keyboard each time.' },
   mac: { name: 'Huma Mac app', label: 'Mac app · strong check',
     about: 'The Mac app confirmed each key press came from its keyboard.' },
 };
@@ -104,13 +108,15 @@ export const writtenInBrowser = journal => Number(journal?.origin_present) === 0
 export const HUMAN_TYPING_RULES = [4, 5, 6, 8], TYPING_CAP = 50;
 /** `rhythmAutomated`: the shared replay's rhythm looked automated (replayRhythm below). It holds a browser page at
  *  TYPING_CAP too; a Mac page's score ignores it, as HumaScore.swift has no such check. */
-export function humaScore({ composition, typingEdits, edits, rules, presenceCount, onTime, browser = false, passkey = false, rhythmAutomated = false }) {
+/** `automated`: the host's typing analysis of the page's session (detection/judge.mjs) found it automated, which holds
+ *  any page at 50; the Mac app, which can't know that before sharing, shows its own score without it. */
+export function humaScore({ composition, typingEdits, edits, rules, presenceCount, onTime, browser = false, passkey = false, rhythmAutomated = false, automated = false }) {
   const typedShare = browser ? (composition ? (composition.total ? (composition.typed + (composition.external ?? 0)) / composition.total : 0) : edits ? typingEdits / edits : 0)
     : composition ? (composition.total ? (composition.typed + EXTERNAL_WEIGHT * (composition.external ?? 0)) / composition.total : 0)
     : edits ? EXTERNAL_WEIGHT * typingEdits / edits : 0;
   const checksMet = rules.length === 9 ? rules.slice(2, 9).filter(Boolean).length : 0;
   const onTimeCount = Math.min(onTime, presenceCount), touch = presenceCount ? onTimeCount / presenceCount : 1;
-  const weights = WEIGHTS, capped = (rules.length === 9 && HUMAN_TYPING_RULES.some(i => rules[i] === false)) || (browser && rhythmAutomated === true);
+  const weights = WEIGHTS, capped = (rules.length === 9 && HUMAN_TYPING_RULES.some(i => rules[i] === false)) || (browser && rhythmAutomated === true) || automated === true;
   let raw = [weights[0] * typedShare, weights[1] * checksMet / 7, weights[2] * touch];
   const sum = raw[0] + raw[1] + raw[2];
   // Capped, each part shrinks alike, so the parts still add up to the score.
@@ -133,7 +139,7 @@ export function humaScore({ composition, typingEdits, edits, rules, presenceCoun
 // keys on a timer, at random, or from a fixed table. Worked out from the replay's typed edits alone (no key codes, so
 // no keyboard layout): the gap from each typed character to the next one typed straight after it, in milliseconds.
 // Checked against 323 real essays typed in a browser (school students', from a public keystroke dataset), whole and
-// cut short at 200 to 1,500 characters: none is held. web/test/rhythm.test.mjs keeps modelled cases.
+// cut short at 200 to 1,500 characters: none is held. frontend/test/rhythm.test.mjs keeps modelled cases.
 export const RHYTHM = {
   /** Gaps longer than this are pauses to think, not rhythm. */
   pause: 2000,
@@ -149,7 +155,20 @@ export const RHYTHM = {
    *  People show 3 and more from 500 gaps, and more the longer they type; delays drawn at random fall under 1.5
    *  about 19 times in 20. Shorter typing isn't judged this way: there, people and chance overlap. */
   minRandomGaps: 500, ignored: 1.5,
+  /** Spread evenly, judged from 120 gaps inside words: a hand's gaps are skewed, most of them quick with a long tail
+   *  of slow ones (the tail above the middle runs 1.5 times the spread below it and more, skewness 1 and more, on
+   *  people modelled and real), while delays drawn evenly at random are flat (tail about 1, skewness about 0), however
+   *  much they vary. Both must be flat. */
+  minSpreadGaps: 120, flatTail: 1.15, flatSkew: 0.5,
 };
+/** The shape of gaps: `tail`, the spread above the middle against the spread below it (1 when flat, 1.5 and more
+ *  when skewed as a hand's are), and `skew`, the standard skewness (0 when flat). */
+export function spreadOf(values) {
+  const s = [...values].sort((a, b) => a - b), n = s.length, at = p => s[Math.min(n - 1, Math.floor(p * n))];
+  const low = at(0.1), mid = at(0.5), high = at(0.9), m = s.reduce((a, b) => a + b, 0) / n;
+  const sd = Math.sqrt(s.reduce((a, b) => a + (b - m) ** 2, 0) / n);
+  return { tail: (high - mid) / Math.max(1, mid - low), skew: sd ? s.reduce((a, b) => a + ((b - m) / sd) ** 3, 0) / n : 0 };
+}
 const TYPED = new Set(['typing', 'typing-external']);
 const isLetter = c => c !== undefined && /\p{L}/u.test(c);
 const average = values => values.reduce((a, b) => a + b, 0) / values.length;
@@ -224,15 +243,24 @@ export function replayRhythm(frames) {
   // Both as one z-score: how much letter pairs and word starts shape the gaps.
   measures.rhythmShift = measures.pairShift === null ? null
     : measures.wordStartShift === null ? measures.pairShift : (measures.pairShift + measures.wordStartShift) / Math.SQRT2;
+  // The shape of the gaps inside words (spreadOf): a hand's long tail, or delays spread flat.
+  const spread = inWord.length >= RHYTHM.minSpreadGaps ? spreadOf(inWord) : null;
+  measures.spreadTail = spread?.tail ?? null; measures.spreadSkew = spread?.skew ?? null;
   const verdict = reason => ({ automated: reason !== null, reason, measures });
   if (gaps.length < RHYTHM.minGaps) return verdict(null);
   if (measures.gapVariation < RHYTHM.evenVariation || measures.evenGaps >= RHYTHM.evenShare) return verdict('a perfectly even rhythm');
   if (measures.pairVariation !== null && measures.pairVariation < RHYTHM.pairVariation) return verdict('each letter pair took the same time');
+  if (spread !== null && spread.tail < RHYTHM.flatTail && spread.skew < RHYTHM.flatSkew) return verdict('gaps spread evenly, without a hand’s long tail');
   if (gaps.length >= RHYTHM.minRandomGaps && measures.rhythmShift !== null && measures.rhythmShift < RHYTHM.ignored)
     return verdict('a rhythm that ignored letters and words');
   return verdict(null);
 }
 /** A share (0...1) as a whole percent that never rounds a part away: "100%" only when it's all, "0%" only when none. */
+/** A writing time: "45 s", "3 min" or "3 min 4 s". */
+export const duration = milliseconds => {
+  const seconds = Math.max(1, Math.round(Number(milliseconds) / 1000)), minutes = Math.floor(seconds / 60);
+  return minutes ? `${minutes} min${seconds % 60 ? ' ' + (seconds % 60) + ' s' : ''}` : `${seconds} s`;
+};
 export function percentLabel(share) {
   if (!(share > 0)) return '0%';
   if (share >= 1) return '100%';

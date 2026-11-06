@@ -24,7 +24,8 @@ const started = async base => ({ nonce: [BigInt('0x' + (await (await fetch(base 
 async function running(t, scoring = () => verified.scoring) {
   const directory = await mkdtemp(path.join(tmpdir(), 'huma-writers-'));
   let base;
-  const server = await createRegistry({ store: directory, publicationOptions: { verifyUpload: async source => {
+  // The typing analysis in shadow mode: these pages stream no session, and this tests the score, not the verdict (test/detection-publish.test.mjs does).
+  const server = await createRegistry({ store: directory, publicationOptions: { detectionMode: 'shadow', verifyUpload: async source => {
     const value = structuredClone(verified);
     Object.assign(value.manifest, { publicationNonce: randomBytes(32).toString('hex'), access: JSON.parse(source).access });
     const scored = scoring();

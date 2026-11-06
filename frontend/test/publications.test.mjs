@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
@@ -98,7 +97,7 @@ test('shipped server rejects retired uploads while existing proof records stay r
 
 test('all declared approval chunks including lazy wallet assets are served; traversal stays rejected', async t => {
   const { request } = await running(t);
-  const files = await shareAssetFiles(fileURLToPath(new URL('../', import.meta.url)));
+  const files = await shareAssetFiles(new URL('../', import.meta.url).pathname);
   // World ID sign-in, loaded lazily (Privy's wallet screens, off for now, were here before).
   assert.ok(files.some(name => name.includes('WorldSignIn')));
   for (const name of files.filter(name => name.startsWith('assets/'))) {
@@ -489,4 +488,22 @@ test('a shared page has one short link, opened by its code and the key after the
   assert.equal(sent.status, 200, await sent.clone().text());
   const { submissions } = await (await request('/api/requests/' + made.id + '/inbox', { headers: { Authorization: 'Bearer ' + made.key } })).json();
   assert.equal(submissions[0].page, id); assert.equal(submissions[0].token, code + '.' + key);
+});
+
+test('/example goes to the page HUMA_EXAMPLE_LINK names, full or short, copied with its site or not; anything else goes home', async t => {
+  const { request } = await running(t), was = process.env.HUMA_EXAMPLE_LINK;
+  t.after(() => { if (was === undefined) delete process.env.HUMA_EXAMPLE_LINK; else process.env.HUMA_EXAMPLE_LINK = was; });
+  const where = async link => {
+    if (link === undefined) delete process.env.HUMA_EXAMPLE_LINK; else process.env.HUMA_EXAMPLE_LINK = link;
+    const response = await request('/example', { redirect: 'manual' });
+    assert.equal(response.status, 302);
+    return response.headers.get('location');
+  };
+  const full = '/original/' + 'a'.repeat(64) + '#' + 'b'.repeat(64), short = '/p/9QxXWTfM#G7icGAbl0Qba0hx1';
+  assert.equal(await where(full), full);
+  assert.equal(await where(short), short);
+  assert.equal(await where('https://huma.social' + short), short);
+  assert.equal(await where('http://127.0.0.1:9000' + short + '\n'), short);
+  for (const bad of [undefined, '', 'https://evil.example/p/9QxXWTfM#G7icGAbl0Qba0hx1x', '/p/short', 'javascript:alert(1)', '//evil.example/'])
+    assert.equal(await where(bad), '/');
 });

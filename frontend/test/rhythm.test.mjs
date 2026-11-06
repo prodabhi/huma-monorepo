@@ -104,8 +104,9 @@ test('an automated rhythm holds a browser page at 50, and nothing else changes',
   const held = humaScore({ ...page, rhythmAutomated: true });
   assert.equal(held.value, 50); assert.equal(held.capped, true);
   assert.equal(held.points.typed + held.points.checks + held.points.touch, 50);
-  // A Mac page's score ignores it, as HumaScore.swift does.
+  // A Mac page's score ignores it, as HumaScore.swift does; the host's verdict (`automated`) holds any page, as its `held` does.
   assert.deepEqual(humaScore({ ...page, browser: false, rhythmAutomated: true }), humaScore({ ...page, browser: false }));
+  assert.equal(humaScore({ ...page, browser: false, automated: true }).value, 50); assert.equal(humaScore({ ...page, automated: true }).capped, true);
   // A page already under 50 stays where it is.
   const pasted = { ...page, composition: { ...composition, typed: 20, pasted: 80 } };
   assert.equal(humaScore({ ...pasted, rhythmAutomated: true }).value, humaScore(pasted).value);
@@ -148,4 +149,22 @@ test('the check runs on a verified replay’s frames', async () => {
   assert.equal(replayRhythm(checked.frames).reason, 'a perfectly even rhythm');
   const human = await signedReplay(typeOut(text, person(11), 'typing-external'));
   assert.equal(replayRhythm((await verifyReplay(human.source, { publicKey: human.publicKey, text: human.text })).frames).automated, false);
+});
+
+test('delays drawn evenly at random, as a scripted browser types, are caught from 250 characters; people are not', () => {
+  // Gaps between 60 and 190 ms, every one as likely as the next (a test harness typed this way), with a pause after
+  // one word in twelve: no long tail.
+  for (const seed of [1, 2, 3]) {
+    const rand = random(seed), flat = (p) => 60 + 130 * rand() + (p === ' ' && rand() < 0.08 ? 400 + 1000 * rand() : 0);
+    const short = replayRhythm(typeOut(TEXT.slice(0, 260), flat));
+    assert.equal(short.reason, 'gaps spread evenly, without a hand’s long tail', JSON.stringify(short.measures));
+    assert.ok(short.measures.spreadTail < RHYTHM.flatTail && short.measures.spreadSkew < RHYTHM.flatSkew);
+  }
+  for (const seed of [1, 2, 3, 4, 5]) {
+    const r = replayRhythm(typeOut(TEXT.slice(0, 260), person(seed)));
+    assert.equal(r.reason, null, JSON.stringify(r.measures));
+    assert.ok(r.measures.spreadTail >= 1.3 && r.measures.spreadSkew >= 0.8, JSON.stringify(r.measures));
+  }
+  // Too little typing says nothing either way.
+  assert.equal(replayRhythm(typeOut(TEXT.slice(0, 120), () => 60 + 130 * random(4)())).measures.spreadTail, null);
 });
