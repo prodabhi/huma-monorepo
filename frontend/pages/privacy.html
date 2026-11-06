@@ -20,32 +20,15 @@
 <link rel="icon" href="/foundation-logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/brand/icon-512.png">
 <link rel="stylesheet" href="/site.css">
-<style>
-/* The policy reads like the landing page's rows: a title, then a short grey paragraph, split by rules. */
-.updated { margin: 14px 0 0; color: var(--tertiary); }
-.prose h2 { font-size: 20px; line-height: 24px; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--separator); }
-.prose p, .prose li { color: var(--grey); font-size: 15px; line-height: 1.5; }
-.prose p { margin: 0 0 10px; }
-.prose ul { margin: 0 0 10px; padding-left: 18px; }
-.prose li { margin: 0 0 6px; }
-.prose strong { color: var(--ink); font-weight: 500; }
-.labels { margin: 0 0 8px; }
-.labels .item h2 { margin: 0 0 6px; padding: 0; border: 0; font-size: 17px; line-height: 22px; }
-.labels .item p, .labels .item ul { margin: 0 0 4px; }
-.labels .item .purpose { color: var(--tertiary); }
-</style>
+<script type="module" src="/visit.js"></script>
 </head>
 <body>
-<nav class="nav" aria-label="Main">
-    <div class="nav_blur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-    <a class="nav_logo" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
-    <a class="nav_cta" href="/write">Start Writing</a>
-</nav>
+<!--#include nav-->
 <main class="split">
     <header class="page-head">
         <span class="kicker mono">Privacy</span>
         <h1 class="page-title">What Huma keeps, and who sees it.</h1>
-        <p class="mono updated">Last updated November 2, 2026</p>
+        <p class="mono updated">Last updated November 4, 2026</p>
     </header>
     <div class="page-body prose">
 
@@ -79,7 +62,7 @@
             <li><strong>Passkeys.</strong> Only each passkey’s ID and public key. Your fingerprint or face never leaves your device.</li>
             <li><strong>Name and face.</strong> Faces are drawn from a short code. No photo is uploaded.</li>
         </ul>
-        <p>Typing checks run on your computer.</p>
+        <p>Typing checks run on your computer. Huma analyzes typing rhythm inside the editor to verify human authorship: while you write on the web, the editor’s key, input and pointer events (never what you type outside the editor) are sent to huma.social and kept for a day; only the analysis’s summary stays with a shared page.</p>
 
         <h2>Shared Links</h2>
         <ul>
@@ -102,7 +85,7 @@
         <p>No ads. No selling or renting your data.</p>
 
         <h2>Service Providers</h2>
-        <p>Cloudflare stores documents and shared pages. Google Cloud runs huma.social. Cloudflare Turnstile checks the browser is used by a person. World ID, linked once to your account before you finish your first document, confirms one real person writes under it. We keep only an anonymous proof of it with your account and the pages you share, never your identity. Readers see a short fingerprint of it, the same on every page you share, so your pages can be told apart as yours. <a href="https://posthog.com/privacy">PostHog</a> counts visits and steps and keeps page replays.</p>
+        <p>Cloudflare stores documents and shared pages. Google Cloud runs huma.social. Cloudflare Turnstile checks the browser is used by a person. World ID signs you in and confirms one real person writes under your account. We keep only an anonymous proof of it with your account and the pages you share, never your identity. Readers see a short fingerprint of it, the same on every page you share, so your pages can be told apart as yours. <a href="https://posthog.com/privacy">PostHog</a> counts visits and steps and keeps page replays.</p>
 
         <h2>Your Choices</h2>
         <ul>
@@ -127,20 +110,6 @@
         <p>Faces are <a href="https://www.dicebear.com/styles/dylan/">DiceBear “Dylan”</a> drawings by Natalia Spivak, used under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
     </div>
 </main>
-<footer class="footer">
-    <nav class="grid footer_menu mono" aria-label="Footer">
-        <div class="f1"><a class="head" href="/#story">Why</a><a href="/#story">The story</a><a href="/#evidence">The evidence</a><a href="/deck/">Research note</a></div>
-        <div class="f2"><a class="head" href="/#how">Product</a><a href="/#how">How it works</a><a href="/#faq">Questions</a><a href="/download">Get Huma</a><a href="/verify">Verify a link</a><a href="/ask">Ask for a Huma Link</a></div>
-        <div class="f3"><a class="head" href="/prove-you-didnt-use-ai">Guides</a><a href="/prove-you-didnt-use-ai">Prove you didn’t use AI</a><a href="/ai-detector-false-positive">Flagged by an AI detector</a></div>
-        <div class="f4"><a class="head" href="/">Huma home</a></div>
-        <div class="f5"><a class="head" href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
-        <div class="f6"><a class="head" href="/deck/">Research</a></div>
-    </nav>
-    <div class="grid footer_brand">
-        <div class="footer_logo"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></div>
-        <p class="mono footer_tag">The human-first internet.</p>
-        <a class="mono footer_social" href="https://x.com/huma_social" target="_blank" rel="me noopener" aria-label="Huma on X"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.2 1.5h2.2L9.6 7l5.6 7.5h-4.4L7.4 10l-3.9 4.5H1.3l5.1-5.9L1 1.5h4.5l3.1 4.1z" fill="currentColor"/></svg>@huma_social</a>
-    </div>
-</footer>
+<!--#include footer-->
 </body>
 </html>

@@ -20,32 +20,15 @@
 <link rel="icon" href="/foundation-logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/brand/icon-512.png">
 <link rel="stylesheet" href="/site.css">
-<style>
-/* The terms read like the landing page's rows: a title, then a short grey paragraph, split by rules. */
-.updated { margin: 14px 0 0; color: var(--tertiary); }
-.prose h2 { font-size: 20px; line-height: 24px; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--separator); }
-.prose p, .prose li { color: var(--grey); font-size: 15px; line-height: 1.5; }
-.prose p { margin: 0 0 10px; }
-.prose ul { margin: 0 0 10px; padding-left: 18px; }
-.prose li { margin: 0 0 6px; }
-.prose strong { color: var(--ink); font-weight: 500; }
-.labels { margin: 0 0 8px; }
-.labels .item h2 { margin: 0 0 6px; padding: 0; border: 0; font-size: 17px; line-height: 22px; }
-.labels .item p, .labels .item ul { margin: 0 0 4px; }
-.labels .item .purpose { color: var(--tertiary); }
-</style>
+<script type="module" src="/visit.js"></script>
 </head>
 <body>
-<nav class="nav" aria-label="Main">
-    <div class="nav_blur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-    <a class="nav_logo" href="/" aria-label="Huma home"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></a>
-    <a class="nav_cta" href="/write">Start Writing</a>
-</nav>
+<!--#include nav-->
 <main class="split">
     <header class="page-head">
         <span class="kicker mono">Terms</span>
         <h1 class="page-title">The rules for using Huma.</h1>
-        <p class="mono updated">Last updated October 31, 2026</p>
+        <p class="mono updated">Last updated November 4, 2026</p>
     </header>
     <div class="page-body prose">
         <h2>Using Huma</h2>
@@ -81,20 +64,6 @@
         <p>Email <a href="mailto:team@huma.social">team@huma.social</a>.</p>
     </div>
 </main>
-<footer class="footer">
-    <nav class="grid footer_menu mono" aria-label="Footer">
-        <div class="f1"><a class="head" href="/#story">Why</a><a href="/#story">The story</a><a href="/#evidence">The evidence</a><a href="/deck/">Research note</a></div>
-        <div class="f2"><a class="head" href="/#how">Product</a><a href="/#how">How it works</a><a href="/#faq">Questions</a><a href="/download">Get Huma</a><a href="/verify">Verify a link</a><a href="/ask">Ask for a Huma Link</a></div>
-        <div class="f3"><a class="head" href="/prove-you-didnt-use-ai">Guides</a><a href="/prove-you-didnt-use-ai">Prove you didn’t use AI</a><a href="/ai-detector-false-positive">Flagged by an AI detector</a></div>
-        <div class="f4"><a class="head" href="/">Huma home</a></div>
-        <div class="f5"><a class="head" href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
-        <div class="f6"><a class="head" href="/deck/">Research</a></div>
-    </nav>
-    <div class="grid footer_brand">
-        <div class="footer_logo"><span class="logo-mark" aria-hidden="true"></span><span>Huma</span></div>
-        <p class="mono footer_tag">The human-first internet.</p>
-        <a class="mono footer_social" href="https://x.com/huma_social" target="_blank" rel="me noopener" aria-label="Huma on X"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.2 1.5h2.2L9.6 7l5.6 7.5h-4.4L7.4 10l-3.9 4.5H1.3l5.1-5.9L1 1.5h4.5l3.1 4.1z" fill="currentColor"/></svg>@huma_social</a>
-    </div>
-</footer>
+<!--#include footer-->
 </body>
 </html>

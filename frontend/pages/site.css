@@ -205,3 +205,79 @@ body:has(.footer.compact) > main { padding-top: 124px; padding-bottom: 48px; }
     .footer_brand { row-gap: 24px; }
     .footer_logo .logo-mark { width: 33px; height: 57px; } .footer_logo span:last-child { font-size: 40px; }
 }
+
+/* Long reading pages (Terms, Privacy, Pricing, the guides): a title on the left, short sections split by rules. */
+.updated { margin: 14px 0 0; color: var(--tertiary); }
+.prose h2 { font-size: 20px; line-height: 24px; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--separator); }
+.prose p, .prose li { color: var(--grey); font-size: 15px; line-height: 1.5; }
+.prose p { margin: 0 0 10px; }
+.prose ul { margin: 0 0 10px; padding-left: 18px; }
+.prose li { margin: 0 0 6px; }
+.prose strong { color: var(--ink); font-weight: 500; }
+.labels { margin: 0 0 8px; }
+.labels .item h2 { margin: 0 0 6px; padding: 0; border: 0; font-size: 17px; line-height: 22px; }
+.labels .item p, .labels .item ul { margin: 0 0 4px; }
+.labels .item .purpose { color: var(--tertiary); }
+
+/* The blog (pages/blog/): one centred reading column, like most blogs. */
+.post { display: flex; justify-content: center; }
+.post > article { width: 100%; max-width: 680px; }
+.post-head { margin: 0 0 40px; padding: 0 0 30px; border-bottom: 1px solid var(--separator); }
+.post-kicker { color: var(--tertiary); text-decoration: none; }
+.post-kicker:hover { color: var(--ink); }
+.post-head h1 { margin: 18px 0 0; font-size: clamp(32px, 4.4vw, 48px); line-height: 1.1; letter-spacing: -.022em; font-weight: 500; }
+.post-lead { margin: 18px 0 0; color: var(--grey); font-size: 20px; line-height: 1.45; }
+.post-meta { margin: 22px 0 0; color: var(--tertiary); }
+.post-head .page-actions { margin-top: 26px; }
+.post-body { color: #2f2f2f; font-size: 18px; line-height: 1.7; }
+.post-body p { margin: 0 0 1.15em; }
+.post-body h2 { margin: 1.9em 0 .55em; color: var(--ink); font-size: 26px; line-height: 1.25; letter-spacing: -.012em; font-weight: 500; }
+.post-body h3 { margin: 1.5em 0 .4em; color: var(--ink); font-size: 20px; line-height: 1.3; font-weight: 500; }
+.post-body ul, .post-body ol { margin: 0 0 1.15em; padding-left: 1.3em; }
+.post-body li { margin: 0 0 .45em; }
+.post-body strong { color: var(--ink); font-weight: 600; }
+.post-body blockquote { margin: 1.4em 0; padding: 2px 0 2px 20px; border-left: 3px solid var(--ink); font-style: italic; }
+.post-body figure { margin: 2em 0; }
+.post-body figure img { display: block; width: auto; max-width: 100%; height: auto; margin: 0 auto; border: 1px solid var(--separator); border-radius: 12px; }
+.post-body figcaption { margin-top: 10px; color: var(--tertiary); font-size: 14px; line-height: 1.45; text-align: center; }
+.post-body .table { overflow-x: auto; margin: 1.6em 0; }
+.post-body table { width: 100%; border-collapse: collapse; font-size: 15.5px; line-height: 1.45; }
+.post-body th, .post-body td { text-align: left; vertical-align: top; padding: 12px 14px 12px 0; border-bottom: 1px solid var(--separator); }
+.post-body th { color: var(--ink); font-weight: 600; border-bottom-color: var(--ink); }
+.cta-box { display: flex; align-items: center; gap: 24px; margin: 2em 0; padding: 22px; background: var(--card); border: 1px solid var(--separator); border-radius: 16px; }
+.cta-mark { position: relative; flex: none; width: 156px; height: 156px; border-radius: 12px; background: var(--bg-alt); }
+.cta-mark::before { content: ""; position: absolute; inset: 16%; background: var(--ink); -webkit-mask: url(/brand/mark.svg) center / contain no-repeat; mask: url(/brand/mark.svg) center / contain no-repeat; }
+.cta-copy { min-width: 0; }
+.cta-box p { margin: 0 0 16px; color: var(--grey); font-size: 16px; line-height: 1.5; }
+.cta-box .cta-title { margin: 0 0 6px; color: var(--ink); font-size: 20px; line-height: 1.3; font-weight: 500; }
+.cta-box .page-actions { margin: 0; }
+.post-body .posts { list-style: none; margin: 0; padding: 0; }
+.post-body .posts li { margin: 0; padding: 26px 0; border-bottom: 1px solid var(--separator); }
+.posts li:first-child { padding-top: 0; }
+.posts a { display: block; color: var(--ink); font-size: 23px; line-height: 1.3; font-weight: 500; letter-spacing: -.01em; text-decoration: none; }
+.posts a:hover { text-decoration: underline; text-decoration-color: var(--separator); }
+.posts p { margin: 8px 0 0; color: var(--grey); font-size: 16px; line-height: 1.5; }
+.posts .post-meta { margin-top: 12px; color: var(--tertiary); font-size: 12.5px; line-height: 15px; }
+.post-body .chart { display: block; width: 100%; height: auto; font-family: var(--sans); }
+.chart .c-label, .chart .c-name { fill: var(--ink); font-size: 14px; }
+.chart .c-name { font-weight: 500; }
+.chart .c-value { fill: var(--ink); font-size: 14px; font-weight: 600; }
+.chart .c-track { fill: var(--separator); }
+.chart .c-box { fill: var(--card); stroke: var(--separator); }
+.chart .c-box.hot { stroke: var(--ink); stroke-width: 1.5; }
+.chart .c-step { fill: var(--ink); font-size: 13px; }
+.chart .c-arrow, .chart .c-axis { fill: none; stroke: var(--tertiary); stroke-width: 1.5; }
+.chart .c-tick { stroke: var(--ink); stroke-width: 1.2; }
+.chart .c-small { fill: var(--tertiary); font-size: 12px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 1.6em 0; }
+.stats div { padding: 18px; background: var(--card); border: 1px solid var(--separator); border-radius: 14px; }
+.stats b { display: block; color: var(--ink); font-size: 28px; line-height: 1.1; font-weight: 600; letter-spacing: -.02em; }
+.stats span { display: block; margin-top: 8px; color: var(--grey); font-size: 14px; line-height: 1.4; }
+.verdict { margin: 2em 0; padding: 20px 24px; border-left: 4px solid var(--ink); background: var(--card); border-radius: 0 14px 14px 0; }
+.verdict p { margin: 0; color: var(--ink); font-size: 18px; line-height: 1.55; }
+.verdict .verdict-title { margin: 0 0 6px; color: var(--tertiary); font: 400 12.5px/15px var(--mono); letter-spacing: .01em; text-transform: uppercase; }
+.post-body .ref { font-size: .75em; vertical-align: super; line-height: 0; text-decoration: none; }
+.post-body .notes { padding-left: 1.4em; color: var(--grey); font-size: 14.5px; line-height: 1.5; }
+.post-body .notes li { margin-bottom: .6em; }
+.post-body .notes li:target { color: var(--ink); }
+@media (max-width: 560px) { .post-body { font-size: 17px; } .stats { grid-template-columns: 1fr; } .post-lead { font-size: 18px; } .cta-box { flex-direction: column; gap: 16px; padding: 20px; } .cta-box { align-items: flex-start; } .cta-mark { width: 64px; height: 64px; border-radius: 10px; } }

@@ -24,10 +24,21 @@ Key facts:
 - [Get Huma](https://huma.social/download): the Mac app and the web app
 - [Ask for a Huma link](https://huma.social/ask): ask someone to send writing as a Huma link
 
+
 ## Guides
 
 - [How to prove you didn't use AI](https://huma.social/prove-you-didnt-use-ai): evidence that helps, and how to make it easy next time
 - [Flagged by an AI detector?](https://huma.social/ai-detector-false-positive): why detectors make mistakes and what to do
+
+## Blog
+
+- [We tried to fool 4 writing-proof tools](https://huma.social/blog/ai-agent-vs-writing-proof-apps): an AI agent and a typing script against Huma, Grammarly Authorship, ValidDraft and LyteWriter; only Huma caught every attempt
+- [Turnitin flagged my essay as AI](https://huma.social/blog/turnitin-flagged-my-essay): what Turnitin's AI score means and what to do
+- [Huma vs Grammarly Authorship](https://huma.social/blog/huma-vs-grammarly-authorship): both record writing; how they differ
+- [How accurate are AI detectors?](https://huma.social/blog/how-accurate-are-ai-detectors): what the studies say
+- [Huma vs Turnitin Clarity](https://huma.social/blog/huma-vs-turnitin-clarity): a school's tool vs the writer's own proof
+- [Alternatives to AI detectors for teachers](https://huma.social/blog/ai-detector-alternatives-for-teachers): ask for the writing process instead of a score
+- [Is Google Docs version history enough?](https://huma.social/blog/google-docs-version-history-proof): what version history shows and what it doesn't
 
 ## Optional
 
