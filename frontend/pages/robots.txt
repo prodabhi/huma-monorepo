@@ -1,0 +1,12 @@
+# Huma's public pages are open to search engines and AI assistants alike. Shared pages (/p/) open only for people
+# who have their link, so they stay out of search.
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /ph/
+Disallow: /p/
+Disallow: /original/
+Disallow: /share/
+Disallow: /write?
+
+Sitemap: https://huma.social/sitemap.xml

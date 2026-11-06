@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel>
+    <title>Huma</title>
+    <item>
+      <title>Huma 0.1.10</title>
+      <pubDate>Thu, 29 Oct 2026 09:27:05 +0000</pubDate>
+      <sparkle:version>14</sparkle:version>
+      <sparkle:shortVersionString>0.1.10</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<ul><li>Clearer report, with Huma branding and more sources.</li></ul>]]></description>
+      <enclosure url="https://huma.social/download/Huma.dmg" type="application/octet-stream" sparkle:edSignature="zIMVxCUIda4Gl7uTkA5GGVwkvmxmrWvUb9TWnEn76LjrMnxsb/WnrZBU6LgPbZlb3IahI1It9QnSejJbzr0eDw==" length="45240803"/>
+    </item>
+  </channel>
+</rss>

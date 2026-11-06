@@ -1,0 +1,37 @@
+# Huma
+
+> Huma is a free writing app, on the web and on Mac, that records how a person types and gives them a link and a PDF Report showing a person wrote the text, not AI. Anyone can open the link in a browser and check it, with no account.
+
+Huma is not an AI detector. AI detectors read finished text and guess; Huma records the writing as it happens, so its proof comes from how the text was made.
+
+Key facts:
+
+- How it works: write in Huma, press Finish, share the link. The proof is made on the writer's own computer in seconds.
+- What a reader sees: the text exactly as written (any later change breaks the proof), the Huma Score (how much was typed and how much was pasted), a PDF Report, and, if the writer allows it, a replay of the writing.
+- Pasted text is allowed and marked as pasted.
+- Who uses it: students flagged by AI detectors, freelance writers, job seekers sending cover letters, newsletter and LinkedIn writers.
+- Price: free.
+- Accounts: not needed to write; writers sign in at Finish to get a link. Readers never need an account.
+- Browsers: Chrome, Edge, Firefox and Safari on a computer. The Mac app adds a stronger check: every key press is confirmed from the keyboard.
+- Length: up to 10,000 characters per document, about 1,500 words.
+- Limits: Huma proves a person typed the text in Huma; it can't tell where the ideas came from, and it covers only what is written in it, not earlier work.
+
+## Pages
+
+- [Home](https://huma.social/): what Huma does, how it works, who it's for, questions
+- [Start writing](https://huma.social/write): the writing app, in the browser
+- [Verify a link](https://huma.social/verify): check a Huma link or Report
+- [Get Huma](https://huma.social/download): the Mac app and the web app
+- [Ask for a Huma link](https://huma.social/ask): ask someone to send writing as a Huma link
+
+## Guides
+
+- [How to prove you didn't use AI](https://huma.social/prove-you-didnt-use-ai): evidence that helps, and how to make it easy next time
+- [Flagged by an AI detector?](https://huma.social/ai-detector-false-positive): why detectors make mistakes and what to do
+
+## Optional
+
+- [Research note](https://huma.social/deck/): how much of the internet is still made by people
+- [Privacy](https://huma.social/privacy)
+- [Terms](https://huma.social/terms)
+- Contact: team@huma.social, @huma_social on X
