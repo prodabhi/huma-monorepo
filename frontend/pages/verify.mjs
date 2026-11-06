@@ -478,6 +478,7 @@ async function presentPage({ source, content, file, share, rows, skeleton, repla
         await Promise.all([writer?.(), showReplay(source, content, links, replayText).then(replay => showScore(score, pageJournal, replay))]);
         // Everything the report says is known now.
         report.ready();
+        showOnchain(source);
     } else { typed.set('no', result.textContent); score.remove(); author.remove(); }
 }
 /** A proof or report dropped here, opened as its page. */
@@ -859,6 +860,42 @@ function showStored(stored, manifest) {
     body.append(check, command, copy);
     chip.append(summary, body);
     label.append(chip);
+}
+/** "Verified on-chain" under the writer, when this page's proofs were checked by HumaPagesV3 (onchain.mjs, backend/onchain):
+ *  the contract on Base checked every zero-knowledge proof and recorded the page's statement, which this page has just
+ *  checked itself. Asked of the host, with a command to ask the chain directly. Nothing shows when it isn't on-chain. */
+async function showOnchain(source) {
+    try {
+        const config = await (await fetch('/api/onchain', { redirect: 'error', signal: AbortSignal.timeout(10000) })).json();
+        const finalInputs = pageProof(source)?.finalInputs;
+        if (!config?.enabled || typeof finalInputs !== 'string') return;
+        const response = await fetch('/api/onchain/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ finalInputs }),
+            redirect: 'error', signal: AbortSignal.timeout(20000) });
+        const record = response.ok ? await response.json() : null;
+        const label = document.querySelector('.author');
+        if (!label || !record?.verified || !/^0x[0-9a-f]{64}$/.test(record.statement) || !Number.isSafeInteger(record.block)) return;
+        const chip = document.createElement('details'); chip.className = 'human stored';
+        const summary = document.createElement('summary');
+        const mark = document.createElement('span'); mark.className = 'human-mark stored-mark'; mark.textContent = '◆'; mark.setAttribute('aria-hidden', 'true');
+        summary.append(mark, 'Verified on-chain · ' + String(config.network).slice(0, 40));
+        const body = document.createElement('div'); body.className = 'human-body';
+        const note = document.createElement('p');
+        const link = (href, text) => { const a = document.createElement('a'); a.href = href; a.textContent = text; a.target = '_blank'; a.rel = 'noopener noreferrer'; return a; };
+        const site = value => typeof value === 'string' && /^https:\/\/[a-z0-9.-]+$/.test(value);
+        note.append('HumaPagesV3 checked every zero-knowledge proof of this page on ' + String(config.network).slice(0, 40) + ' and recorded it at block '
+            + record.block.toLocaleString() + ' (' + record.parts + ' parts and the final proof).');
+        if (site(config.explorer) && /^0x[0-9a-fA-F]{64}$/.test(record.tx ?? '')) note.append(' ', link(config.explorer + '/tx/' + record.tx, 'View transaction'), '.');
+        body.append(note);
+        if (/^0x[0-9a-fA-F]{40}$/.test(config.contract)) {
+            const check = document.createElement('p');
+            check.textContent = 'Check it yourself: the contract answers true for this page’s statement hash, ' + record.statement + '.';
+            const command = document.createElement('pre');
+            command.textContent = "cast call " + config.contract + " 'verified(bytes32)(bool)' " + record.statement + ' --rpc-url ' + (config.chainId === 8453 ? 'https://mainnet.base.org' : 'https://sepolia.base.org');
+            body.append(check, command);
+        }
+        chip.append(summary, body);
+        label.append(chip);
+    } catch {}
 }
 /** "Anchored on Arkiv" under the writer, when the host published the page's signed hash record (hash-record.mjs): hashes
  *  and the writer's signature only, public. Nothing here is taken on trust: the hashes and the signed message are

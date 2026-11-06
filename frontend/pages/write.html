@@ -355,6 +355,8 @@ dialog .countdown { margin-top: 12px; color: var(--ui-3); font-size: 13px; min-h
 .check-row[hidden], .check-row [hidden] { display: none; }
 .check-row > label { display: flex; align-items: center; gap: 10px; }
 .check-row .text-button { height: 28px; margin: -4px 0; padding: 0 10px; font-size: 13px; }
+.chain-status { color: var(--ui-2); font-size: 13px; }
+.chain-status a { color: inherit; }
 .keys-table { display: grid; grid-template-columns: 1fr auto; gap: 2px 24px; margin-top: 16px; max-height: 60vh; overflow-y: auto; font-size: 14px; }
 .keys-table span:nth-child(odd) { color: var(--ui-2); }
 .keys-table span:nth-child(even) { color: var(--ui); font-variant-numeric: tabular-nums; text-align: right; }
@@ -803,6 +805,7 @@ body.pageless .outline-button { top: 16px; }
         <label class="check-row" id="replayRow" hidden><input type="checkbox" id="replayToggle">Let Readers Watch You Write</label>
         <span class="check-row" id="listedRow" hidden><label><input type="checkbox" id="listedToggle">Show on Your Page</label>
             <button class="text-button" type="button" id="listedHandle" hidden>Choose Your Handle</button></span>
+        <span class="check-row" id="chainRow" hidden><button class="text-button" type="button" id="chainVerify">Verify On-Chain</button><span class="chain-status" id="chainStatus" role="status"></span></span>
     </div>
     <p class="done-link" id="doneLink" role="status" hidden></p>
     <div class="actions done-actions">
