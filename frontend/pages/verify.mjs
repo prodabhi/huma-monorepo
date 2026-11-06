@@ -1,6 +1,6 @@
 import { verify as verifyEvidence, prepare as prepareVerifier } from '/verify-core/browser.mjs';
 import { parseEnvelope, boundedJSON, writingDisclosure } from '/verify-core/contract.mjs';
-import { checkDownloadedPublication, expectedMaster, unmetWritingRules, humaScore, replayRhythm, scoreLine, percentLabel, writtenInBrowser, checkTier, passkeyRow, WRITING_RULES, MASTER_LIMIT, PROOF_LIMIT, HANDLE } from '/publication-contract.mjs';
+import { checkDownloadedPublication, expectedMaster, unmetWritingRules, humaScore, replayRhythm, scoreLine, percentLabel, duration, writtenInBrowser, checkTier, passkeyRow, WRITING_RULES, MASTER_LIMIT, PROOF_LIMIT, HANDLE } from '/publication-contract.mjs';
 const text = document.querySelector('#text');
 const result = document.querySelector('#result');
 const reportElement = document.querySelector('#report');
@@ -470,6 +470,16 @@ async function presentPage({ source, content, file, share, rows, skeleton, repla
     const { typed, score } = rows;
     // The score only appears for a page that verified here, so it never sits next to a failed check.
     if (await check()) {
+        const shown = showReplay(source, content, links, replayText);
+        // The proof notes any paste (or imported text) while writing, even one deleted before Finish. When the replay,
+        // checked against the proof, shows every character of the final text was typed, the page doesn't say otherwise.
+        const replay = pageUnmet.some(rule => rule === WRITING_RULES[0] || rule === WRITING_RULES[1]) ? await shown : null;
+        const c = replay?.composition;
+        if (c?.total && !c.pasted && !c.before && !c.other) {
+            pageUnmet = pageUnmet.filter(rule => rule !== WRITING_RULES[0] && rule !== WRITING_RULES[1]);
+            if (!pageUnmet.length) { result.textContent = "Verified. This matches a signed Huma writing record, and it hasn't changed since."; result.dataset.state = 'valid'; }
+            else result.textContent = partialSummary(pageUnmet);
+        }
         if (!pageUnmet.length) {
             typed.set('ok', 'Typed in Huma. Unchanged since.');
             author.verified();
@@ -479,7 +489,7 @@ async function presentPage({ source, content, file, share, rows, skeleton, repla
             typed.set('partial', partialSummary(pageUnmet)); author.partial(notAllTyped(pageUnmet));
         }
         typed.explain(typingPoints(pageJournal));
-        await Promise.all([writer?.(), showReplay(source, content, links, replayText).then(replay => showScore(score, pageJournal, replay))]);
+        await Promise.all([writer?.(), shown.then(replay => showScore(score, pageJournal, replay))]);
         // Everything the report says is known now.
         report.ready();
         chain.ready();
@@ -502,6 +512,8 @@ function checkRow(row) {
     const name = row.querySelector('strong'), line = row.querySelector('span'), title = name.textContent;
     return { line, row, remove: () => row.remove(),
              set(state, text) { row.dataset.state = state; line.textContent = text; },
+             /** Takes the explanation off again, so it can be rebuilt. */
+             clear() { row.querySelectorAll('.more, .explain').forEach(el => el.remove()); },
              /** A ⌃ button that opens a plain list of what was checked. */
              explain(points) {
                  if (!points.length) return;
@@ -518,10 +530,6 @@ function checkRow(row) {
                  });
                  name.after(toggle); row.append(body);
              } };
-}
-function duration(milliseconds) {
-    const seconds = Math.max(1, Math.round(Number(milliseconds) / 1000)), minutes = Math.floor(seconds / 60);
-    return minutes ? `${minutes} min${seconds % 60 ? ' ' + (seconds % 60) + ' s' : ''}` : `${seconds} s`;
 }
 /** The label on the text card: "Checking…" from the moment the text shows, "Typed by a person" once it checks out. */
 function authorLabel() {
@@ -747,14 +755,32 @@ async function downloadReport() {
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 60000);
 }
+/** The host's verdict on a browser page's streamed typing (detection/judge.mjs), from its receipt: shown with the
+ *  score, and where the host enforces it, holding the score at 50 as the host does. */
+let scoreShown = null, detectionShown = null;
+const detectionHolds = detection => detection?.enforced === true && (detection.platform === 'mac' ? detection.band === 'likely_automated' : !(detection.band === 'likely_human' && detection.integrity === 'pass'));
+function showDetection(detection) {
+    if (!detection || typeof detection !== 'object') return;
+    detectionShown = detection;
+    if (scoreShown) { scoreShown.row.clear(); showScore(scoreShown.row, scoreShown.journal, scoreShown.replay); }
+}
+/** The verdict in plain lines: what it found and the top reasons. */
+function detectionLines(detection) {
+    if (!detection) return [];
+    const label = detection.integrity === 'fail' ? 'the live typing stream couldn’t verify it'
+        : detection.band === 'likely_human' ? 'typed like a person' : detection.band === 'likely_automated' ? 'typed like software' : 'not clear either way';
+    const reasons = (detection.reasons ?? []).filter(r => typeof r.detail === 'string' && r.detail).slice(0, 4).map(r => r.detail);
+    return [`Live typing analysis: ${label} (${Math.round(detection.humanProbability * 100)}% likely a person).` + (reasons.length ? ' ' + reasons.map(r => r[0].toUpperCase() + r.slice(1)).join('; ') + '.' : '')];
+}
 /** The Huma score (humaScore in publication-contract.mjs), worked out here from the proof and, when shared, the replay:
- *  what it says was typed, and on a browser page its rhythm too (replayRhythm). */
+ *  what it says was typed, and on a browser page its rhythm too (replayRhythm), and the host's verdict on its live typing. */
 function showScore(row, journal, replay) {
     if (!journal) { row.remove(); return; }
-    const composition = replay?.composition ?? null;
+    scoreShown = { row, journal, replay };
+    const composition = replay?.composition ?? null, detection = detectionShown;
     const rules = journal.rules ?? [], score = humaScore({ composition, typingEdits: Number(journal.typing), edits: Number(journal.edits), rules,
         presenceCount: Number(journal.presence_count), onTime: Number(journal.on_time), browser: pageBrowser, passkey: pagePasskey,
-        rhythmAutomated: Boolean(pageBrowser && replay && replayRhythm(replay.frames).automated) });
+        rhythmAutomated: Boolean(pageBrowser && replay && replayRhythm(replay.frames).automated), automated: detectionHolds(detection) });
     row.row.querySelector('strong').textContent = `Huma Score: ${score.value} of 100`;
     if (printable) Object.assign(printable, { score, composition });
     row.set(score.value >= 85 ? 'ok' : 'partial', scoreLine(score));
@@ -764,7 +790,8 @@ function showScore(row, journal, replay) {
                 : 'No replay shared, so this counts typed edits.'),
             `Typing checks: ${checks} of ${wc} points. ` + (missed.length ? `${score.checksMet} of 7 met. Not met: ${missed.join(', ')}.` : 'All 7 met.'),
             `Check-ins: ${touch} of ${wp} points. ` + (score.presenceCount ? `${score.presenceOnTime} of ${score.presenceCount} answered within 10 seconds.` : 'None needed.'),
-            ...(score.capped ? ['Held at 50: the typing didn’t look like a person’s.'] : []), checkTier(true, score.passkey).about]);
+            ...(score.capped ? [detectionHolds(detection) && !(replay && replayRhythm(replay.frames).automated) ? 'Held at 50: the live typing analysis couldn’t verify it as a person’s.' : 'Held at 50: the typing didn’t look like a person’s.'] : []),
+            ...detectionLines(detection), checkTier(true, score.passkey).about]);
         return;
     }
     row.explain([
@@ -776,7 +803,8 @@ function showScore(row, journal, replay) {
         `Typing checks: ${checks} of 20 points. ` + (missed.length ? `${score.checksMet} of 7 met. Not met: ${missed.join(', ')}.`
             : 'All 7 met.'),
         `Touch ID: ${touch} of 10 points. ` + (score.presenceCount ? `${score.presenceOnTime} of ${score.presenceCount} answered within 10 seconds.` : 'None needed.'),
-        ...(score.capped ? ['Held at 50: the typing didn’t look like a person’s.'] : [])]);
+        ...(score.capped ? [detectionHolds(detection) ? 'Held at 50: the host’s analysis of the writing replay found it typed like software.' : 'Held at 50: the typing didn’t look like a person’s.'] : []),
+        ...detectionLines(detection)]);
 }
 /** Whether a page's unmet rules mean some of its text wasn't typed (imported or pasted), not just a typing check. */
 function notAllTyped(unmet) { return unmet.includes(WRITING_RULES[0]) || unmet.includes(WRITING_RULES[1]); }
@@ -800,8 +828,12 @@ function showWorldID(worldId, headers) {
     summary.append(mark, 'Verified human · World ID ' + worldId.fingerprint);
     const body = document.createElement('div'); body.className = 'human-body';
     const note = document.createElement('p');
-    note.textContent = 'One real, unique person, confirmed with World ID, wrote and shared this page. It does not say who they are. Their anonymous World ID, '
-        + worldId.fingerprint + ', is the same on every page they share, so they can show these pages are theirs.';
+    // Written in a browser, it was scanned at its Start and again at its Finish, by the same person (publications.mjs).
+    note.textContent = (Number.isFinite(worldId.startedAt)
+        ? 'One real, unique person confirmed with World ID that they started this page, and again that they finished this exact text. '
+        : 'One real, unique person, confirmed with World ID, wrote and shared this page. ')
+        + 'It does not say who they are. Their anonymous World ID, ' + worldId.fingerprint
+        + ', is the same on every page they share, so they can show these pages are theirs.';
     const check = document.createElement('p'); check.textContent = 'Check it yourself: save the proof below as proof.json, then run the command.';
     const command = document.createElement('pre'); const proof = document.createElement('pre');
     const copy = document.createElement('button'); copy.type = 'button'; copy.textContent = 'Copy proof'; copy.disabled = true;
@@ -957,7 +989,7 @@ function showAttestation(attestation, manifest, manifestSource) {
 async function showWriterFromHost(headers) {
     try {
         const response = await fetch('/api/publications/' + originalID + '/receipt', { headers, redirect: 'error', signal: AbortSignal.timeout(15000) });
-        if (response.ok) { const receipt = await response.json(); showWriter(receipt.profile, receipt.handle); showWorldID(receipt.worldId, headers); showStored(receipt.stored, publicationManifest); showAttestation(receipt.attestation, publicationManifest); }
+        if (response.ok) { const receipt = await response.json(); showWriter(receipt.profile, receipt.handle); showWorldID(receipt.worldId, headers); showStored(receipt.stored, publicationManifest); showAttestation(receipt.attestation, publicationManifest); showDetection(receipt.detection); }
     } catch {}
 }
 if (id) {
