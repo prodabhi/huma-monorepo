@@ -448,6 +448,9 @@ async function presentPage({ source, content, file, share, rows, skeleton, repla
     // The report (to save as a PDF or print), with the proof inside, for anyone who wants to keep it or check it again.
     const report = reportButton();
     links.append(report.button);
+    // Verify On-Chain: asks the chain about this page, ready once the checks here pass (off where the host has no chain).
+    const chain = chainButton(source);
+    links.append(chain.button);
     printable = { text: content, link: share ?? Promise.resolve(null), proof: source, file };
     const details = document.querySelector('.details'), more = document.createElement('button');
     more.className = 'button small secondary'; more.type = 'button'; more.textContent = 'All Details';
@@ -463,6 +466,7 @@ async function presentPage({ source, content, file, share, rows, skeleton, repla
         links.append(again);
     }
     document.querySelector('.actions.reader-only')?.replaceWith(links);
+    links.after(chain.status);
     const { typed, score } = rows;
     // The score only appears for a page that verified here, so it never sits next to a failed check.
     if (await check()) {
@@ -478,6 +482,7 @@ async function presentPage({ source, content, file, share, rows, skeleton, repla
         await Promise.all([writer?.(), showReplay(source, content, links, replayText).then(replay => showScore(score, pageJournal, replay))]);
         // Everything the report says is known now.
         report.ready();
+        chain.ready();
         showOnchain(source);
     } else { typed.set('no', result.textContent); score.remove(); author.remove(); }
 }
@@ -864,17 +869,40 @@ function showStored(stored, manifest) {
 /** "Verified on-chain" under the writer, when this page was checked by HumaPagesV4 (onchain.mjs, backend/onchain): the
  *  contract on Base checked every zero-knowledge proof, the writer key's signature of every event, the event digest and
  *  the session's binding to that key, and recorded the page's statement, which this page has just checked itself. Asked of the host, with a command to ask the chain directly. Nothing shows when it isn't on-chain. */
-async function showOnchain(source) {
+let chainConfig = null;
+const onchainConfig = () => (chainConfig ??= fetch('/api/onchain', { redirect: 'error', signal: AbortSignal.timeout(10000) }).then(r => r.json()).catch(() => ({ enabled: false })));
+/** Verify On-Chain, on a page that checked here: asks the chain (through the host) whether this page's statement was
+ *  verified and recorded by the contract, and says what it found either way, with the record when there is one. */
+function chainButton(source) {
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'button small secondary';
+    button.textContent = 'Verify On-Chain'; button.hidden = true; button.disabled = true;
+    const status = document.createElement('p'); status.className = 'note chain-note'; status.setAttribute('role', 'status'); status.hidden = true;
+    button.addEventListener('click', async () => {
+        button.disabled = true; button.textContent = 'Checking…'; status.hidden = true;
+        const found = await showOnchain(source, { open: true });
+        status.textContent = found.verified
+            ? '✓ Verified on-chain on ' + found.network + ' at block ' + found.block.toLocaleString() + ': the contract checked every proof of this page, the writer’s signatures and the session’s key. The details are above.'
+            : found.verified === false ? 'Not verified on-chain yet. The writer can verify it on-chain right after Finish, with Verify On-Chain in Huma.'
+            : 'The chain couldn’t be reached. Try again.';
+        status.hidden = false; button.textContent = 'Verify On-Chain'; button.disabled = false;
+    });
+    return { button, status, async ready() { if ((await onchainConfig())?.enabled) { button.hidden = false; button.disabled = false; } } };
+}
+async function showOnchain(source, { open = false } = {}) {
     try {
-        const config = await (await fetch('/api/onchain', { redirect: 'error', signal: AbortSignal.timeout(10000) })).json();
+        const config = await onchainConfig();
         const finalInputs = pageProof(source)?.finalInputs;
-        if (!config?.enabled || typeof finalInputs !== 'string') return;
+        if (!config?.enabled || typeof finalInputs !== 'string') return { verified: null };
         const response = await fetch('/api/onchain/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ finalInputs }),
             redirect: 'error', signal: AbortSignal.timeout(20000) });
         const record = response.ok ? await response.json() : null;
-        const label = document.querySelector('.author');
-        if (!label || !record?.verified || !/^0x[0-9a-f]{64}$/.test(record.statement) || !Number.isSafeInteger(record.block)) return;
-        const chip = document.createElement('details'); chip.className = 'human stored';
+        if (!record || typeof record.verified !== 'boolean') return { verified: null };
+        if (!record.verified || !/^0x[0-9a-f]{64}$/.test(record.statement) || !Number.isSafeInteger(record.block)) return { verified: false };
+        const found = { verified: true, block: record.block, network: String(config.network).slice(0, 40) };
+        const label = document.querySelector('.author'), shown = label?.querySelector('.onchain');
+        if (shown) { if (open) shown.open = true; return found; }
+        if (!label) return found;
+        const chip = document.createElement('details'); chip.className = 'human stored onchain'; chip.open = open;
         const summary = document.createElement('summary');
         const mark = document.createElement('span'); mark.className = 'human-mark stored-mark'; mark.textContent = '◆'; mark.setAttribute('aria-hidden', 'true');
         summary.append(mark, 'Verified on-chain · ' + String(config.network).slice(0, 40));
@@ -896,7 +924,8 @@ async function showOnchain(source) {
         }
         chip.append(summary, body);
         label.append(chip);
-    } catch {}
+        return found;
+    } catch { return { verified: null }; }
 }
 /** "Anchored on Arkiv" under the writer, when the host published the page's signed hash record (hash-record.mjs): hashes
  *  and the writer's signature only, public. Nothing here is taken on trust: the hashes and the signed message are

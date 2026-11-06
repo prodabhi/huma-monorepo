@@ -251,6 +251,8 @@ body.reader .checks { animation: rise .45s .08s cubic-bezier(.2, .8, .2, 1) both
 }
 @media (prefers-reduced-motion: reduce) { .checks > li[data-state=pending]::before { animation: none; } .checks .more svg { transition: none; } }
 .note { margin: 40px 0 0; max-width: 330px; color: var(--tertiary); font-size: 12.5px; line-height: 1.45; }
+.chain-note { margin: 12px 0 0; max-width: 560px; color: var(--secondary); }
+.chain-note[hidden] { display: none; }
 @media (max-width: 560px) {
     .checks .explain { grid-column: 1 / -1; padding-left: 26px; }
     .fact { grid-template-columns: 1fr; gap: 2px; }
