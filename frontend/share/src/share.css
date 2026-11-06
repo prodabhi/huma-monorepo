@@ -1,0 +1,32 @@
+/* Colors, type, nav, buttons and footer come from /site.css (the landing page's look); this is only the card. */
+/* The page fills the window and the footer stays at the bottom, so nothing moves while the card loads. */
+#root{min-height:100vh;min-height:100svh;display:flex;flex-direction:column}
+main{flex:1 0 auto;width:100%;max-width:560px;margin:0 auto;padding:124px 16px 48px}
+h1{font-size:clamp(28px,2.45vw,40px);line-height:1.08;letter-spacing:-.018em;font-weight:450;margin:0 0 14px}
+p{margin:0 0 12px;color:var(--secondary)}
+.card .small{font-size:12.5px;color:var(--tertiary);margin:14px 0 0}
+.label{color:var(--tertiary);margin:24px 0 9px}
+pre{font:inherit;margin:0;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--fill);
+  border-radius:8px;padding:14px 16px;max-height:280px;overflow:auto;color:var(--text)}
+.card .button{width:100%;margin-top:24px}
+.who{display:flex;align-items:center;gap:10px;margin-top:22px;padding:12px 14px;border-radius:10px;background:var(--fill);font-size:14px}
+.who span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.who a{color:var(--grey);font:400 12px/1 var(--mono);text-transform:uppercase}
+.done{width:40px;height:40px;border-radius:50%;background:var(--green-fill);color:var(--green);display:grid;place-items:center;margin-bottom:18px}
+.done svg{width:20px;height:20px}
+[role=alert]{color:var(--red-text);margin:14px 0 0;font-size:14px}
+[role=status]{color:var(--tertiary)}
+/* Loading: grey shapes where the card's title, words and button will be (Skeleton.jsx, and index.html before the script). */
+@keyframes shimmer{from{background-position:100% 0}to{background-position:-100% 0}}
+.skeleton i{display:block;height:13px;margin:0 0 12px;border-radius:6px;
+  background:linear-gradient(90deg,var(--fill) 30%,rgba(34,34,34,.09) 50%,var(--fill) 70%) 0 0/200% 100%;animation:shimmer 1.4s ease-in-out infinite}
+.skeleton .title{width:62%;height:34px;margin-bottom:22px}
+.skeleton .short{width:46%}
+.skeleton .pill{height:38px;margin:28px 0 0;border-radius:999px}
+@media (prefers-reduced-motion:reduce){.skeleton i{animation:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:900px){main{padding-top:120px}}
+.code{font:400 28px/36px var(--mono);letter-spacing:.08em;color:var(--text);text-align:center;
+  background:var(--fill);border-radius:10px;padding:14px;margin:4px 0 0}
+.worldid-qr{width:208px;height:208px;margin:16px auto;padding:12px;box-sizing:border-box;border-radius:8px;background:#fff;color:#000}
+.worldid-qr svg{display:block;width:100%;height:100%}
