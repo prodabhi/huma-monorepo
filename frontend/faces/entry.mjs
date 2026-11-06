@@ -1,5 +1,5 @@
 // Writers' faces for the Mac app, drawn on the Mac: the same DiceBear "Dylan" (Natalia Spivak, CC BY 4.0)
-// and the same output as the site's /avatar/<seed>.svg in registry.mjs. Built into Resources/Faces.js.
+// and the same output as the site's /avatar/<seed>.svg in registry.mjs. Built into extra/Resources/Faces.js.
 import { Avatar, Style } from '@dicebear/core';
 import dylan from '@dicebear/styles/dylan.json' with { type: 'json' };
 

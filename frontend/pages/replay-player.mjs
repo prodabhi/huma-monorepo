@@ -1,5 +1,6 @@
 // The shared page's replay: the text as it was written, edit by edit, with pasted text marked.
 // Frames come from replay-core.mjs, already checked against the page proof. Long pauses are shortened.
+import { percentLabel } from '/publication-contract.mjs';
 const PAUSE = 1500, SNAPSHOT = 200, SPEEDS = [1, 4, 16];
 
 function clock(milliseconds) {
@@ -109,9 +110,7 @@ export function openPlayer(article, replay, onClose) {
 
 /** "97% typed · 3% pasted" from the replay's breakdown of the final text. */
 export function mixLabel({ typed, external = 0, pasted, before, other, total }) {
-    // As percentLabel in publication-contract.mjs: a part is never rounded away, and "100%" means all of it.
-    const percent = value => { const p = value / total * 100; return p >= 100 ? '100%' : p < 1 ? '<1%' : Math.min(99, Math.round(p)) + '%'; };
     const parts = [[typed, 'typed'], [external, 'typed on another keyboard'], [pasted, 'pasted'], [other, 'other edits'], [before, 'there before']]
         .filter(([value]) => value > 0);
-    return parts.map(([value, name]) => percent(value) + ' ' + name).join(' · ');
+    return parts.map(([value, name]) => percentLabel(value / total) + ' ' + name).join(' · ');
 }

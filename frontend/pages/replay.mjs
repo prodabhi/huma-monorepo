@@ -4,7 +4,9 @@
 // Global Privacy Control or Do Not Track on, on a shared page (its link holds the key that opens it), or when the site
 // has no PostHog key. Built into /write/replay.js (write/build.mjs) and loaded once the page is idle.
 import posthog from 'posthog-js/dist/module.no-external';
-import 'posthog-js/dist/recorder';
+// The recorder and the part that starts it (PostHog 1.2xx+ needs both; dist/recorder alone only loads rrweb, so nothing
+// was ever recorded).
+import 'posthog-js/dist/posthog-recorder';
 import { visitorId, trackingOff } from './track.mjs';
 
 async function start() {

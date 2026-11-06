@@ -24,7 +24,7 @@
 export const VERIFY_URL = 'https://huma.social/verify', DOWNLOAD_URL = 'https://huma.social/download', SITE_URL = 'https://huma.social';
 export const REPLAY_FILE = 'Huma-replay.json';
 /** The tier shown with the score; the Mac app's own reports, made before tiers were passed in, are the strong check. */
-const tierOf = report => report.tier ?? (report.where === 'browser' ? 'Web browser · basic check' : 'Mac app · strong check');
+const tierOf = report => report.tier ?? (report.where === 'browser' ? 'Web browser · basic check (typing rhythm only)' : 'Mac app · strong check');
 export const NOIR_URL = 'https://noir-lang.org/docs', BARRETENBERG_URL = 'https://barretenberg.aztec.network/docs';
 export const ENCLAVE_URL = 'https://support.apple.com/guide/security/secure-enclave-sec59b0b31ff/web';
 /** The nine writing rules, as met (WRITING_RULES in publication-contract.mjs says how each is missed). */

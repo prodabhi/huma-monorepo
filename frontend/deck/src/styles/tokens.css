@@ -5,7 +5,7 @@
    "dark product" default — REPLACE them to match the brief or the brand.
    =================================================================== */
 :root {
-  /* Surfaces — the landing page's paper (web/pages/foundation.css) */
+  /* Surfaces — the landing page's paper (frontend/pages/foundation.css) */
   --bg: #f6f4f3;
   --bg-grad-1: transparent;
   --bg-grad-2: transparent;
