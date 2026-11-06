@@ -3,8 +3,8 @@
 // off for now; its code is kept below, commented out.) From then on this page signs its own requests with that key: it
 // keeps documents in the account (documents.mjs) and makes a page's view link at Finish without another tab.
 import { b64, signDER, writingKey } from './recorder.mjs';
-import { pageSignal, accountSignal, worldIDSigninMessage, documentRequestMessage, publicationMessage, replayMessage, listedMessage, titleMessage, signinMessage, removalMessage, cleanTitle, digest, FULL_LINK, SHORT_LINK, SIGNIN_PENDING } from '../publication-contract.mjs';
-import { hex } from '../verify-core/contract.mjs';
+import { pageSignal, accountSignal, sessionSignal, worldIDSigninMessage, worldIDSessionMessage, documentRequestMessage, publicationMessage, replayMessage, listedMessage, titleMessage, signinMessage, removalMessage, cleanTitle, digest, FULL_LINK, SHORT_LINK, SIGNIN_PENDING } from '../publication-contract.mjs';
+import { hex, fromBase64 } from '../verify-core/contract.mjs';
 import { humanToken } from './turnstile.mjs';
 import { track } from '../pages/track.mjs';
 
@@ -38,6 +38,23 @@ export async function worldIDSignIn(proof) {
   const value = { wallet: reply.wallet, name: typeof reply.account === 'string' ? reply.account.slice(0, 200) : null };
   try { localStorage.setItem(ACCOUNT, JSON.stringify(value)); } catch {}
   track('signed_in');
+  return value;
+}
+
+/** What Start Recording's World ID is made for: writing session `nonce` (session.mjs) on this browser's key. */
+export const startSignal = async nonce => sessionSignal(nonce, (await publishingKey()).publicKey);
+/** Sends the World ID scanned at Start for session `nonce` (worldid.mjs), signed by this browser's key. The server
+ *  checks it with World and keeps it with the session, and signs this browser in to that World ID's account if it
+ *  isn't yet. Resolves { wallet, name }, as worldIDSignIn does. */
+export async function worldIDStart(nonce, proof) {
+  const { publicKey } = await publishingKey(), body = JSON.stringify({ publicKey, nonce, proof });
+  const signature = await signed(worldIDSessionMessage(publicKey, await digest(encoder.encode(body))));
+  const response = await fetch('/api/worldid/session', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Huma-Signature': signature }, body });
+  const reply = await response.json().catch(() => ({}));
+  if (!response.ok || reply.status !== 'signed-in' || !reply.wallet)
+    throw Object.assign(new Error(reply.error ?? 'Couldn’t confirm World ID. Try again.'), { status: response.status });
+  const value = { wallet: reply.wallet, name: typeof reply.account === 'string' ? reply.account.slice(0, 200) : null };
+  try { localStorage.setItem(ACCOUNT, JSON.stringify(value)); } catch {}
   return value;
 }
 
@@ -138,7 +155,6 @@ export const faceURL = seed => '/avatar/' + encodeURIComponent(seed) + '.svg';
 // Passkeys: the account's own (Touch ID, Face ID, Windows Hello or a security key) approve check-ins alongside this
 // browser's writing key, and a page whose every check-in they approved shows the passkey check. Only each one's
 // credential id and P-256 public key are kept, here and in the account (documents.mjs).
-const fromBase64 = text => Uint8Array.from(atob(text), c => c.charCodeAt(0));
 const fromBase64url = text => fromBase64(text.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - text.length % 4) % 4));
 const keepPasskeys = list => { try { localStorage.setItem(PASSKEYS, JSON.stringify({ wallet: account()?.wallet, passkeys: list })); } catch {} return list; };
 /** The account's passkeys known in this browser: [{ id, publicKey, rpId }]. */
@@ -227,13 +243,27 @@ export async function publish(proved, { replay = false, listed = false, title = 
   // it's got after the scan, as its token expires in minutes.
   const early = turnstile ? Promise.resolve(turnstile) : humanProof ? null : humanToken('publish').catch(() => humanToken('publish'));
   early?.catch(() => {});
-  const prepared = await fetch('/api/publications/prepare', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ kind: 'huma-publication-upload-v1', access: 'link', proof: proved.envelope,
-      master: { base64: b64(encoder.encode(proved.text)), mediaType: 'text/plain;charset=utf-8' }, ...(replay && proved.replay ? { replay: proved.replay } : {}) }) });
-  const ticket = await prepared.json().catch(() => ({}));
-  if (!prepared.ok || !/^[a-f0-9]{64}$/.test(ticket.id ?? '')) throw new Error(ticket.error ?? 'The page couldn’t be checked.');
-  const pending = await (await fetch('/api/publications/pending/' + ticket.id, { headers: { Authorization: 'Bearer ' + ticket.ticket } })).json();
-  const [{ publicKey }, worldId] = await Promise.all([publishingKey(), humanProof ? humanProof(pageSignal(pending.manifest)) : null]);
+  // The World ID scan starts now, while the page uploads and is checked, not after: it's made for the page's text and
+  // proof, known here (the same hashes the server's manifest names, checked below), so the QR shows at once.
+  const signal = humanProof ? pageSignal({ master: { hash: await digest(encoder.encode(proved.text)) }, proof: { hash: await digest(encoder.encode(proved.envelope)) } }) : null;
+  const scan = new AbortController(), scanning = humanProof ? humanProof(signal, { cancel: scan.signal }) : null;
+  scanning?.catch(() => {});
+  let ticket, pending;
+  try {
+    const prepared = await fetch('/api/publications/prepare', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kind: 'huma-publication-upload-v1', access: 'link', proof: proved.envelope,
+        master: { base64: b64(encoder.encode(proved.text)), mediaType: 'text/plain;charset=utf-8' }, ...(replay && proved.replay ? { replay: proved.replay } : {}) }) });
+    ticket = await prepared.json().catch(() => ({}));
+    if (!prepared.ok || !/^[a-f0-9]{64}$/.test(ticket.id ?? '')) throw new Error(ticket.error ?? 'The page couldn’t be checked.');
+    pending = await (await fetch('/api/publications/pending/' + ticket.id, { headers: { Authorization: 'Bearer ' + ticket.ticket } })).json();
+    if (!pending?.manifest) throw new Error(pending?.error ?? 'The page couldn’t be checked.');
+  } catch (e) { scan.abort(); throw e; }
+  let worldId = null;
+  if (humanProof) {
+    if (pageSignal(pending.manifest) === signal) worldId = await scanning;
+    else { scan.abort(); await scanning.catch(() => {}); worldId = await humanProof(pageSignal(pending.manifest)); } // never expected
+  }
+  const { publicKey } = await publishingKey();
   const person = await (early ?? humanToken('publish').catch(() => humanToken('publish')));
   const response = await fetch('/api/publications/pending/' + ticket.id + '/publish-device', { method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Huma-Ticket': ticket.ticket },
@@ -245,24 +275,24 @@ export async function publish(proved, { replay = false, listed = false, title = 
   // The page's own id (its manifest's hash) is in its link; the upload ticket's id is another.
   return { path: SHORT_LINK.test(data.short ?? '') ? data.short : await shorten(data.path), id: data.path.match(FULL_LINK)[1] };
 }
+/** A change to a shared page, signed by this browser's publishing key: `fields` go with the key and the signature of
+ *  `message`; the server's error, or `fallback`, is thrown unless the reply is fine (or `alsoFine(status)`). */
+async function changeShared(id, action, fields, message, fallback, alsoFine = () => false) {
+  const { publicKey } = await publishingKey();
+  const response = await fetch('/api/publications/' + id + '/' + action, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ publicKey, ...fields, signature: await signed(message) }) });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok && !alsoFine(response.status)) throw new Error(data.error ?? fallback);
+  return data;
+}
 /** Turns a shared page's writing replay on (the signed replay) or off (null). Only the browser that shared it can. */
 export async function setReplay(id, replay) {
-  const { publicKey } = await publishingKey();
-  const signature = await signed(replayMessage(id, replay === null ? null : await digest(encoder.encode(replay))));
-  const response = await fetch('/api/publications/' + id + '/replay', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ publicKey, replay, signature }) });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error ?? 'Couldn’t change the replay. Try again.');
-  return data.replay === true;
+  const message = replayMessage(id, replay === null ? null : await digest(encoder.encode(replay)));
+  return (await changeShared(id, 'replay', { replay }, message, 'Couldn’t change the replay. Try again.')).replay === true;
 }
-/** Shows a shared page on the writer's page (huma.social/@handle) or takes it off. Any browser signed in to its account can. */
 /** Takes a shared page down: its link stops working. Any browser signed in to its account can. */
 export async function removeShared(id) {
-  const { publicKey } = await publishingKey();
-  const response = await fetch('/api/publications/' + id + '/remove', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ publicKey, signature: await signed(removalMessage(id)) }) });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok && response.status !== 410) throw new Error(data.error ?? 'Couldn’t take the page down. Try again.');
+  await changeShared(id, 'remove', {}, removalMessage(id), 'Couldn’t take the page down. Try again.', status => status === 410);
 }
 /** The page a short link (/p/<code>#key) names, as the server keeps it: its id, or null. */
 export async function shortTarget(path) {
@@ -273,20 +303,13 @@ export async function shortTarget(path) {
 }
 /** Renames a shared page where it's listed; any browser signed in to its account can. */
 export async function setTitle(id, title) {
-  const { publicKey } = await publishingKey(), time = Date.now();
-  const response = await fetch('/api/publications/' + id + '/title', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ publicKey, title, time, signature: await signed(titleMessage(id, title, time)) }) });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error ?? 'Couldn’t rename it. Try again.');
-  return data.title;
+  const time = Date.now();
+  return (await changeShared(id, 'title', { title, time }, titleMessage(id, title, time), 'Couldn’t rename it. Try again.')).title;
 }
+/** Shows a shared page on the writer's page (huma.social/@handle) or takes it off. Any browser signed in to its account can. */
 export async function setListed(id, listed) {
-  const { publicKey } = await publishingKey(), time = Date.now();
-  const response = await fetch('/api/publications/' + id + '/listed', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ publicKey, listed, time, signature: await signed(listedMessage(id, listed, time)) }) });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error ?? 'Couldn’t change Your Page. Try again.');
-  return data.listed === true;
+  const time = Date.now();
+  return (await changeShared(id, 'listed', { listed, time }, listedMessage(id, listed, time), 'Couldn’t change Your Page. Try again.')).listed === true;
 }
 /**
  * How a shared page is shown now, from its receipt: { replay, listed, handle }, each null when it can't be told

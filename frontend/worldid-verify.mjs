@@ -19,14 +19,19 @@ import { createHash } from 'node:crypto';
 import { signRequest } from '@worldcoin/idkit-core/signing';
 import { hashSignal } from '@worldcoin/idkit-core/hashing';
 import { clientIP } from './client-ip.mjs';
-import { pageSignal, accountSignal } from './publication-contract.mjs';
+import { pageSignal, accountSignal, sessionSignal } from './publication-contract.mjs';
 
-export { pageSignal, accountSignal };
+export { pageSignal, accountSignal, sessionSignal };
 export const BRIDGE_ORIGIN = 'https://bridge.worldcoin.org';
 export const VERIFY_URL = 'https://developer.world.org/api/v4/verify/';
 export const NOT_VERIFIED = 'Couldn’t confirm World ID.';
 export const WORLD_ID_REQUIRED = 'Verify you’re human with World ID to share this page.';
 export const WORLD_ID_TAKEN = 'This World ID is already linked to another Huma account.';
+export const WORLD_ID_START = 'Verify you’re human with World ID when you start writing. Start a new document to share.';
+/** A host in production without World ID keys: pages can't be shared from it at all, rather than without the human check. */
+export const WORLD_ID_UNCONFIGURED = 'This host isn’t set up for World ID, so pages can’t be shared from it.';
+export const WORLD_ID_FINISH = 'Verify you’re human with World ID again to finish and share this page.';
+export const WORLD_ID_SOMEONE_ELSE = 'This World ID isn’t the one this page was started with.';
 export const WORLD_ID_LIMIT = 24 * 1024;
 // World ID 4.0 names the credential proof_of_human, 3.0 (the Orb fallback) orb. Nothing else counts as unique.
 const CREDENTIALS = new Map([['proof_of_human', 'proof_of_human'], ['orb', 'proof_of_human']]);
@@ -51,6 +56,10 @@ export function configuredWorldID(env = process.env, { fetch: send = globalThis.
     console.warn('World ID is off: set HUMA_WORLD_APP_ID, HUMA_WORLD_RP_ID and WORLD_RP_SIGNING_KEY (all valid) to turn it on.');
   }
   const required = enabled && env.HUMA_WORLD_REQUIRED !== 'false';
+  // In production, no keys means no sharing at all (HUMA_WORLD_OPTIONAL=true says this host really means to run without
+  // the human check); never a quiet fallback to pages without it, on the web or from the Mac.
+  const missing = !enabled && env.NODE_ENV === 'production' && env.HUMA_WORLD_OPTIONAL !== 'true';
+  if (missing && !warned) { warned = true; console.error('World ID is not configured: pages can’t be shared from this host until HUMA_WORLD_APP_ID, HUMA_WORLD_RP_ID and WORLD_RP_SIGNING_KEY are set.'); }
   let waiting = 0;
   /** A fresh signed request for this action: what the browser hands IDKit as its rp_context. */
   function context() {
@@ -89,14 +98,16 @@ export function configuredWorldID(env = process.env, { fetch: send = globalThis.
     return { ok: true, record: { credential, nullifier: nullifier.toLowerCase(), version: String(result.protocol_version ?? ''), action, environment,
       signal, verifiedAt: now(), result } };
   }
-  return { enabled, required, appId: enabled ? appId : null, rpId: enabled ? rpId : null, action, environment, context, verify };
+  return { enabled, required, missing, appId: enabled ? appId : null, rpId: enabled ? rpId : null, action, environment, context, verify };
 }
 
 /** What a reader is shown of a stored record: never the proof or the nullifier itself, only a short fingerprint. */
 export function publicWorldID(record) {
   if (!record || typeof record.nullifier !== 'string') return null;
   return { verified: true, credential: record.credential, version: record.version, verifiedAt: record.verifiedAt,
-    fingerprint: createHash('sha256').update(record.nullifier).digest('hex').slice(0, 12) };
+    fingerprint: createHash('sha256').update(record.nullifier).digest('hex').slice(0, 12),
+    // A page written in a browser was also scanned at its Start: the same human started and finished it.
+    ...(record.started ? { startedAt: record.started.verifiedAt } : {}) };
 }
 
 async function readSmallJSON(req, limit = 2048) {
@@ -114,7 +125,7 @@ export function worldIDRoutes(world, { now = Date.now } = {}) {
   return async (req, res, pathname, { json }) => {
     if (pathname === '/api/worldid' && req.method === 'GET') {
       json(res, 200, world.enabled ? { appId: world.appId, rpId: world.rpId, action: world.action, environment: world.environment, required: world.required }
-        : { appId: null, rpId: null, action: null, environment: null, required: false });
+        : { appId: null, rpId: null, action: null, environment: null, required: false, missing: world.missing === true });
       return true;
     }
     if (pathname !== '/api/worldid/context') return false;

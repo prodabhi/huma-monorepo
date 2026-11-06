@@ -10,7 +10,7 @@ import { statementHash, TEXT_POLICY } from '../verify-core/contract.mjs';
 import { configuredWorldID, publicWorldID, worldIDRoutes, pageSignal, accountSignal, VERIFY_URL } from '../worldid-verify.mjs';
 import { LocalObjectStore } from '../object-store.mjs';
 import { deviceOwnerKey } from '../documents.mjs';
-import { documentRequestMessage, publicationMessage, worldIDSigninMessage } from '../publication-contract.mjs';
+import { documentRequestMessage, publicationMessage, worldIDSigninMessage, worldIDSessionMessage, sessionSignal } from '../publication-contract.mjs';
 
 // Made-up app, RP and signing key. World's verify endpoint is always stubbed: no network.
 const ENV = { HUMA_WORLD_APP_ID: 'app_example1234', HUMA_WORLD_RP_ID: 'rp_example1234', WORLD_RP_SIGNING_KEY: '0x' + '11'.repeat(32) };
@@ -135,7 +135,7 @@ test('the routes tell the page the public config, sign for it, and limit a clien
   // Off: the page is told so, and nothing is signed.
   const off = worldIDRoutes(configured(world(), {}));
   await off(request('GET'), {}, '/api/worldid', { json });
-  assert.deepEqual(sent.pop().body, { appId: null, rpId: null, action: null, environment: null, required: false });
+  assert.deepEqual(sent.pop().body, { appId: null, rpId: null, action: null, environment: null, required: false, missing: false });
   await off(request('POST'), {}, '/api/worldid/context', { json });
   assert.equal(sent.pop().status, 404);
 });
@@ -154,20 +154,27 @@ async function madeUpPage(source) {
     proof: { hash: sha(proof), byteLength: Buffer.byteLength(proof) }, statement, statementHash: await statementHash(statement), access: JSON.parse(source).access };
   return { manifest, proof, scoring: null };
 }
-const started = async base => ({ nonce: [BigInt('0x' + (await (await fetch(base + '/api/sessions', { method: 'POST' })).json()).nonce).toString(), '0'],
-  elapsed: '0', start_unix: '0', end_unix: '0' });
-async function running(t, worldId, { browser = true } = {}) {
+const newSession = async base => (await (await fetch(base + '/api/sessions', { method: 'POST' })).json()).nonce;
+const started = nonce => ({ nonce: [BigInt('0x' + nonce).toString(), '0'], elapsed: '0', start_unix: '0', end_unix: '0' });
+async function running(t, worldId, { browser = true, mac = false } = {}) {
   const directory = await mkdtemp(path.join(tmpdir(), 'huma-worldid-'));
-  let base;
+  let base, next = null;
   const server = await createRegistry({ store: directory, publicationOptions: {
     authenticate: async token => { if (token !== 'test-owner-session') throw Object.assign(new Error('Sign in required.'), { status: 401 }); return sha('test-owner'); },
     // A browser page's journal says it was written in one (origin_present 0) and starts from this server's session nonce.
-    verifyUpload: async source => ({ ...await madeUpPage(source), scoring: browser ? { journal: { origin_present: 0, ...await started(base) } } : null }), worldId } });
+    // The page's session is the one the test opened with request.session(), or a fresh one.
+    verifyUpload: async source => {
+      const nonce = next ?? await newSession(base); next = null;
+      // A Mac's page has a writing session too, but its keys weren't all typed in a browser (origin_present above 0).
+      return { ...await madeUpPage(source), scoring: mac ? { journal: { origin_present: 1, ...started(nonce) } } : browser ? { journal: { origin_present: 0, ...started(nonce) } } : null };
+    }, worldId } });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(async () => { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); await rm(directory, { recursive: true, force: true }); });
   base = `http://127.0.0.1:${server.address().port}`;
   const request = (route, options) => fetch(base + route, options);
   request.store = new LocalObjectStore(path.join(directory, 'publications'));
+  /** Opens a writing session, as Start Recording does; the next page prepared is written in it. */
+  request.session = async () => (next = await newSession(base));
   return request;
 }
 /** A browser's publishing key, linked to `owner` as sign-in links it (the test sign-in's account by default), and its
@@ -185,6 +192,25 @@ async function browser(request, owner = sha('test-owner')) {
 }
 /** A World ID made for linking the account of the browser with publishing key `point`. */
 const linkProof = (point, item = {}) => proofFor({}, { signal_hash: hashSignal(accountSignal(point)), ...item });
+/** Start Recording's World ID scan for session `nonce` on browser `who` (newBrowser): it also signs that browser in. */
+function startScan(request, who, nonce, item = {}) {
+  const body = JSON.stringify({ publicKey: who.point, nonce, proof: proofFor({}, { signal_hash: hashSignal(sessionSignal(nonce, who.point)), ...item }) });
+  return request('/api/worldid/session', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Huma-Signature': who.signs(worldIDSessionMessage(who.point, sha(body))) }, body });
+}
+/** Shares `pending` from browser `who` with its own key, with `worldId` as the World ID scanned at Finish (if any). */
+async function shareFrom(request, who, pending, worldId) {
+  const { manifest } = await (await request('/api/publications/pending/' + pending.id, { headers: { Authorization: 'Bearer ' + pending.ticket } })).json();
+  return request('/api/publications/pending/' + pending.id + '/publish-device', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Huma-Ticket': pending.ticket },
+    body: JSON.stringify({ publicKey: who.point, wallet: who.wallet, signature: who.signs(publicationMessage(manifest)), ...(worldId ? { worldId } : {}) }) });
+}
+/** A page written in browser `who`: World ID scanned at its Start (`start`), then shared with one scanned at its Finish
+ *  (`finish`, bound to this page). Returns { response, pending, nonce }. */
+async function writeAndShare(request, who, { start = true, finish = true, share = true } = {}) {
+  const nonce = await request.session();
+  if (start) { const started = await startScan(request, who, nonce); assert.equal(started.status, 200, await started.clone().text()); who.wallet = (await started.json()).wallet; }
+  const pending = await prepared(request);
+  return { pending, nonce, response: share ? await shareFrom(request, who, pending, finish ? proofOf(pending) : undefined) : null };
+}
 async function prepared(request) {
   const response = await request('/api/publications/prepare', { method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ kind: 'huma-publication-upload-v1', access: 'link', proof: '{}',
@@ -202,37 +228,42 @@ const proofOf = pending => {
   return proof;
 };
 
-test('a page shared with a World ID shows a verified human, and anyone can fetch the proof to check it', { timeout: 60000 }, async t => {
+test('a page started and finished with World ID shows the human who did both, and anyone can fetch both proofs', { timeout: 60000 }, async t => {
   const stub = world();
   const request = await running(t, configured(stub));
-  const pending = await prepared(request);
-  const shared = await publish(request, pending, { worldId: proofOf(pending) });
+  const me = newBrowser(request);
+  const { response: shared, pending, nonce } = await writeAndShare(request, me);
   assert.equal(shared.status, 200, await shared.clone().text());
-  assert.equal(stub.calls.length, 1);
+  assert.equal(stub.calls.length, 2); // World checked the Start scan and the Finish scan
   const [, id, key] = (await shared.json()).path.match(/^\/original\/([a-f0-9]{64})#([a-f0-9]{64})$/);
   const asReader = { headers: { Authorization: 'Bearer ' + key } };
   const receipt = await (await request(`/api/publications/${id}/receipt`, asReader)).json();
   assert.equal(receipt.worldId.verified, true);
   assert.match(receipt.worldId.fingerprint, /^[0-9a-f]{12}$/);
+  assert.equal(typeof receipt.worldId.startedAt, 'number');
   assert.ok(!JSON.stringify(receipt).includes(NULLIFIER));
   const evidence = await (await request(`/api/publications/${id}/worldid`, asReader)).json();
   assert.equal(evidence.rpId, 'rp_example1234');
   assert.equal(evidence.signal, pending.signal);
+  assert.equal(evidence.started.signal, sessionSignal(nonce, me.point));
   assert.equal(evidence.result.responses[0].nullifier, NULLIFIER);
+  assert.equal(evidence.started.result.responses[0].nullifier, NULLIFIER);
   // Not without the page's link key.
   assert.equal((await request(`/api/publications/${id}/worldid`)).status, 404);
 });
 
-test('a page written in a browser can’t be shared without a World ID, and nothing is stored', { timeout: 60000 }, async t => {
-  const stub = world();
-  const request = await running(t, configured(stub));
-  const pending = await prepared(request);
-  const refused = await publish(request, pending, {});
-  assert.equal(refused.status, 403);
-  assert.match((await refused.json()).error, /Verify you’re human with World ID to share this page/);
-  assert.equal(stub.calls.length, 0);
-  // The same page, with its World ID, is shared.
-  assert.equal((await publish(request, pending, { worldId: proofOf(pending) })).status, 200);
+test('a page written in a browser is shared only with World ID at both its Start and its Finish', { timeout: 60000 }, async t => {
+  const request = await running(t, configured(world()));
+  const me = newBrowser(request);
+  me.wallet = (await (await me.signIn()).json()).wallet; // signed in, but the next page isn't started with World ID
+  const noStart = await writeAndShare(request, me, { start: false });
+  assert.equal(noStart.response.status, 403);
+  assert.match((await noStart.response.json()).error, /when you start writing/);
+  const noFinish = await writeAndShare(request, me, { finish: false });
+  assert.equal(noFinish.response.status, 403);
+  assert.match((await noFinish.response.json()).error, /again to finish/);
+  // The same page, with its Finish World ID, is shared.
+  assert.equal((await shareFrom(request, me, noFinish.pending, proofOf(noFinish.pending))).status, 200);
 });
 
 test('a Mac page is shared without a World ID, and so is a browser page when it is only a badge', { timeout: 60000 }, async t => {
@@ -248,20 +279,28 @@ test('a Mac page is shared without a World ID, and so is a browser page when it 
   assert.equal((await publish(optional, await prepared(optional), {})).status, 200);
 });
 
-test('a World ID that is not a unique human’s for this page stops the share, and a retry can still succeed', { timeout: 60000 }, async t => {
-  const request = await running(t, configured(world({ success: true, environment: 'production' })));
-  const pending = await prepared(request);
+test('a Finish World ID that isn’t for this page, or isn’t the same person’s, stops the share; a retry still can; World down blocks it', { timeout: 60000 }, async t => {
+  const request = await running(t, configured(world()));
+  const me = newBrowser(request);
+  const { pending } = await writeAndShare(request, me, { share: false });
   const other = await prepared(request); // a proof made for a different page
-  const refused = await publish(request, pending, { worldId: proofOf(other) });
+  assert.equal((await shareFrom(request, me, pending, proofOf(other))).status, 403);
+  assert.equal((await shareFrom(request, me, pending, { ...proofOf(pending), environment: 'staging' })).status, 403);
+  const someoneElse = proofOf(pending); someoneElse.responses[0].nullifier = '0x' + 'cd'.repeat(32);
+  const refused = await shareFrom(request, me, pending, someoneElse);
   assert.equal(refused.status, 403);
-  const staging = await publish(request, pending, { worldId: { ...proofOf(pending), environment: 'staging' } });
-  assert.equal(staging.status, 403);
-  assert.equal((await publish(request, pending, { worldId: proofOf(pending) })).status, 200);
-  // World down: 503, and where it is required the page isn't shared without it; where it is only a badge it can be.
+  assert.match((await refused.json()).error, /isn’t the one this page was started with/);
+  assert.equal((await shareFrom(request, me, pending, proofOf(pending))).status, 200);
+  // A session already started by one person can't be started by another.
+  const nonce = await request.session(), them = newBrowser(request);
+  assert.equal((await startScan(request, me, nonce)).status, 200);
+  assert.equal((await startScan(request, them, nonce, { nullifier: '0x' + 'cd'.repeat(32) })).status, 409);
+  // Only a live session can be started: not one this server never issued, nor one a page has used.
+  assert.equal((await startScan(request, me, 'f'.repeat(32))).status, 403);
+  assert.equal((await startScan(request, me, (await writeAndShare(request, me)).nonce)).status, 403);
+  // World down: Start can't be scanned, so where World ID is required nothing is shared; where it is only a badge it can be.
   const down = await running(t, configured(world(new Error('offline'))));
-  const pendingDown = await prepared(down);
-  assert.equal((await publish(down, pendingDown, { worldId: proofOf(pendingDown) })).status, 503);
-  assert.equal((await publish(down, pendingDown, {})).status, 403);
+  assert.equal((await startScan(down, newBrowser(down), await down.session())).status, 503);
   const soft = await running(t, configured(world(new Error('offline')), { ...ENV, HUMA_WORLD_REQUIRED: 'false' }));
   const pendingSoft = await prepared(soft);
   assert.equal((await publish(soft, pendingSoft, { worldId: proofOf(pendingSoft) })).status, 503);
@@ -270,7 +309,7 @@ test('a World ID that is not a unique human’s for this page stops the share, a
 
 test('with World ID off the write page is as before, and a proof sent anyway is refused', { timeout: 60000 }, async t => {
   const request = await running(t, configured(world(), {}));
-  assert.deepEqual(await (await request('/api/worldid')).json(), { appId: null, rpId: null, action: null, environment: null, required: false });
+  assert.deepEqual(await (await request('/api/worldid')).json(), { appId: null, rpId: null, action: null, environment: null, required: false, missing: false });
   assert.doesNotMatch((await request('/write')).headers.get('content-security-policy') ?? '', /worldcoin/);
   const pending = await prepared(request);
   assert.equal((await publish(request, pending, { worldId: proofOf(pending) })).status, 409);
@@ -287,7 +326,8 @@ test('with World ID on the write page may reach only World’s bridge', { timeou
 
 test('a writer links World ID once, and every page they share and their writer page show that same World ID', { timeout: 60000 }, async t => {
   const stub = world();
-  const request = await running(t, configured(stub));
+  // Pages from a Mac (no Start or Finish scans there) carry the account's World ID.
+  const request = await running(t, configured(stub), { browser: false });
   const me = await browser(request);
   assert.deepEqual(await (await me.send('GET', '/api/documents/worldid')).json(), { worldId: null });
   // A proof made for another browser's key can't link this account, and World isn't asked.
@@ -386,17 +426,15 @@ test('a writer signs in with World ID alone: one account per World ID, the same 
   // The same person on another browser gets the same account.
   const phone = newBrowser(request);
   assert.equal((await (await phone.signIn()).json()).wallet, me.wallet);
-  // A page shared from the browser itself (no Privy, no bearer token) carries the World ID.
-  const pending = await prepared(request);
-  const { manifest } = await (await request('/api/publications/pending/' + pending.id, { headers: { Authorization: 'Bearer ' + pending.ticket } })).json();
-  const shared = await request('/api/publications/pending/' + pending.id + '/publish-device', { method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Huma-Ticket': pending.ticket },
-    body: JSON.stringify({ publicKey: laptop.point, wallet: me.wallet, signature: laptop.signs(publicationMessage(manifest)) }) });
+  // A page written and shared from the browser itself (no Privy, no bearer token), started and finished with World ID,
+  // carries it.
+  const { response: shared } = await writeAndShare(request, laptop);
+  assert.equal(laptop.wallet, me.wallet);
   assert.equal(shared.status, 200, await shared.clone().text());
   const [, id, key] = (await shared.json()).path.match(/^\/original\/([a-f0-9]{64})#([a-f0-9]{64})$/);
   const receipt = await (await request(`/api/publications/${id}/receipt`, { headers: { Authorization: 'Bearer ' + key } })).json();
   assert.equal(receipt.worldId.fingerprint, fingerprint);
-  assert.equal(stub.calls.length, 2); // one check with World per sign-in, none at the share
+  assert.equal(stub.calls.length, 4); // World checked each sign-in, then the page's Start and its Finish
 });
 
 test('a World ID sign-in is refused unless this browser signed it, for its own key, as a unique human', { timeout: 60000 }, async t => {
@@ -421,7 +459,7 @@ test('a World ID sign-in is refused unless this browser signed it, for its own k
 
 test('the Mac signs in with World ID through the sign-in page, reads it back with its code, and shares by itself', { timeout: 60000 }, async t => {
   const stub = world();
-  const request = await running(t, configured(stub));
+  const request = await running(t, configured(stub), { browser: false });
   const mac = newBrowser(request), code = randomBytes(32).toString('hex');
   const signIn = (body, signin = code) => request('/api/publications/signin', { method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Huma-Signin': signin }, body: JSON.stringify(body) });
@@ -452,4 +490,69 @@ test('the Mac signs in with World ID through the sign-in page, reads it back wit
   const csp = (await request('/share/signin')).headers.get('content-security-policy') ?? '';
   assert.match(csp, /connect-src 'self' https:\/\/bridge\.worldcoin\.org;/);
   assert.doesNotMatch(csp, /privy/);
+});
+
+test('the Mac starts a page with World ID in its window, finishes it with another for that page, and shares it itself', { timeout: 60000 }, async t => {
+  const stub = world();
+  const request = await running(t, configured(stub), { mac: true });
+  const mac = newBrowser(request), code = randomBytes(32).toString('hex');
+  const signIn = body => request('/api/publications/signin', { method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Huma-Signin': code }, body: JSON.stringify(body) });
+  // Start Recording: the window's World ID is made for the host's session and the Mac's key; it signs the Mac in too.
+  const nonce = await request.session();
+  assert.equal((await signIn({ publicKey: mac.point, worldId: linkProof(mac.point), nonce })).status, 403); // not for this session
+  assert.equal((await signIn({ publicKey: mac.point, worldId: proofFor({}, { signal_hash: hashSignal(sessionSignal(nonce, mac.point)) }), nonce })).status, 200);
+  const back = await (await request('/api/publications/signin', { headers: { 'X-Huma-Signin': code } })).json();
+  assert.deepEqual([back.status, back.device], ['signed-in', true]);
+  mac.wallet = back.wallet;
+  // Get Link: not without the Finish World ID, which the window sends with the waiting page's ticket.
+  const pending = await prepared(request);
+  const noFinish = await shareFrom(request, mac, pending);
+  assert.equal(noFinish.status, 403);
+  assert.match((await noFinish.json()).error, /again to finish/);
+  const finish = (on, proof) => request('/api/publications/pending/' + on.id + '/worldid', { method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Huma-Ticket': on.ticket }, body: JSON.stringify({ worldId: proof }) });
+  const elsewhere = await prepared(request);
+  assert.equal((await finish(pending, proofOf(elsewhere))).status, 403); // made for another page
+  assert.equal((await finish(pending, proofOf(pending))).status, 200);
+  const shared = await shareFrom(request, mac, pending);
+  assert.equal(shared.status, 200, await shared.clone().text());
+  const [, id, key] = (await shared.json()).path.match(/^\/original\/([a-f0-9]{64})#([a-f0-9]{64})$/);
+  const receipt = await (await request(`/api/publications/${id}/receipt`, { headers: { Authorization: 'Bearer ' + key } })).json();
+  assert.equal(typeof receipt.worldId.startedAt, 'number');
+  assert.equal(stub.calls.length, 2); // World checked the Start scan and the Finish scan
+  // A Mac page whose session wasn't started with World ID (an older Huma) isn't shared, even with a Finish scan.
+  assert.equal((await finish(elsewhere, proofOf(elsewhere))).status, 200);
+  const unstarted = await shareFrom(request, mac, elsewhere);
+  assert.equal(unstarted.status, 403);
+  assert.match((await unstarted.json()).error, /when you start writing/);
+});
+
+test('the Mac sends its own Start scan and gets who signed in back, then sends its Finish scan with the share itself', { timeout: 60000 }, async t => {
+  const stub = world();
+  const request = await running(t, configured(stub), { mac: true });
+  const mac = newBrowser(request), code = randomBytes(32).toString('hex'), nonce = await request.session();
+  // Start: Huma's window hands the proof back and Huma sends it with the sign-in code; the reply says who signed in.
+  const started = await request('/api/publications/signin', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Huma-Signin': code },
+    body: JSON.stringify({ publicKey: mac.point, worldId: proofFor({}, { signal_hash: hashSignal(sessionSignal(nonce, mac.point)) }), nonce }) });
+  assert.equal(started.status, 200, await started.clone().text());
+  const me = await started.json();
+  assert.equal(me.status, 'signed-in');
+  assert.equal(me.device, true);
+  assert.match(me.wallet, /^0x[0-9a-fA-F]{40}$/);
+  mac.wallet = me.wallet;
+  // Finish: the proof goes with the share (no /worldid call). One made for another page is refused before World.
+  const pending = await prepared(request), other = await prepared(request);
+  assert.equal((await shareFrom(request, mac, pending, proofOf(other))).status, 403);
+  // Finished by someone else: a Finish scan from another person than the one who scanned at Start is refused.
+  const someoneElse = proofOf(pending); someoneElse.responses[0].nullifier = '0x' + 'cd'.repeat(32);
+  const refused = await shareFrom(request, mac, pending, someoneElse);
+  assert.equal(refused.status, 403);
+  assert.match((await refused.json()).error, /isn’t the one this page was started with/);
+  const shared = await shareFrom(request, mac, pending, proofOf(pending));
+  assert.equal(shared.status, 200, await shared.clone().text());
+  const [, id, key] = (await shared.json()).path.match(/^\/original\/([a-f0-9]{64})#([a-f0-9]{64})$/);
+  const receipt = await (await request(`/api/publications/${id}/receipt`, { headers: { Authorization: 'Bearer ' + key } })).json();
+  assert.equal(typeof receipt.worldId.startedAt, 'number');
+  assert.equal(stub.calls.length, 3); // World checked the Start scan, the other person's Finish scan and the Finish scan
 });
