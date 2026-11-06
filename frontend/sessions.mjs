@@ -1,6 +1,9 @@
-import { createHash, randomBytes } from 'node:crypto';
-import { changeState } from './documents.mjs';
+import { randomBytes } from 'node:crypto';
+import { changeState, readState } from './documents.mjs';
 import { clientIP } from './client-ip.mjs';
+import { sha256Hex as hash, fail } from './server-util.mjs';
+import { sessionKey } from './detection/stream.mjs';
+import { canaryWord } from './detection/traps.mjs';
 
 /** Server-anchored time for pages written in a browser. Everything on /write runs in the browser, its clock too, so a
  *  script could feed the recorder invented times and prove half an hour of typing in seconds. Instead, Start asks
@@ -22,8 +25,6 @@ const SHARDS = 16, SHARD_LIMIT = 3000, OWN = 24;
 // window can't lock out someone just arriving.
 const WINDOW = 10 * 60 * 1000, PER_CLIENT = 30, PER_NETWORK = 120, OVERALL = 3000, NEWCOMER = 3, CLIENTS = 10000;
 
-const hash = value => createHash('sha256').update(value).digest('hex');
-const fail = (status, message) => Object.assign(new Error(message), { status });
 /** A page's public nonce[0] (decimal, as decodeFinal gives it) as the 32 hex characters this server issued, or null. */
 export function nonceHex(field) {
   if (typeof field !== 'string' || !/^[1-9][0-9]{0,38}$/.test(field)) return null;
@@ -45,8 +46,14 @@ export const networkOf = client => {
   return groups.length === 4 ? groups.slice(0, 3).join(':') + '::/48' : null;
 };
 
-/** `limits` is for tests: { shards, shardLimit, own, overall }. */
-export function createSessions({ objectStore, now = Date.now, limits = {} }) {
+/** The server's session secret (detection/stream.mjs sessionKey, detection/traps.mjs canaryWord): HUMA_SESSION_SECRET,
+ *  else a random one for this process, so a restart ends the sessions being written (their keys are gone with it). */
+export function sessionSecret(env = process.env) {
+  const given = env.HUMA_SESSION_SECRET;
+  return typeof given === 'string' && given.length >= 32 ? Buffer.from(given, 'utf8') : randomBytes(32);
+}
+/** `limits` is for tests: { shards, shardLimit, own, overall }. `secret` signs session keys and picks canary words. */
+export function createSessions({ objectStore, now = Date.now, limits = {}, secret = sessionSecret() }) {
   const { shards = SHARDS, shardLimit = SHARD_LIMIT, own: ownLimit = OWN, overall: overallLimit = OVERALL } = limits;
   const shardKey = nonceHash => 'sessions/' + hash('huma-sessions-v1\0' + (parseInt(nonceHash[0], 16) % shards));
   const counts = new Map(), salt = randomBytes(16).toString('hex'); let window = 0, overall = 0;
@@ -64,7 +71,8 @@ export function createSessions({ objectStore, now = Date.now, limits = {} }) {
   }
   const prune = (state, at) => Object.fromEntries(Object.entries(state && typeof state === 'object' ? state : {})
     .filter(([, entry]) => Number.isFinite(entry?.issued) && entry.issued + SESSION_LIFETIME > at && entry.issued <= at));
-  /** A fresh nonce for a page about to start: { nonce } as 32 hex characters. `client` is clientAddress(req). */
+  /** A fresh nonce for a page about to start: { nonce } as 32 hex characters, with the key its event stream is signed
+   *  with (detection/stream.mjs) and the canary word its page hides (detection/traps.mjs). `client` is clientAddress(req). */
   async function issue(client) {
     client = typeof client === 'string' && client ? client : 'unknown';
     admit(client);
@@ -85,7 +93,7 @@ export function createSessions({ objectStore, now = Date.now, limits = {} }) {
       next[key] = { issued: at, by };
       return next;
     });
-    return { nonce: hex };
+    return { nonce: hex, key: sessionKey(secret, hex), canary: canaryWord(secret, hex) };
   }
   /** Checks a browser page's claim and marks its nonce used by `proof` (the page proof's hash; the same proof may
    *  be shared again after a failed try, no other may). Returns when the server issued the nonce. */
@@ -102,5 +110,25 @@ export function createSessions({ objectStore, now = Date.now, limits = {} }) {
     });
     return issued;
   }
-  return { issue, confirm };
+  /** Whether `nonce` was issued here, is under a day old and no page has used it yet: a session still being written. */
+  async function live(nonce) {
+    if (typeof nonce !== 'string' || !/^[a-f0-9]{32}$/.test(nonce)) return false;
+    const key = hash(nonce), at = now(), entry = (await readState(objectStore, shardKey(key), {})).value?.[key];
+    return Number.isFinite(entry?.issued) && entry.issued <= at && entry.issued + SESSION_LIFETIME > at && !entry.used;
+  }
+  // The World ID a session's writer scanned at Start (publications.mjs, /api/worldid/session), kept once beside it: the
+  // page that session makes is shared only with a World ID from the same person at Finish.
+  const humanKey = nonce => 'sessions/' + hash('huma-session-world-id-v1\0' + nonce);
+  /** Keeps the World ID scanned at a session's Start ({ owner, record }), once: a second scan for it changes nothing. */
+  async function startedBy(nonce, value) {
+    await objectStore.quotaCAS(humanKey(nonce), null, Buffer.from(JSON.stringify(value)));
+    return started(nonce);
+  }
+  /** The World ID scanned at a session's Start: { owner, record }, or null. */
+  async function started(nonce) {
+    if (typeof nonce !== 'string' || !/^[a-f0-9]{32}$/.test(nonce)) return null;
+    try { const value = (await readState(objectStore, humanKey(nonce), null)).value; return typeof value?.record?.nullifier === 'string' ? value : null; }
+    catch { return null; }
+  }
+  return { issue, confirm, live, startedBy, started, secret };
 }
