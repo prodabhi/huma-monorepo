@@ -19,7 +19,7 @@ public final class ExperimentalCompactRecorder {
     private var lastHead: String
 
     public init(libraryURL: URL, session: SessionLog, publicKey: Data, time: CaptureTime,
-                profile: ExperimentalCompactCapture.Profile? = nil) throws {
+                profile: ExperimentalCompactCapture.Profile? = nil, sessionNonce: Data? = nil) throws {
         guard session.events.isEmpty, (session.inputSamples ?? []).isEmpty,
               session.captureRecords?.isEmpty == true, (session.signedCheckpoints ?? []).isEmpty,
               (session.presenceEvents ?? []).isEmpty, session.experimentalCompactSnapshot == nil,
@@ -32,7 +32,7 @@ public final class ExperimentalCompactRecorder {
         guard selected.isAssurance == (session.presenceProtocol != nil) else { throw HumaError.invalidSession }
         capture = try ExperimentalCompactCapture(libraryURL: libraryURL, initialText: session.initialText,
             publicKey: publicKey, unixMilliseconds: time.unixMilliseconds,
-            profile: selected)
+            profile: selected, sessionNonce: sessionNonce)
     }
     public func synchronize(_ session: SessionLog, signPresence: ((Data) throws -> Data)? = nil) throws {
         guard session.id == sessionID, exactTextEqual(session.initialText, initialText),

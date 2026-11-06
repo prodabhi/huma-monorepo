@@ -41,17 +41,21 @@ public final class ExperimentalCompactCapture {
     private let native: CompactNativeLibrary
     private let expectedKeyHash: String
 
+    /// `sessionNonce` (long profile only): 16 bytes the host issued at Start, the session's public nonce, so the World ID
+    /// scanned there and the page's proof name the same session. Without it the session picks its own.
     public init(libraryURL: URL, initialText: String, publicKey: Data, unixMilliseconds: UInt64,
-                profile: Profile = .replay) throws {
+                profile: Profile = .replay, sessionNonce: Data? = nil) throws {
         struct Config: Encodable {
             let profile: String
             let initial_text: String
             let public_key: [UInt8]
             let unix: UInt64
+            let nonce: [UInt8]?
         }
+        guard sessionNonce == nil || (profile == .assuranceLong && sessionNonce?.count == 16) else { throw HumaError.invalidSession }
         let native = try CompactNativeLibrary(url: libraryURL)
         let request = try JSONEncoder().encode(Config(profile: profile.rawValue, initial_text: initialText,
-            public_key: Array(publicKey), unix: unixMilliseconds))
+            public_key: Array(publicKey), unix: unixMilliseconds, nonce: sessionNonce.map(Array.init)))
         let response = try native.create(request)
         let info = try JSONDecoder().decode(Envelope<Info>.self, from: response).result
         let keyHash = sha256(publicKey)

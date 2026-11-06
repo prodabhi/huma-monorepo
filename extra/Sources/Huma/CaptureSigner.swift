@@ -15,6 +15,8 @@ final class CaptureSigner: ObservableObject {
     private var nextPresenceElapsed: UInt64 = .max
     private var key: SecureEnclave.P256.Signing.PrivateKey?
     private var sessionID: String?
+    /// The host's session nonce for this recording (16 bytes, from Start), or nil: the long session's public nonce.
+    private var sessionNonce: Data?
     private var clockStart: ContinuousClock.Instant?
     private var compact: ExperimentalCompactRecorder?
     private var compactUnavailable = false
@@ -38,7 +40,8 @@ final class CaptureSigner: ObservableObject {
         return UInt64(max(0, parts.seconds)) * 1_000 + UInt64(max(0, parts.attoseconds)) / 1_000_000_000_000_000
     }
 
-    func start(draft: inout Draft, context: LAContext) throws {
+    /// `sessionNonce`: the session the host issued at Start, which its World ID scan was made for (WritingView).
+    func start(draft: inout Draft, context: LAContext, sessionNonce: Data? = nil) throws {
         guard SecureEnclave.isAvailable else {
             throw HumaError.configuration("This Mac can’t sign your writing. Huma needs a Mac with Touch ID.")
         }
@@ -57,7 +60,7 @@ final class CaptureSigner: ObservableObject {
         candidate.replayProof = nil; candidate.replayProofTextHash = nil; candidate.publicProof = nil
         compact = nil; compactUnavailable = false; long = nil; longUnavailable = false
         chunks.reset(sessionID: candidate.session.id)
-        key = signingKey; sessionID = candidate.session.id; clockStart = .now; recording = true
+        key = signingKey; sessionID = candidate.session.id; self.sessionNonce = sessionNonce; clockStart = .now; recording = true
         try checkpoint(draft: &candidate, force: true)
         draft = candidate
         nextPresenceElapsed = PresenceSchedule.next(after: 0)
@@ -137,7 +140,7 @@ final class CaptureSigner: ObservableObject {
                     publicKey: key.publicKey.x963Representation, time: time) }
                 catch { compact = nil; compactUnavailable = true }
                 do { long = try ExperimentalCompactRecorder(libraryURL: library, session: draft.session,
-                    publicKey: key.publicKey.x963Representation, time: time, profile: .assuranceLong) }
+                    publicKey: key.publicKey.x963Representation, time: time, profile: .assuranceLong, sessionNonce: sessionNonce) }
                 catch { long = nil; longUnavailable = true }
             }
             if let compact {

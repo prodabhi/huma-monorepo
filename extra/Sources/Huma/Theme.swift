@@ -42,7 +42,7 @@ enum Theme {
     static let warning = dynamic(0x8F6420, 0xE0B877)
     static let disabledFill = dynamic(0xE9E6E4, 0x161D26)
 
-    /// The website's own fonts, bundled in Resources/Fonts: Inter for text and Geist Mono for labels and buttons.
+    /// The website's own fonts, bundled in extra/Resources/Fonts: Inter for text and Geist Mono for labels and buttons.
     /// Both are variable, so any weight the site uses (like its 450 headings) is drawn exactly. Without the bundle
     /// (a bare `swift run`), the system fonts stand in.
     private static let bundledFonts: Bool = {
