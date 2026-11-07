@@ -10,7 +10,7 @@ export const LEGACY_CONTRACTS = { 'base-sepolia': ['0x350c2064f0ae37e343e6a1ab52
 export const RPC = { 'base-sepolia': 'https://sepolia.base.org', base: 'https://mainnet.base.org' };
 export const EXPLORER = { 'base-sepolia': 'https://sepolia.basescan.org', base: 'https://basescan.org' };
 
-// Keccak-256 (Ethereum's padding), small and dependency-free; checked against viem in web/test/relayer.test.mjs.
+// Keccak-256 (Ethereum's padding), small and dependency-free; checked against viem in frontend/test/relayer.test.mjs.
 const RC = [0x1n, 0x8082n, 0x800000000000808an, 0x8000000080008000n, 0x808bn, 0x80000001n, 0x8000000080008081n, 0x8000000000008009n,
   0x8an, 0x88n, 0x80008009n, 0x8000000an, 0x8000808bn, 0x800000000000008bn, 0x8000000000008089n, 0x8000000000008003n,
   0x8000000000008002n, 0x8000000000000080n, 0x800an, 0x800000008000000an, 0x8000000080008081n, 0x8000000000008080n, 0x80000001n, 0x8000000080008008n];

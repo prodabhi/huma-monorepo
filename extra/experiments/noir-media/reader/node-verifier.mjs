@@ -1,4 +1,4 @@
-// Internal engine; use web/verify-core/node.mjs for worker/deadline isolation.
+// Internal engine; use frontend/verify-core/node.mjs for worker/deadline isolation.
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createMediaVerifier } from './core.mjs';

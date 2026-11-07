@@ -21,7 +21,7 @@ const WITNESS: &str = include_str!("../witness.mjs");
 // Pins shared with integrations/noir/batch/prove.mjs and the deployed verifier contract.
 const CIRCUIT_SHA256: &str = "0da9427cd43a38e5c5d63e4c462ac2f22fbaea9308f49eb8771a7e55e29d31de";
 const VK_SHA256: &str = "854715ce8482322d12147e28b50b86330a944d0e1b5819693bfce554aa1f2712";
-// Pinned page circuits (backend/integrations/noir/batch/src/main.nr).
+// Pinned page circuits (integrations/noir/batch/src/main.nr).
 const KEY_HASHES: [(&str, &str, bool); 5] = [
     ("assurance64-v1", "0x17c103561f785a7b80c1d917db2612f276a1583d532f8935229bd4de5b04b30d", false),
     ("assurance256-v1", "0x0157685ede27f32fdd79223af0fa1033773fcf97c772fe24f3351d41e002a5d0", false),
@@ -175,14 +175,14 @@ pub mod tests {
 
     pub fn repo() -> PathBuf { Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap().to_path_buf() }
     pub fn fixture(name: &str) -> Value {
-        serde_json::from_slice(&std::fs::read(repo().join("extra/experiments/noir-compact/browser/test/fixtures").join(format!("{name}.json"))).unwrap()).unwrap()
+        serde_json::from_slice(&std::fs::read(repo().join("experiments/noir-compact/browser/test/fixtures").join(format!("{name}.json"))).unwrap()).unwrap()
     }
     /// Commitment checks need only the batch directory; the engine paths are checked by `open`.
     pub fn prover() -> Option<BatchProver> {
         let engine = std::env::var("HUMA_ENGINE_DIR").map(PathBuf::from).unwrap_or(repo().join("build/prover-engine"));
         let crs = std::env::var("HUMA_BATCH_CRS").map(PathBuf::from).unwrap_or(repo().join("build/research/batch-crs"));
         let cores = std::thread::available_parallelism().map(|n| n.get()).unwrap_or(2);
-        match BatchProver::open(&repo().join("backend/integrations/noir/batch"), &crs, &engine, cores, std::env::temp_dir()) {
+        match BatchProver::open(&repo().join("integrations/noir/batch"), &crs, &engine, cores, std::env::temp_dir()) {
             Ok(prover) => Some(prover),
             Err(why) => { eprintln!("batch prover unavailable: {why}"); None }
         }

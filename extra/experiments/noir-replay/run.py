@@ -61,7 +61,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     env = dict(os.environ, RAYON_NUM_THREADS="2", HARDWARE_CONCURRENCY=str(args.threads))
     if not BB.exists() or subprocess.check_output([str(BB), "--version"], text=True).strip() != "5.2.1":
-        parser.error("Run experiments/noir-prover/prepare.py for patched tools first")
+        parser.error("Run extra/experiments/noir-prover/prepare.py for patched tools first")
     WORK.mkdir(parents=True, exist_ok=True)
     previous_vk = archive_built_circuit()
     shutil.copytree(HERE / "src", WORK / "src", dirs_exist_ok=True)

@@ -1,22 +1,21 @@
 // Deploys the three page verifiers and HumaPages from the relayer wallet (HUMA_RELAYER_KEY, funded
-// by the host), then prints the env lines the sharing server needs. Run after `forge build` in this
-// archived contracts directory:
-//   node --env-file=.env.local extra/experiments/onchain/contracts/deploy.mjs [base-sepolia|base]
+// by the host), then prints the env lines the sharing server needs. Run from frontend/ so its dependencies
+// resolve, after `forge build` in contracts/:
+//   cd frontend && node --env-file=../.env.local ../contracts/deploy.mjs [base-sepolia|base]
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, '../../../..');
-const require = createRequire(path.join(repo, 'frontend/package.json'));
+const require = createRequire(path.join(process.cwd(), 'package.json'));
 const { createPublicClient, createWalletClient, http, formatEther } = await import(require.resolve('viem'));
 const { privateKeyToAccount } = await import(require.resolve('viem/accounts'));
-const { NETWORKS } = await import(new URL('../relayer.mjs', import.meta.url));
+const { NETWORKS } = await import(path.join(process.cwd(), 'relayer.mjs'));
 
 const name = process.argv[2] ?? 'base-sepolia', network = NETWORKS[name];
 if (!network) throw new Error('Network must be base-sepolia or base.');
 if (!/^0x[0-9a-fA-F]{64}$/.test(process.env.HUMA_RELAYER_KEY ?? '')) throw new Error('Add HUMA_RELAYER_KEY (the funded relayer wallet\'s private key) to .env.local first.');
+const here = path.dirname(fileURLToPath(import.meta.url));
 const artifact = async contract => JSON.parse(await readFile(path.join(here, 'out', contract + '.sol', contract + '.json'), 'utf8'));
 const account = privateKeyToAccount(process.env.HUMA_RELAYER_KEY), transport = http(process.env.HUMA_CHAIN_RPC ?? network.rpc, { timeout: 30000 });
 const client = createPublicClient({ chain: network.chain, transport }), wallet = createWalletClient({ account, chain: network.chain, transport });
@@ -38,4 +37,4 @@ if (!reuse.length) for (const tier of [1024, 4096, 10000]) verifiers.push(await 
 else console.log('Reusing verifiers', verifiers.join(', '));
 const pages = await deploy('HumaPages', verifiers);
 console.log(`\nAdd to .env.local:\nHUMA_CHAIN=${name}\nHUMA_PAGES_ADDRESS=${pages}\n` +
-  `\nPin it for readers in extra/experiments/onchain/chain.mjs: OFFICIAL_CONTRACTS['${name}'] = '${pages}', then rebuild the reader bundle.`);
+  `\nPin it for readers in backend/integrations/noir/long/chain.mjs: OFFICIAL_CONTRACTS['${name}'] = '${pages}', then rebuild the reader bundle.`);
