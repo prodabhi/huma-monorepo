@@ -1,0 +1,102 @@
+[
+  {
+    "case": "Valid",
+    "accepted": true,
+    "wallMs": 1365.5
+  },
+  {
+    "case": "ChangedKeyTiming",
+    "accepted": false,
+    "wallMs": 1080.53
+  },
+  {
+    "case": "ChangedKeyCode",
+    "accepted": false,
+    "wallMs": 1080.39
+  },
+  {
+    "case": "ChangedScalar",
+    "accepted": false,
+    "wallMs": 1092.36
+  },
+  {
+    "case": "SurrogateScalar",
+    "accepted": false,
+    "wallMs": 872.22
+  },
+  {
+    "case": "InvalidSource",
+    "accepted": false,
+    "wallMs": 854.3
+  },
+  {
+    "case": "ChangedSource",
+    "accepted": false,
+    "wallMs": 1055.53
+  },
+  {
+    "case": "ChangedLocation",
+    "accepted": false,
+    "wallMs": 868.42
+  },
+  {
+    "case": "UnknownOpcode",
+    "accepted": false,
+    "wallMs": 873.61
+  },
+  {
+    "case": "ExtraArgumentBits",
+    "accepted": false,
+    "wallMs": 856.1
+  },
+  {
+    "case": "Salt",
+    "accepted": false,
+    "wallMs": 1047.32
+  },
+  {
+    "case": "ZeroSalt",
+    "accepted": false,
+    "wallMs": 851.83
+  },
+  {
+    "case": "Nonce",
+    "accepted": false,
+    "wallMs": 1042.87
+  },
+  {
+    "case": "ChangedPublicRoot",
+    "accepted": false,
+    "wallMs": 1049.88
+  },
+  {
+    "case": "ChangedPublicText",
+    "accepted": false,
+    "wallMs": 1038.66
+  },
+  {
+    "case": "ChangedPublicCount",
+    "accepted": false,
+    "wallMs": 1049.7
+  },
+  {
+    "case": "ChangedClock",
+    "accepted": false,
+    "wallMs": 1053.75
+  },
+  {
+    "case": "UncoveredFinalOps",
+    "accepted": false,
+    "wallMs": 1054.58
+  },
+  {
+    "case": "WrongStart",
+    "accepted": false,
+    "wallMs": 1087.58
+  },
+  {
+    "case": "NonzeroPadding",
+    "accepted": false,
+    "wallMs": 1075.66
+  }
+]

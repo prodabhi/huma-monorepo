@@ -1,0 +1,22 @@
+{
+  "experimental": true,
+  "proofGenerated": false,
+  "compilerVersion": "nargo version = 1.0.0-rc.6\nnoirc version = 1.0.0-rc.6+2c22344a0d76f2456d017859a8f59d4dcd7b1208\n(git version hash: 2c22344a0d76f2456d017859a8f59d4dcd7b1208, is dirty: false)",
+  "compilerSha256": "43e0eef1defde886ba99474b415e571bee424f645c7e1fa0542137d4839b491f",
+  "compileAndWitness": {
+    "wallMs": 12952.15,
+    "peakSampledRSS": 2174025728
+  },
+  "gateCost": {
+    "wallMs": 780.25,
+    "peakSampledRSS": 901906432
+  },
+  "gates": {
+    "functions": [
+      {
+        "acir_opcodes": 574941,
+        "circuit_size": 705691
+      }
+    ]
+  }
+}

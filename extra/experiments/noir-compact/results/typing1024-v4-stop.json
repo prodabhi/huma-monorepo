@@ -1,0 +1,15 @@
+{
+  "stopped": true,
+  "reason": "rss",
+  "peakSampledRSS": 6822248448,
+  "wallMs": 68870.5,
+  "proofAttempted": false,
+  "case": "typing1024-v4",
+  "experimental": true,
+  "proofGenerated": false,
+  "sourceSha256": {
+    "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "060741e68039598af93ed6e89668513d2e35c61ba4b9d6a311e048e6e56a13a6"
+  }
+}

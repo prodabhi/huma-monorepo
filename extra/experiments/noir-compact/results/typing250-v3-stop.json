@@ -1,0 +1,12 @@
+{
+  "stage": "backend gate sizing",
+  "proofGenerated": false,
+  "error": "MAX_SMALL_RANGE_CONSTRAINT_VAL >= target_range; 65535 vs 68085",
+  "sourceSha256": {
+    "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "095baf5629515dcdae53566b0d55dd8aa95d9bdd6ef197eba02305be72f24c7d"
+  },
+  "case": "typing250-v3",
+  "experimental": true
+}

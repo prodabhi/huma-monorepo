@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-23",
+  "experimental": true,
+  "profile": "cast256-v1",
+  "backend": "@aztec/bb.js 5.2.1 WASM; ZK noir-recursive",
+  "automatedReaderTests": {
+    "passed": 29,
+    "failed": 0
+  },
+  "registryTests": {
+    "passed": 3,
+    "failed": 0,
+    "includesExistingRiscZero": true
+  },
+  "browser": {
+    "engine": "Google Chrome",
+    "observation": "Real local page driven through CUA; visible PASS summaries",
+    "standard": {
+      "passed": 12,
+      "failed": 0,
+      "crossOriginIsolated": false,
+      "sharedArrayBufferAvailable": false,
+      "validFixtureMs": [
+        200,
+        172,
+        207
+      ]
+    },
+    "shared": {
+      "passed": 12,
+      "failed": 0,
+      "crossOriginIsolated": true,
+      "sharedArrayBufferAvailable": true,
+      "validFixtureMs": [
+        261,
+        124,
+        132
+      ]
+    },
+    "timingScope": "Individual observed worker verifications including local asset loading, not proving or repeated latency guarantees",
+    "integratedVerifyPage": {
+      "jsonImportAccepted": true,
+      "sharedProofLinkAccepted": true,
+      "changedTextRejected": true,
+      "finalSpaceTabAccepted": true,
+      "unsupportedAccountAttachmentRejected": true,
+      "statementIdentity": "dd0e8360dbe93324bc1d0792f31f32bccf63b81dac110573bc96130266439b68",
+      "registryContentID": "0f92943c79187a4b02344315c6ebfbf88f64cf2ad6e55b95f298e8eb6b79093c"
+    },
+    "fileChooser": "Chrome extension file access unavailable; no permissions changed; JSON import tested instead"
+  },
+  "assets": {
+    "cast256.vk": {
+      "bytes": 3680,
+      "sha256": "149d13f114a80bc03df8966aa5b716ba86acc383c48c620e0bdb1afb09f4b600"
+    },
+    "journal-abi.json": {
+      "bytes": 2611,
+      "sha256": "d3ac50086728791ab41503666e4f5454b9bfe30000abf2ddfefd624a7c21c952"
+    },
+    "g2.dat": {
+      "bytes": 128,
+      "sha256": "01797bfc4de5a96f0e516a9ea4537d18786dc30cb991aca4274c95822b69c32f"
+    },
+    "barretenberg.wasm": {
+      "bytes": 10571126,
+      "sha256": "662ed50ca7275398817ae780733a9fc1ad1681776c75615cb81ecd737bca17e6"
+    },
+    "barretenberg-threads.wasm": {
+      "bytes": 10475904,
+      "sha256": "454527654830b95af0c75d639194587119f4f25e20739254c2eb7bc7c5fec5a9"
+    }
+  },
+  "runtime": {
+    "externalVerificationService": false,
+    "provingSrsDownload": false,
+    "wasmLimitMiB": 128,
+    "workerDeadlineSeconds": 20,
+    "concurrentBrowserChecks": 1
+  },
+  "npmAudit": {
+    "knownVulnerabilities": 0,
+    "dependencyEntriesIncludingOptional": 43
+  },
+  "scope": {
+    "syntheticSoftwareKeyFixtures": true,
+    "macNativeCutover": false,
+    "manufacturerAttestationVerified": false,
+    "trustedTime": false,
+    "humanAuthorshipProven": false
+  }
+}

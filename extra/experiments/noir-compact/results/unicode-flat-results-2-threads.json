@@ -1,0 +1,61 @@
+{
+  "experimental": true,
+  "newProtocol": true,
+  "notAppRelease": true,
+  "fixture": "swift-timed.json",
+  "proofGenerated": true,
+  "publicKeyDisclosed": true,
+  "allSignaturesVerified": true,
+  "attestationVerified": false,
+  "trustedTime": false,
+  "operations": 93,
+  "operationCapacity": 96,
+  "scalarCapacity": 64,
+  "byteCapacity": 64,
+  "checkpoints": 3,
+  "compileAndWitness": {
+    "wallMs": 962.38,
+    "peakSampledRSS": 207372288
+  },
+  "gateCounter": {
+    "wallMs": 77.35,
+    "peakSampledRSS": 0
+  },
+  "gates": {
+    "functions": [
+      {
+        "acir_opcodes": 47817,
+        "circuit_size": 75043
+      }
+    ]
+  },
+  "threads": 2,
+  "nice": 10,
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "zeroKnowledge": true,
+  "verified": true,
+  "proveMs": 823.164125,
+  "verifyMs": 310.11,
+  "proofIdentity": "0c4fe6192521ef07c19c7f9d347e1da085af553ab809ff6fb28973f582db961c",
+  "proofBytes": 14656,
+  "publicInputBytes": 1632,
+  "vkSha256": "638c38769e672cb63a52e9f71a46b13f91207d30b84838ad5318416dba1bc412",
+  "witnessProveVerifyMs": 2095.65,
+  "fixtureSetupCompileAndChecksMs": 2570.33,
+  "sourceSha256": {
+    "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "b47bbba2896fff902318d4547cb55333e120a4dd7972371cedc33ffdd8e66f95"
+  },
+  "nativeSourceSha256": {
+    "native/Cargo.toml": "58ec03fe47928d9a86d00bf8fccf5272243e01a84c3b8adc53cb04961cebe4be",
+    "native/Cargo.lock": "42970754b07a6760921c09f250911c709377cc31adb915558b848da0590c0fee",
+    "native/src/commit.rs": "f9a49d7942478448a3ff2cf913c79ac5cef03b075c80f288c414991775f9a2ab",
+    "native/src/protocol.rs": "ac7cdd7e372a96e0ef86539ce07edce1085735e6458b183be1739c3058153c98",
+    "native/src/lib.rs": "b94e44acdc5388cb612459183b5ed4455f7c044c1e39db30f0a6d0876732108d",
+    "native/src/main.rs": "e79b402f00d7861569577628356190342097964d16a51a39ef90fb7b0d538e8d",
+    "native/src/ops.rs": "3e61cecdf5769673a94d188449b7d9743948a9b5ad8f6561706454b0855d9406"
+  },
+  "artifactSha256": "11833adfb2f2a8852066bde5341806a930c56592f07090640d1971db4bc0dd0c"
+}

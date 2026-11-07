@@ -1,0 +1,44 @@
+[
+  {
+    "repetition": 1,
+    "threads": 8,
+    "experimental": true,
+    "precompiled": true,
+    "verified": true,
+    "allSignaturesVerified": true,
+    "witnessMs": 1394.38,
+    "proveMs": 2556.279292,
+    "verifyMs": 31.29,
+    "contiguousWitnessProveVerifyMs": 3993.61,
+    "vkSha256": "f4ceea6ae23ba66461874a6ccc0d3f8214881bd58ca557482ac11d8c790b0d21",
+    "proofIdentity": "27571dcc2462e5ef1c85bf3c30b8a2412a13fde373f974072b9e8404c0b4e4eb"
+  },
+  {
+    "repetition": 2,
+    "threads": 8,
+    "experimental": true,
+    "precompiled": true,
+    "verified": true,
+    "allSignaturesVerified": true,
+    "witnessMs": 1385.18,
+    "proveMs": 2535.245375,
+    "verifyMs": 32.11,
+    "contiguousWitnessProveVerifyMs": 3961.99,
+    "vkSha256": "f4ceea6ae23ba66461874a6ccc0d3f8214881bd58ca557482ac11d8c790b0d21",
+    "proofIdentity": "27571dcc2462e5ef1c85bf3c30b8a2412a13fde373f974072b9e8404c0b4e4eb"
+  },
+  {
+    "repetition": 3,
+    "threads": 8,
+    "experimental": true,
+    "precompiled": true,
+    "verified": true,
+    "allSignaturesVerified": true,
+    "witnessMs": 1381.58,
+    "proveMs": 2563.487333,
+    "verifyMs": 31.65,
+    "contiguousWitnessProveVerifyMs": 3986.05,
+    "vkSha256": "f4ceea6ae23ba66461874a6ccc0d3f8214881bd58ca557482ac11d8c790b0d21",
+    "proofIdentity": "27571dcc2462e5ef1c85bf3c30b8a2412a13fde373f974072b9e8404c0b4e4eb"
+  }
+]

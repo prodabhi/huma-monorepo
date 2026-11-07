@@ -1,0 +1,40 @@
+{
+  "experimental": true,
+  "proofGenerated": false,
+  "recomputedCommitments": true,
+  "candidate": "bounded-checkpoints",
+  "weakenedOverflowControl": false,
+  "sourceSha256": "950c1f4c35454d9c26348c3b57dcfa6176e9dca527c366ff77988fa7dcc821c8",
+  "cases": [
+    {
+      "case": "ValidSemantic",
+      "accepted": true,
+      "wallMs": 2329.45
+    },
+    {
+      "case": "ElapsedOverflow",
+      "accepted": false,
+      "wallMs": 303.48
+    },
+    {
+      "case": "MidEditSample",
+      "accepted": false,
+      "wallMs": 274.01
+    },
+    {
+      "case": "SplitSurrogate",
+      "accepted": false,
+      "wallMs": 270.39
+    },
+    {
+      "case": "InvalidUnicode",
+      "accepted": false,
+      "wallMs": 274.26
+    },
+    {
+      "case": "ForgedFinalText",
+      "accepted": false,
+      "wallMs": 311.88
+    }
+  ]
+}

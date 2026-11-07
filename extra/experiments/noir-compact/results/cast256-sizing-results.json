@@ -1,0 +1,39 @@
+{
+  "experimental": true,
+  "newProtocol": true,
+  "notAppRelease": true,
+  "fixture": "typing-250-current.json",
+  "proofGenerated": false,
+  "publicKeyDisclosed": true,
+  "allSignaturesVerified": true,
+  "attestationVerified": false,
+  "trustedTime": false,
+  "operations": 1251,
+  "operationCapacity": 1536,
+  "scalarCapacity": 256,
+  "byteCapacity": 1024,
+  "checkpoints": 5,
+  "checkpointCapacity": 8,
+  "profile": "cast256",
+  "compileAndWitness": {
+    "wallMs": 35235.83,
+    "peakSampledRSS": 2625388544
+  },
+  "gateCounter": {
+    "wallMs": 782.34,
+    "peakSampledRSS": 1088864256
+  },
+  "gates": {
+    "functions": [
+      {
+        "acir_opcodes": 629350,
+        "circuit_size": 804314
+      }
+    ]
+  },
+  "threads": 8,
+  "nice": 10,
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "zeroKnowledge": true
+}

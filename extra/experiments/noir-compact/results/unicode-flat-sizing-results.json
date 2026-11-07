@@ -1,0 +1,37 @@
+{
+  "experimental": true,
+  "newProtocol": true,
+  "notAppRelease": true,
+  "fixture": "swift-timed.json",
+  "proofGenerated": false,
+  "publicKeyDisclosed": true,
+  "allSignaturesVerified": true,
+  "attestationVerified": false,
+  "trustedTime": false,
+  "operations": 93,
+  "operationCapacity": 96,
+  "scalarCapacity": 64,
+  "byteCapacity": 64,
+  "checkpoints": 3,
+  "compileAndWitness": {
+    "wallMs": 962.38,
+    "peakSampledRSS": 207372288
+  },
+  "gateCounter": {
+    "wallMs": 77.35,
+    "peakSampledRSS": 0
+  },
+  "gates": {
+    "functions": [
+      {
+        "acir_opcodes": 47817,
+        "circuit_size": 75043
+      }
+    ]
+  },
+  "threads": 2,
+  "nice": 10,
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "zeroKnowledge": true
+}

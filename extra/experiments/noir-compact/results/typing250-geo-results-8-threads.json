@@ -1,0 +1,53 @@
+{
+  "experimental": true,
+  "newProtocol": true,
+  "notAppRelease": true,
+  "fixture": "typing-250-current.json",
+  "proofGenerated": false,
+  "publicKeyDisclosed": true,
+  "allSignaturesVerified": true,
+  "attestationVerified": false,
+  "trustedTime": false,
+  "operations": 1251,
+  "operationCapacity": 1260,
+  "scalarCapacity": 256,
+  "byteCapacity": 256,
+  "checkpoints": 5,
+  "compileAndWitness": {
+    "wallMs": 15142.73,
+    "peakSampledRSS": 2287861760
+  },
+  "gateCounter": {
+    "wallMs": 758.8,
+    "peakSampledRSS": 901513216
+  },
+  "gates": {
+    "functions": [
+      {
+        "acir_opcodes": 572413,
+        "circuit_size": 720786
+      }
+    ]
+  },
+  "threads": 8,
+  "nice": 10,
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "zeroKnowledge": true,
+  "fixtureSetupCompileAndChecksMs": 15907.99,
+  "sourceSha256": {
+    "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "c3578553e09794aa170588d0f17244c905a51ddf30d33a59143a30aa0ab760cb"
+  },
+  "nativeSourceSha256": {
+    "native/Cargo.toml": "58ec03fe47928d9a86d00bf8fccf5272243e01a84c3b8adc53cb04961cebe4be",
+    "native/Cargo.lock": "42970754b07a6760921c09f250911c709377cc31adb915558b848da0590c0fee",
+    "native/src/commit.rs": "f9a49d7942478448a3ff2cf913c79ac5cef03b075c80f288c414991775f9a2ab",
+    "native/src/protocol.rs": "ac7cdd7e372a96e0ef86539ce07edce1085735e6458b183be1739c3058153c98",
+    "native/src/lib.rs": "b94e44acdc5388cb612459183b5ed4455f7c044c1e39db30f0a6d0876732108d",
+    "native/src/main.rs": "e79b402f00d7861569577628356190342097964d16a51a39ef90fb7b0d538e8d",
+    "native/src/ops.rs": "3e61cecdf5769673a94d188449b7d9743948a9b5ad8f6561706454b0855d9406"
+  },
+  "artifactSha256": "b22720190679265bce41991d8f5cfde27a8914c63a35a0ea9648ff1d90fdb636"
+}

@@ -1,0 +1,15 @@
+{
+  "experimental": true,
+  "proofGenerated": false,
+  "recomputedCommitments": true,
+  "candidate": "none",
+  "weakenedOverflowControl": true,
+  "sourceSha256": "d5e60192c0fd8bc4f6b606836f119508297f2153a3ef9e2e3ff2e6ffb1411a58",
+  "cases": [
+    {
+      "case": "ElapsedOverflow",
+      "accepted": true,
+      "wallMs": 2589.76
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "softwareKeysOnly": true,
+  "simulatedInputAndTimes": true,
+  "existingSignaturesPreserved": true,
+  "completeSignedSessionBinding": true,
+  "independentABIAdaptersAgree": true,
+  "proofGenerated": true,
+  "inputSha256": "534b2e20850a4b1f845afdf29906131f887d489d540dd121b1ba00677217bf85",
+  "capture": {
+    "saveReopen": true,
+    "profile": "assurance256-v1",
+    "captures": 750,
+    "manufacturerAttestation": false,
+    "softwareKeyOnly": true,
+    "checkpoints": 7,
+    "simulatedInputAndTimes": true,
+    "captureAndSignMilliseconds": 359.689666,
+    "operations": 1251
+  },
+  "witness": {
+    "wallMs": 1687.54,
+    "peakSampledRSS": 543129600
+  },
+  "artifactSha256": "13e082e07f70aa85398c91a2cbacff76eda96266fdc0dec9cd9e9dcd76af7d47",
+  "bytecodeSha256": "15d6b3c7d5db15310f56452b0d5808444daf166c6a610daffdd7ddf682c8b1c5",
+  "publicABIHash": "729cc9a345f5b8a37549cddbe3ef848edb7bfc8d051867c016928ddabbf3fdc5",
+  "programKeyHash": "1cab7a6b3ce5947916ad8bc09616c801de66f896eecc6677dbaf43284696a496",
+  "threads": 2,
+  "zeroKnowledge": true,
+  "cryptoChildrenOutboundNetworkDenied": true,
+  "verified": true,
+  "proofIdentity": "c12a8574de25d1b53b71216e560d44d420b99598794d2c36fdd91d8fbd21a649",
+  "proveMs": 8092.571334,
+  "witnessProveNativeVerifyMs": 10544.67,
+  "checkpointSignatures": 7,
+  "presenceSignatures": 2,
+  "sourceSha256": {
+    "experiments/noir-compact/live_assurance_cases.py": "c7c8b04d986de969d2a967d3f4e629b32411604933e6e8b1eb6371f7e59a96cd",
+    "experiments/noir-compact/native/src/assurance_input.rs": "8a5ed31007f8e999ae5981a5730e9240556d6076c8ca3e706d3abc6b8c24fb0b",
+    "experiments/noir-compact/live-assurance.swift": "e2dd82591156cf5c9de143b3c22da4dde3a8b6627f6d9684e16437657f5eb862"
+  },
+  "nodeSDKVerified": true,
+  "browserVerified": true,
+  "localMasterProofPublicationVerified": true,
+  "realR2Accepted": false,
+  "realCoinbaseAccepted": false,
+  "appProofBackendSelected": false,
+  "ownerBiometricUsed": false
+}

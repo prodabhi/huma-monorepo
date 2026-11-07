@@ -1,0 +1,51 @@
+{
+  "experimental": true,
+  "newProtocol": true,
+  "notAppRelease": true,
+  "fixture": "typing-50-current.json",
+  "proofGenerated": true,
+  "publicKeyDisclosed": true,
+  "allSignaturesVerified": true,
+  "attestationVerified": false,
+  "trustedTime": false,
+  "operations": 251,
+  "operationCapacity": 252,
+  "scalarCapacity": 64,
+  "byteCapacity": 64,
+  "checkpoints": 2,
+  "compileAndWitness": {
+    "wallMs": 2371.78,
+    "peakSampledRSS": 453836800
+  },
+  "gateCounter": {
+    "wallMs": 159.55,
+    "peakSampledRSS": 0
+  },
+  "gates": {
+    "functions": [
+      {
+        "acir_opcodes": 123703,
+        "circuit_size": 190705
+      }
+    ]
+  },
+  "threads": 2,
+  "nice": 10,
+  "noir": "1.0.0-beta.25",
+  "bb": "5.2.1",
+  "zeroKnowledge": true,
+  "verified": true,
+  "proveMs": 1871.645833,
+  "verifyMs": 401.81,
+  "proofIdentity": "36bd51b7546a58485db4b4b223a338da333f5855d77b10b8cf1a8c72326922c2",
+  "proofBytes": 14656,
+  "publicInputBytes": 1600,
+  "vkSha256": "c4c1055e1fefe3d63dfac4724ffb6eb3e205a53de435e88a870e97966ddd8b16",
+  "witnessProveVerifyMs": 4645.24,
+  "fixtureSetupCompileAndChecksMs": 5615.29,
+  "sourceSha256": {
+    "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+    "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c",
+    "main.nr": "e6afaeef4d9b38a113589e1436cdb8ba425c606f4dbc6a7e717b6950ce8b999b"
+  }
+}

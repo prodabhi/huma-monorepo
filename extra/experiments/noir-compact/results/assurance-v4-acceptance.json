@@ -1,0 +1,286 @@
+{
+  "date": "2026-10-23",
+  "experimental": true,
+  "softwareFixturesOnly": true,
+  "proofSystem": "barretenberg-5.2.1-ultrahonk",
+  "verifierTarget": "noir-recursive",
+  "zeroKnowledgeEnabled": true,
+  "passingProof": {
+    "experimental": true,
+    "softwareKeysOnly": true,
+    "profile": "cast256",
+    "limits": {
+      "OPS": 1536,
+      "SCALARS": 256,
+      "BYTES": 1024,
+      "CPS": 8,
+      "SAMPLES": 516,
+      "PRES": 8
+    },
+    "proofGenerated": true,
+    "compileAndWitness": {
+      "wallMs": 36712.82,
+      "peakSampledRSS": 3182018560
+    },
+    "gates": {
+      "functions": [
+        {
+          "acir_opcodes": 759392,
+          "circuit_size": 1041574
+        }
+      ]
+    },
+    "gateCounter": {
+      "wallMs": 911.21,
+      "peakSampledRSS": 1651343360
+    },
+    "operations": 1251,
+    "samples": 500,
+    "presence": 2,
+    "checkpointCount": 4,
+    "threads": 2,
+    "verified": true,
+    "proofIdentity": "fb435120e6c8f04e38b226a4f94461bbfdf44ec372640692794e4a4d5654e67e",
+    "programKeyHash": "1cab7a6b3ce5947916ad8bc09616c801de66f896eecc6677dbaf43284696a496",
+    "proveMs": 8690.49275,
+    "warmWitness": {
+      "wallMs": 1792.97,
+      "peakSampledRSS": 544079872
+    },
+    "contiguousWitnessProveVerifyMs": 10521.65,
+    "checkpointSignatures": 4,
+    "presenceSignatures": 2,
+    "sourceHashes": {
+      "main.nr": "0a43056c0788cc9079e508901fb557b6dd46c0c4269d62d943f702191828ff22",
+      "commit.nr": "2d48ccbd32e032d7ec617e53133e6ebd7c382770b41afd137627230c64cd631c",
+      "assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870",
+      "bytes.nr": "3e0bba0dccad0f62582f90d9db73e8ddbdb3a3177b8ea180eb3ff902879a201c"
+    }
+  },
+  "failedPolicyProof": {
+    "generated": true,
+    "verified": true,
+    "policySatisfied": false,
+    "proveMs": 8440.043792,
+    "checkpointSignatures": 2,
+    "presenceSignatures": 2
+  },
+  "constraintChecks": {
+    "experimental": true,
+    "softwareKeysOnly": true,
+    "artifactSha256": "10c09b82c532ef22e249dbe703f111486468a5818f08f5ee5575981860c2737e",
+    "cases": [
+      {
+        "case": "Validtyped250",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1743.23,
+        "peakSampledRSS": 543997952,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validrollover",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1664.95,
+        "peakSampledRSS": 550420480,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validrepeat",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1672.56,
+        "peakSampledRSS": 543506432,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validunpaired",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1713.07,
+        "peakSampledRSS": 545800192,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validrate",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1695.0,
+        "peakSampledRSS": 546340864,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validdwell",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1690.49,
+        "peakSampledRSS": 551370752,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validmissingorigin",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1755.54,
+        "peakSampledRSS": 547258368,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validlate",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1786.78,
+        "peakSampledRSS": 547438592,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validtimeout",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1755.96,
+        "peakSampledRSS": 548552704,
+        "policySatisfied": true,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "Validu64max",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 1762.4,
+        "peakSampledRSS": 545112064,
+        "policySatisfied": false,
+        "softwareKeysOnly": true,
+        "proofGenerated": false
+      },
+      {
+        "case": "RejectOriginPID",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1368.71
+      },
+      {
+        "case": "RejectKeyboardType",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1363.29
+      },
+      {
+        "case": "RejectRepeatFlag",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1412.53
+      },
+      {
+        "case": "RejectPresenceNonce",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1367.11
+      },
+      {
+        "case": "RejectLateSeal",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1370.61
+      },
+      {
+        "case": "RejectOmittedPresenceCoverage",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1340.78
+      },
+      {
+        "case": "RejectPublicPresenceCount",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1364.78
+      },
+      {
+        "case": "RejectUnboundSampleTime",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1316.48
+      },
+      {
+        "case": "RejectUnusedOriginPadding",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1309.69
+      },
+      {
+        "case": "RejectUnusedPresenceRoot",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1361.78
+      },
+      {
+        "case": "RejectForgedHumanRhythm",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1300.73
+      },
+      {
+        "case": "RejectReusedKeySample",
+        "accepted": false,
+        "expectedAccepted": false,
+        "wallMs": 1339.25
+      }
+    ],
+    "controls": [
+      {
+        "case": "UnsafeUnboundTime",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 2548.78,
+        "peakSampledRSS": 525058048,
+        "weakenedControl": true,
+        "proofGenerated": false,
+        "verificationKeyCreated": false
+      },
+      {
+        "case": "UnsafeReusedSample",
+        "accepted": true,
+        "expectedAccepted": true,
+        "wallMs": 2505.98,
+        "peakSampledRSS": 541327360,
+        "weakenedControl": true,
+        "proofGenerated": false,
+        "verificationKeyCreated": false
+      }
+    ]
+  },
+  "testedBytecodeMatchesProved": true,
+  "bytecodeStringSha256": "15d6b3c7d5db15310f56452b0d5808444daf166c6a610daffdd7ddf682c8b1c5",
+  "publicProofBytes": 14656,
+  "publicInputBytes": 3008,
+  "nativeLiveCaptureIntegrated": false,
+  "appBackendSwitched": false,
+  "subFiveSecondTargetMet": false,
+  "sourceSha256": {
+    "experiments/noir-compact/candidates/assurance-v4.nr": "423a0bdbdf7a48d54259240d2800232a0a735a0dbdc9f857ab69f1a8a93de7c5",
+    "experiments/noir-compact/src/assurance.nr": "3106e2b36cecfa2a33d8ede1b54bbe97f6cffc36ed3f9037b37c93ddad6ab870",
+    "experiments/noir-compact/assurance_cases.py": "00d74c879dc55a6bfd4aedd677819959f6c49e52aa810a08b821d09afaf2f42b",
+    "experiments/noir-compact/assurance_checks.py": "2b59ae7edc4f76616c3ba6a9eca051b6623b7f64b0330f9ba092fb9d22184419",
+    "experiments/noir-compact/browser/assurance-profile.mjs": "defd3cab225604cdec628aea90734be4436e7fb66a4ee0e454b067cf64068232",
+    "experiments/noir-compact/browser/assurance-core.mjs": "481fd2baaf5d8fddd46695a486616b8dd350047a697aa0548840fec215202bf2",
+    "experiments/noir-compact/browser/assurance-node.mjs": "2c70f50e2af7882666bb3ccd02d45425afea96aacee479188c952a30cd3a52b7",
+    "experiments/noir-compact/browser/assurance-inline.mjs": "b87bee10325c90bf589061e42315ce7ebc89e70db0b4a5127f177d5c1c414d90"
+  }
+}

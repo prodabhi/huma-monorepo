@@ -1,0 +1,90 @@
+{
+  "experimental": true,
+  "softwareKeysOnly": true,
+  "manufacturerAttestationVerified": false,
+  "macAppProverCutover": false,
+  "profile": "cast256-v1",
+  "sourceHashes": {
+    "Sources/HumaCore/ExperimentalCompactCapture.swift": "7a2131dd11fcee5540267e03a6f910e7c82ef8f784a8f192b23cec51c7e2a062",
+    "Sources/HumaCore/ExperimentalCompactRecorder.swift": "c1dd7c0a04b3d0825d03755fc6658fc1080966bc311c67ca36b3e7c1ec0c5bbe",
+    "Sources/HumaCore/SessionLog.swift": "6e81cf1362573ea28c2e1404e1428f8732d0ab342752b4fc0bbce5d77f756979",
+    "Sources/HumaCore/SignedCapture.swift": "8c30333d48ec20a082a130bf39c49212a967e594c691ad4a42c47dc9d6562783",
+    "Sources/HumaCore/Draft.swift": "f25b10cab38546883206fa9ef44738b90931a46e4251ea549ac21b01f1236097",
+    "experiments/noir-compact/live-capture.swift": "844059aa2c3142d6a87ce10e5f8c4c14a2ccafe8dceac3726ea2ba3679edf375",
+    "experiments/noir-compact/native/src/capture.rs": "07fd7de41ab0c584c002859ffb8c775f74eb64edd37a2ebf544f99a011ffe8fb",
+    "experiments/noir-compact/native/src/ffi.rs": "f590ddb5d5e0a38558d5ed741a36aa902c58a59c528fc74b1949cc1827f7d914",
+    "experiments/noir-compact/native/src/ops.rs": "e7a8d5b088be7d8284152abaa08f18b7a331378fa83c6558cb12f436e24acb6b",
+    "experiments/noir-compact/native/src/commit.rs": "f9a49d7942478448a3ff2cf913c79ac5cef03b075c80f288c414991775f9a2ab",
+    "experiments/noir-compact/native/src/protocol.rs": "ab31448c8e3e7efd2db8813d4434309873faf4ce9aa832494fafb2f564905b98",
+    "experiments/noir-compact/native/examples/live_cases.rs": "d82ca9d900937fbe90000e6706e1e13607e471012a6a393b0fe498d97b938dec",
+    "experiments/noir-compact/native/Cargo.lock": "42970754b07a6760921c09f250911c709377cc31adb915558b848da0590c0fee",
+    "experiments/noir-compact/native/include/huma_compact.h": "52322670792dcab72e4fd239bf73f1d37183a35976c19781ba6dae55bf43d99b"
+  },
+  "swiftCapture": {
+    "captures": 750,
+    "softwareKeyOnly": true,
+    "operations": 1251,
+    "checkpoints": 5,
+    "hardwareAttestation": false,
+    "captureAndSignMilliseconds": 302.136167,
+    "recorderAdapterAndSaveReopen": true
+  },
+  "cases": [
+    {
+      "case": "nativelivev3SwiftLive250",
+      "accepted": true,
+      "wallMs": 1444.34,
+      "name": "SwiftLive250",
+      "operations": 1251,
+      "checkpoints": 5,
+      "signaturesDuringCapture": true,
+      "proofGenerated": true,
+      "verified": true,
+      "proveMs": 2848.033959,
+      "contiguousWitnessProveVerifyMs": 4343.91,
+      "proofIdentity": "127ee36f10759dd9a56872b36d1f8df0bf66ae82435bcabb01af23948852f64a",
+      "independentWasmReader": true
+    },
+    {
+      "case": "nativelivev3LiveUnicodeFlagsCursor",
+      "accepted": true,
+      "wallMs": 1430.67,
+      "name": "LiveUnicodeFlagsCursor",
+      "operations": 34,
+      "checkpoints": 2,
+      "signaturesDuringCapture": true,
+      "proofGenerated": false
+    },
+    {
+      "case": "nativelivev3LiveU64Maximum",
+      "accepted": true,
+      "wallMs": 1378.66,
+      "name": "LiveU64Maximum",
+      "operations": 259,
+      "checkpoints": 2,
+      "signaturesDuringCapture": true,
+      "proofGenerated": false
+    },
+    {
+      "case": "nativelivev3Live256Scalars1024Bytes8Checkpoints",
+      "accepted": true,
+      "wallMs": 1372.03,
+      "name": "Live256Scalars1024Bytes8Checkpoints",
+      "operations": 263,
+      "checkpoints": 8,
+      "signaturesDuringCapture": true,
+      "proofGenerated": false
+    },
+    {
+      "case": "nativelivev3Live1536Operations",
+      "accepted": true,
+      "wallMs": 1380.3,
+      "name": "Live1536Operations",
+      "operations": 1536,
+      "checkpoints": 2,
+      "signaturesDuringCapture": true,
+      "proofGenerated": false
+    }
+  ],
+  "programKeyHash": "149d13f114a80bc03df8966aa5b716ba86acc383c48c620e0bdb1afb09f4b600"
+}

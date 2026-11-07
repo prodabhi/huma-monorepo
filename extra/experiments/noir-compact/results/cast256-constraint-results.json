@@ -1,0 +1,122 @@
+[
+  {
+    "case": "Valid",
+    "accepted": true,
+    "wallMs": 1607.12
+  },
+  {
+    "case": "ChangedKeyTiming",
+    "accepted": false,
+    "wallMs": 1207.51
+  },
+  {
+    "case": "ChangedKeyCode",
+    "accepted": false,
+    "wallMs": 1203.37
+  },
+  {
+    "case": "ChangedScalar",
+    "accepted": false,
+    "wallMs": 1219.15
+  },
+  {
+    "case": "SurrogateScalar",
+    "accepted": false,
+    "wallMs": 951.0
+  },
+  {
+    "case": "InvalidSource",
+    "accepted": false,
+    "wallMs": 958.54
+  },
+  {
+    "case": "ChangedSource",
+    "accepted": false,
+    "wallMs": 1199.22
+  },
+  {
+    "case": "ChangedLocation",
+    "accepted": false,
+    "wallMs": 987.04
+  },
+  {
+    "case": "UnknownOpcode",
+    "accepted": false,
+    "wallMs": 953.45
+  },
+  {
+    "case": "ExtraArgumentBits",
+    "accepted": false,
+    "wallMs": 950.86
+  },
+  {
+    "case": "Salt",
+    "accepted": false,
+    "wallMs": 1180.65
+  },
+  {
+    "case": "ZeroSalt",
+    "accepted": false,
+    "wallMs": 954.93
+  },
+  {
+    "case": "Nonce",
+    "accepted": false,
+    "wallMs": 1201.73
+  },
+  {
+    "case": "ChangedPublicRoot",
+    "accepted": false,
+    "wallMs": 1213.86
+  },
+  {
+    "case": "ChangedPublicText",
+    "accepted": false,
+    "wallMs": 1212.21
+  },
+  {
+    "case": "ChangedPublicCount",
+    "accepted": false,
+    "wallMs": 1205.02
+  },
+  {
+    "case": "ChangedClock",
+    "accepted": false,
+    "wallMs": 1210.45
+  },
+  {
+    "case": "UncoveredFinalOps",
+    "accepted": false,
+    "wallMs": 1219.66
+  },
+  {
+    "case": "WrongStart",
+    "accepted": false,
+    "wallMs": 1199.73
+  },
+  {
+    "case": "NonzeroPadding",
+    "accepted": false,
+    "wallMs": 1158.53
+  },
+  {
+    "case": "TooFewCheckpoints",
+    "accepted": false,
+    "wallMs": 1183.78
+  },
+  {
+    "case": "TooManyCheckpoints",
+    "accepted": false,
+    "wallMs": 1180.28
+  },
+  {
+    "case": "NonzeroCheckpointPadding",
+    "accepted": false,
+    "wallMs": 1196.04
+  },
+  {
+    "case": "NonzeroRootPadding",
+    "accepted": false,
+    "wallMs": 1197.44
+  }
+]

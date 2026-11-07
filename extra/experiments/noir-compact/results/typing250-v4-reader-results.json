@@ -1,0 +1,41 @@
+{
+  "originalVerified": true,
+  "checks": [
+    {
+      "case": "BadSignature",
+      "rejected": true
+    },
+    {
+      "case": "ReorderedSignatures",
+      "rejected": true
+    },
+    {
+      "case": "MissingSignature",
+      "rejected": true
+    },
+    {
+      "case": "ChangedKey",
+      "rejected": true
+    },
+    {
+      "case": "UnprovenPublicTime",
+      "rejected": true
+    },
+    {
+      "case": "WrongExpectedKey",
+      "rejected": true
+    },
+    {
+      "case": "ChangedReaderText",
+      "rejected": true
+    },
+    {
+      "case": "Changed-proof",
+      "rejected": true
+    },
+    {
+      "case": "Changed-public_inputs",
+      "rejected": true
+    }
+  ]
+}
