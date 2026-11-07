@@ -21,9 +21,8 @@ POSTHOG_KEY=$(key POSTHOG_KEY); POSTHOG_HOST=$(key POSTHOG_HOST)
 "${SSH[@]}" 'set -e; read -r URL; read -r SUM; read -r EXAMPLE || true; read -r TSITE || true; read -r TSECRET || true; read -r PKEY || true; read -r PHOST || true
 curl -fsS --retry 3 -o /tmp/host.tgz "$URL"
 echo "$SUM  /tmp/host.tgz" | sha256sum -c --quiet
-# On-chain verification (frontend/onchain.mjs) reads HUMA_RELAYER_KEY, HUMA_ONCHAIN_CONTRACT, HUMA_CHAIN and
-# HUMA_CHAIN_RPC from the server's .env, so those stay. Only the retired HUMA_PAGES_ADDRESS name is removed.
-sudo sed -i "/^HUMA_PAGES_ADDRESS=/d" /opt/huma/.env
+# Huma has no on-chain verification: any relayer wallet key and contract settings are removed from the server.
+sudo sed -i "/^HUMA_PAGES_ADDRESS=/d; /^HUMA_ONCHAIN_CONTRACT=/d; /^HUMA_RELAYER_KEY=/d; /^HUMA_RELAYER_DAILY_LIMIT=/d; /^HUMA_CHAIN=/d; /^HUMA_CHAIN_RPC=/d" /opt/huma/.env
 if echo "$EXAMPLE" | grep -Eq "^(/original/[a-f0-9]{64}(#[a-f0-9]{64})?|/p/[A-Za-z0-9]{8,12}(#[A-Za-z0-9]{16})?)$"; then
   sudo sed -i "/^HUMA_EXAMPLE_LINK=/d" /opt/huma/.env; echo "HUMA_EXAMPLE_LINK=$EXAMPLE" | sudo tee -a /opt/huma/.env >/dev/null
 fi

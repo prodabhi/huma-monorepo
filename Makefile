@@ -4,7 +4,7 @@ SHELL := /bin/bash
 .PHONY: help install-node build-frontend build-macos build-zkvm-browser \
 	test test-frontend test-backend test-extra test-swift test-attestation \
 	test-prover test-zkvm test-grammar test-witness test-compact \
-	test-compact-browser test-onchain typecheck
+	test-compact-browser typecheck
 
 help:
 	@printf '%s\n' \
@@ -20,7 +20,7 @@ help:
 		'  make typecheck          Type-check the frontend deck' \
 		'  make test               Run the maintained frontend, backend, and extra suites' \
 		'  make test-frontend      Run the Node frontend suite' \
-		'  make test-backend       Run attestation, prover, zkVM, and on-chain suites' \
+		'  make test-backend       Run attestation, prover, zkVM, grammar and witness suites' \
 		'  make test-extra         Run Swift and compact-native suites'
 
 install-node:
@@ -50,7 +50,7 @@ test: test-frontend test-backend test-extra
 test-frontend:
 	npm --prefix frontend test
 
-test-backend: test-attestation test-prover test-zkvm test-grammar test-witness test-onchain
+test-backend: test-attestation test-prover test-zkvm test-grammar test-witness
 
 test-extra: test-swift test-compact test-compact-browser
 
@@ -78,5 +78,3 @@ test-compact:
 test-compact-browser:
 	npm --prefix extra/experiments/noir-compact/browser test
 
-test-onchain:
-	forge test --root backend/onchain

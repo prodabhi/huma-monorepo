@@ -12,7 +12,6 @@ routes and static application are one deployable unit.
 | `integrations/attestation/` | Apple attestation verifier and service |
 | `integrations/grammar/` | Native grammar-checking bridge |
 | `integrations/noir/` | Pinned Noir preparation, readers and packaging |
-| `onchain/` | Foundry contracts, deployment records and relay tooling |
 | `prover/` | Optional Rust server-side prover |
 | `scripts/` | Repository build, release and hosting scripts |
 | `zkvm/` | Historical RISC Zero workspace and independent verifier |
