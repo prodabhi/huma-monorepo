@@ -39,6 +39,8 @@ function face(seed) {
 const HUMA_RELEASE = '0.1.10';
 // The Mac app's proving points (64 MB that don't compress), kept out of the installer; the app checks their fingerprint.
 const PROVING_SETUP = 'bn254_g1_compressed-3e1ac096.dat';
+// Aztec's public copy of the same proving points, used when the release asset isn't there.
+const PUBLIC_PROVING_SETUP = 'https://crs.aztec-cdn.foundation/g1_compressed.dat';
 // Writing in the browser (frontend/write, built into dist/write): its prover needs threads, so the page and everything it
 // loads are cross-origin isolated. Only these files, by name.
 const WRITE_ISOLATION = { 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Embedder-Policy': 'require-corp', 'Cross-Origin-Resource-Policy': 'same-origin' };
@@ -59,8 +61,14 @@ function provingPoints(log) {
             const handle = await open(file);
             try { if ((await handle.read(bytes, 0, length, 0)).bytesRead !== length) throw new Error('Short setup file.'); } finally { await handle.close(); }
         } catch {
-            const response = await fetch(engineURL(PROVING_SETUP), { headers: { Range: `bytes=0-${length - 1}` }, signal: AbortSignal.timeout(60000) });
-            bytes = Buffer.from(await response.arrayBuffer());
+            // The release asset, else Aztec's public copy of the same points (bb.js downloads them from there too). Either
+            // is checked against the pin below, so a wrong file is refused.
+            for (const source of [engineURL(PROVING_SETUP), PUBLIC_PROVING_SETUP]) {
+                const response = await fetch(source, { headers: { Range: `bytes=0-${length - 1}` }, signal: AbortSignal.timeout(60000) }).catch(() => null);
+                if (!response?.ok) continue;
+                bytes = Buffer.from(await response.arrayBuffer()).subarray(0, length);
+                if (createHash('sha256').update(bytes).digest('hex') === POINTS[log]) break;
+            }
         }
         if (bytes.length !== length || createHash('sha256').update(bytes).digest('hex') !== POINTS[log]) throw new Error('Proving points differ from their pin.');
         return bytes;

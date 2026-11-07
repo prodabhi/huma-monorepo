@@ -40,7 +40,8 @@ export async function packagePublication(destination) {
   destination = path.resolve(destination);
   if (destination === root || root.startsWith(destination + path.sep)) throw Error('Use a new output directory.');
   const mapping = new Map(fixed.map(file => [file, file]));
-  for (const [output, input] of Object.entries({ 'package.json': 'backend/hosting/package.json', 'package-lock.json': 'backend/hosting/package-lock.json' })) mapping.set(output, input);
+  for (const [output, input] of Object.entries({ 'package.json': 'backend/hosting/package.json', 'package-lock.json': 'backend/hosting/package-lock.json',
+    Dockerfile: 'backend/hosting/Dockerfile', '.dockerignore': 'backend/hosting/.dockerignore' })) mapping.set(output, input);
   for (const name of Object.keys({ ...COMPACT, ...ASSURANCE })) {
     mapping.set('extra/experiments/noir-compact/browser/assets/' + name, 'extra/experiments/noir-compact/browser/assets/' + name);
     mapping.set('frontend/dist/compact/assets/' + name, 'frontend/dist/compact/assets/' + name);
