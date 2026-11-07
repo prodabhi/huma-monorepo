@@ -6,22 +6,28 @@ import path from 'node:path';
 import { shareAssetFiles } from '../../frontend/share-assets.mjs';
 import { ASSETS as COMPACT } from '../../extra/experiments/noir-compact/browser/profile.mjs';
 import { ASSETS as ASSURANCE } from '../../extra/experiments/noir-compact/browser/assurance-profile.mjs';
+import { POSTS, IMAGES } from '../../frontend/blog.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const names = (prefix, files) => files.split(' ').map(file => prefix + file);
 export const fixed = [
-  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs hash-record.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs onchain.mjs arkiv-store.mjs'),
+  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs hash-record.mjs server-util.mjs websocket.mjs onchain.mjs'),
+  // The typing analysis of a browser page's streamed session (frontend/detection): its receiver, checks, features, traps, scoring and tables.
+  ...names('frontend/detection/', 'stream.mjs session.mjs integrity.mjs features.mjs stats.mjs keyboard.mjs traps.mjs score.mjs judge.mjs baseline.mjs model.mjs thresholds.json bigrams.json wordfreq.json'),
+  'frontend/write/canary.mjs',
   // Writing in the browser: the page, its pins (the server checks the proving points against them) and its build.
   'frontend/pages/write.html', 'frontend/write/pins.mjs',
   ...names('frontend/dist/write/', 'write.js prover.js bb-thread.js replay.js grammar.js writer-actions.js recorder.wasm witness.wasm grammar.wasm barretenberg-threads.wasm g2.dat'
     + ' long-chunk.vk long-final1024.vk long-final4096.vk long-final10000.vk long2-final1024.vk long2-final4096.vk long2-final10000.vk'
     + ['chunk1024', 'final1024', 'chunk4096', 'final4096', 'chunk10000', 'final10000'].map(n => ` long3-${n}.json long3-${n}.vk long3-${n}-evm.vk`).join('')),
   ...names('frontend/verify-core/', 'browser.mjs worker.mjs core.mjs contract.mjs node.mjs node-worker.mjs node-engine.mjs'),
-  ...names('frontend/pages/', 'ask.html ask.js guide-prove.html guide-detector.html robots.txt sitemap.xml llms.txt download.html download.js privacy.html terms.html notfound.html appcast.xml verify.html verify.mjs writer.html writer.mjs track.mjs visit.mjs replay-player.mjs site.css replay-worker.mjs brand/huma-mark.svg brand/icon-512.png fonts/inter.woff2 fonts/OFL.txt fonts/newsreader-latin.woff2 fonts/newsreader-latin-ext.woff2 fonts/NEWSREADER-OFL.txt img/og-page.png img/og-home.jpg'),
+  ...names('frontend/pages/', 'ask.html ask.js guide-prove.html guide-detector.html robots.txt sitemap.xml llms.txt download.html download.js privacy.html terms.html partials/nav.html partials/footer.html partials/footer-compact.html partials/cta-short.html partials/cta-end.html notfound.html appcast.xml verify.html verify.mjs writer.html writer.mjs track.mjs visit.mjs replay-player.mjs site.css replay-worker.mjs brand/huma-mark.svg brand/icon-512.png fonts/inter.woff2 fonts/OFL.txt fonts/newsreader-latin.woff2 fonts/newsreader-latin-ext.woff2 fonts/NEWSREADER-OFL.txt img/og-page.png img/og-home.jpg'),
   // A shared page's PDF report: its maker, fonts, QR code (MIT) and PDF library (MIT), loaded only when it's made.
   ...names('frontend/pages/', 'report-pdf.mjs fonts/tinos-report.ttf fonts/tinos-bold-report.ttf fonts/TINOS-OFL.txt vendor/qr/qr.mjs vendor/qr/LICENSE.txt vendor/pdf-lib/pdf-lib.mjs vendor/pdf-lib/fontkit.js vendor/pdf-lib/LICENSE-pdf-lib.txt vendor/pdf-lib/LICENSE-fontkit.txt'),
-  // The landing page (foundation.html at /): the page, its scripts, mark, fonts, hero poster and the vendored MapLibre (BSD-3-Clause) for the globe.
-  ...names('frontend/pages/', 'foundation.html foundation.css foundation.js foundation-globe.js foundation-logo.svg fonts/geist-mono.woff2 fonts/GEIST-OFL.txt foundation-media/hero-poster.jpg foundation-media/hero-art.webp vendor/maplibre/maplibre-gl.mjs vendor/maplibre/maplibre-gl-worker.mjs vendor/maplibre/maplibre-gl.css vendor/maplibre/LICENSE.txt'),
+  // The blog (frontend/blog.mjs lists its posts and pictures).
+  'frontend/blog.mjs', 'frontend/pages/blog/index.html', ...POSTS.map(post => `frontend/pages/blog/${post}.html`), ...IMAGES.map(image => 'frontend/pages/blog/img/' + image),
+  // The landing page (foundation.html at /): the page, its scripts, mark, fonts, hero poster.
+  ...names('frontend/pages/', 'foundation.html foundation.css foundation.js foundation-logo.svg fonts/geist-mono.woff2 fonts/GEIST-OFL.txt foundation-media/hero-art.webp'),
   ...names('frontend/dist/', 'device-verifier.js replay/huma_replay_browser.js replay/huma_replay_browser_bg.wasm'),
   ...names('frontend/dist/compact/', 'compact-verifier.js compact-worker.js compact-inline.js assurance-inline.js media-inline.js long-inline.js asset-manifest.json'),
   ...names('extra/experiments/noir-compact/browser/', 'core.mjs profile.mjs wasm.mjs node-verifier.mjs assurance-core.mjs assurance-profile.mjs assurance-node.mjs final-text.mjs'),
@@ -80,6 +86,6 @@ export async function packagePublication(destination) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (process.argv.length !== 3) throw Error('Usage: node scripts/package-publication.mjs <new-output-directory>');
+  if (process.argv.length !== 3) throw Error('Usage: node backend/scripts/package-publication.mjs <new-output-directory>');
   console.log(JSON.stringify(await packagePublication(process.argv[2])));
 }

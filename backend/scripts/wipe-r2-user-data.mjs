@@ -1,8 +1,8 @@
 // Empties huma.social's user data in R2 before launch: shared pages, accounts, documents, profiles, handles, writer
 // records and sign-in links. Releases (releases/), the proving setup (engine/), site media (media/) and deploys
 // (deploy/) are kept. Lists what it would remove unless --delete is given.
-//   cd web && node --env-file=../.env.local ../scripts/wipe-r2-user-data.mjs            (counts only)
-//   cd web && node --env-file=../.env.local ../scripts/wipe-r2-user-data.mjs --delete   (removes them)
+//   cd frontend && node --env-file=../.env.local ../backend/scripts/wipe-r2-user-data.mjs            (counts only)
+//   cd frontend && node --env-file=../.env.local ../backend/scripts/wipe-r2-user-data.mjs --delete   (removes them)
 import { createRequire } from 'node:module';
 const require = createRequire(new URL('../../frontend/package.json', import.meta.url));
 const { S3Client, ListObjectsV2Command, DeleteObjectsCommand } = require('@aws-sdk/client-s3');

@@ -1,5 +1,5 @@
 // Uploads the notarized build/release/Huma.dmg to R2 as releases/Huma-<version>.dmg, which huma.social/download/Huma.dmg
-// serves through a one-hour signed link. Run from web/: node --env-file=../.env.local ../scripts/upload-release.mjs
+// serves through a one-hour signed link. Run from frontend/: node --env-file=../.env.local ../backend/scripts/upload-release.mjs
 // Parts of 16 MB, each retried, so a slow or flaky connection doesn't restart the whole file.
 import { readFileSync, statSync, openSync, readSync, closeSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -12,7 +12,7 @@ const { S3Client, CreateMultipartUploadCommand, UploadPartCommand, CompleteMulti
   await import(pathToFileURL(createRequire(root + 'frontend/package.json').resolve('@aws-sdk/client-s3')).href);
 const version = readFileSync(root + 'extra/Resources/Info.plist', 'utf8').match(/<key>CFBundleShortVersionString<\/key>\s*<string>([\d.]+)<\/string>/)?.[1];
 const served = readFileSync(root + 'frontend/registry.mjs', 'utf8').match(/const HUMA_RELEASE = '([\d.]+)'/)?.[1];
-if (!version || version !== served) throw new Error(`App version ${version} doesn't match HUMA_RELEASE ${served} in web/registry.mjs.`);
+if (!version || version !== served) throw new Error(`App version ${version} doesn't match HUMA_RELEASE ${served} in frontend/registry.mjs.`);
 const file = process.argv[2] ?? root + 'build/release/Huma.dmg', size = statSync(file).size, Key = `releases/Huma-${version}.dmg`, PART = 16 * 1024 * 1024;
 const client = new S3Client({ region: 'auto', endpoint: process.env.R2_ENDPOINT,
   credentials: { accessKeyId: process.env.R2_ACCESS_KEY_ID, secretAccessKey: process.env.R2_SECRET_ACCESS_KEY } });

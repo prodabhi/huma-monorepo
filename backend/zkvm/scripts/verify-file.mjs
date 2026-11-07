@@ -15,7 +15,7 @@ async function boundedFile(file, limit) {
 const textFile = async (file, limit) => new TextDecoder('utf-8', { fatal: true }).decode(await boundedFile(file, limit));
 try {
     const [file, ...arguments_] = process.argv.slice(2);
-    if (!file || file.startsWith('--')) throw new Error('Usage: node zkvm/scripts/verify-file.mjs proof.json [--text text.txt | --media master-file] [--expected-key fingerprint] [--device-evidence evidence.json --device-policy policy.json]');
+    if (!file || file.startsWith('--')) throw new Error('Usage: node backend/zkvm/scripts/verify-file.mjs proof.json [--text text.txt | --media master-file] [--expected-key fingerprint] [--device-evidence evidence.json --device-policy policy.json]');
     const options = new Map();
     for (let i = 0; i < arguments_.length; i += 2) {
         const flag = arguments_[i], value = arguments_[i + 1];

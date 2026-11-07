@@ -1,5 +1,5 @@
 // Puts the server package on R2 as deploy/host.tgz and writes a 15-minute signed GET link to argv[3] (mode 600),
-// so the server downloads it from Cloudflare instead of over a slow ssh upload. Run from web/ with the R2 env.
+// so the server downloads it from Cloudflare instead of over a slow ssh upload. Run from frontend/ with the R2 env.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash, createHmac } from 'node:crypto';
 import { createRequire } from 'node:module';
