@@ -25,8 +25,11 @@ export class EvidenceStore {
             const fd = openSync(temporary, 'w', 0o600);
             try { writeFileSync(fd, JSON.stringify(this.state)); fsyncSync(fd); } finally { closeSync(fd); }
             renameSync(temporary, this.file);
-            const directoryFD = openSync(this.directory, 'r');
-            try { fsyncSync(directoryFD); } finally { closeSync(directoryFD); }
+            // Windows cannot fsync a directory (EPERM); its rename is already durable once the file is synced.
+            if (process.platform !== 'win32') {
+                const directoryFD = openSync(this.directory, 'r');
+                try { fsyncSync(directoryFD); } finally { closeSync(directoryFD); }
+            }
         } catch (error) { this.failed = true; throw error; }
     }
     exclusive(fn) {

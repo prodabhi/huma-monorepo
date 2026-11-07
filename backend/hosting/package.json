@@ -11,11 +11,13 @@
     "check:publication": "node frontend/deployment-check.mjs"
   },
   "dependencies": {
+    "@arkiv-network/sdk": "1.0.0",
     "@aws-sdk/client-s3": "3.1156.0",
     "@aztec/bb.js": "5.2.1",
     "@dicebear/core": "10.7.0",
     "@dicebear/styles": "10.6.0",
     "@privy-io/node": "0.35.0",
+    "@worldcoin/idkit-core": "4.6.0",
     "asn1js": "3.1.0",
     "cbor": "10.0.12",
     "pkijs": "3.4.3",
