@@ -144,6 +144,27 @@ export function createStreams({ directory, secret, live, now = Date.now, limits 
         }).catch(() => { connection.close(1011, 'Error'); });
       });
     },
+    /** One batch sent over HTTP (POST /api/sessions/stream), for hosts that can't take WebSockets (Vercel): the same
+     *  checks as a WebSocket message, and the same reply, { ack } or { error }. Batches must still arrive in order. */
+    async post(message, client = 'unknown') {
+      sweep();
+      let nonce = null;
+      try { nonce = JSON.parse(message)?.session; } catch {}
+      try {
+        if (!nonceOK(nonce)) throw refusal(1008, 'Bad session');
+        const known = sessions.get(nonce);
+        if (!known && !(await live(nonce))) throw refusal(1008, 'No such session');
+        const s = known ?? session(nonce);
+        if (s.started + SESSION_LIFETIME <= now()) throw refusal(1008, 'Session over');
+        // One batch at a time per session, as on a connection.
+        const reply = (s.posting ?? Promise.resolve()).then(() => take(s, message, Buffer.byteLength(message)));
+        s.posting = reply.catch(() => {});
+        return await reply;
+      } catch (error) {
+        if (!error.code) throw error;
+        return { error: error.message };
+      }
+    },
     /** A session's stream so far: { nonce, started, batches: [{ index, sentAt, receivedAt, events }], meta, trap, events },
      *  from memory or its file; null when nothing was streamed for it. */
     async read(nonce) {

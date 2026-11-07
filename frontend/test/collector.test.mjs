@@ -114,3 +114,34 @@ test('the traps on the write page are hidden from people, assistive tech, the po
   // Outside the editor's content model: after #editor, inside the canvas, never inside #pages.
   assert.ok(html.indexOf('id="canary"') > html.indexOf('<div id="editor"></div></div>'));
 });
+
+test('where WebSockets cannot connect (Vercel), the same signed batches go as POSTs and are acknowledged in order', async t => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'huma-collector-http-'));
+  const server = await createRegistry({ store: directory });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  t.after(async () => { server.streams.close(); server.closeAllConnections(); server.close(); await rm(directory, { recursive: true, force: true }); });
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const issued = await (await fetch(base + '/api/sessions', { method: 'POST' })).json();
+  const { editor, doc, win, fire } = page(base);
+  // A WebSocket that never opens, as on a host without them.
+  win.WebSocket = class extends EventTarget {
+    constructor() { super(); this.readyState = 3; setTimeout(() => this.onclose?.(), 5); }
+    send() {} close() {}
+  };
+  win.fetch = (target, init) => fetch(target, { ...init, headers: { ...init.headers, Origin: base } });
+  win.location = { href: base + '/write' };
+  const collector = createCollector({ editor, url: '/api/sessions/stream', win, doc });
+  await collector.start(issued.nonce, issued.key);
+  fire(editor, 'keydown', { code: 'KeyA', key: 'a', keyCode: 65, shiftKey: false, repeat: false, isComposing: false, timeStamp: 100 });
+  await until(async () => (await server.streams.read(issued.nonce))?.batches.length === 1, 6000);
+  fire(editor, 'keyup', { code: 'KeyA', key: 'a', timeStamp: 150 });
+  assert.equal(await collector.flush(), true);
+  const stream = await server.streams.read(issued.nonce);
+  assert.deepEqual(stream.events.map(e => e.ev), ['kd', 'ku']);
+  assert.equal(collector.state.connected, true);
+  // A forged batch is refused over HTTP as it is over the WebSocket.
+  const forged = await fetch(base + '/api/sessions/stream', { method: 'POST', headers: { Origin: base, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session: issued.nonce, index: 2, sentAt: 1, hmac: '00'.repeat(32), events: [] }) });
+  assert.equal(forged.status, 409); assert.deepEqual(await forged.json(), { error: 'Bad signature' });
+  assert.equal(await collector.stop(), true);
+});

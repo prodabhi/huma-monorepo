@@ -203,6 +203,11 @@ export async function createRegistry({ store = process.env.HUMA_DATA_DIR || path
                 const origin = req.headers.origin;
                 if (origin && origin !== `http://${req.headers.host}` && origin !== `https://${req.headers.host}`) throw failure(403, 'Origin not allowed.');
             }
+            // The editor's event stream over HTTP, for hosts without WebSockets (Vercel): one signed batch per request.
+            if (req.method === 'POST' && url.pathname === '/api/sessions/stream') {
+                const reply = await publications.streams.post(await readUpload(req), clientAddress(req));
+                json(res, reply.error ? 409 : 200, reply); return;
+            }
             if (await publications.handle(req, res, url.pathname, { json, headers })) return;
             if (await requests(req, res, url.pathname, { json })) return;
             if (await documents(req, res, url.pathname, { json })) return;

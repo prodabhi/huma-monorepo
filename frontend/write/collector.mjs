@@ -1,7 +1,8 @@
 // The editor's raw events, kept for the server's typing analysis (frontend/detection): keys, input, compositions and the
 // caret inside the editor; the pointer, wheel, selection, focus and visibility on the page. Every handler only pushes
 // a small object to a buffer; nothing is measured here. Every few seconds the buffer goes to huma.social over a
-// WebSocket (/api/sessions/stream, frontend/detection/stream.mjs) in numbered batches signed with the session's key, each
+// WebSocket (/api/sessions/stream, frontend/detection/stream.mjs), or POSTs to the same path where WebSockets can't
+// connect (Vercel), in numbered batches signed with the session's key, each
 // acknowledged by its number; unacknowledged batches are sent again, in order, after a dropped connection. The stream
 // is the server's: it never comes back to the page.
 const FLUSH_MS = 2500, IDLE_TIMEOUT = 1500, RECONNECT_MS = [1000, 2000, 4000, 8000, 15000, 30000];
@@ -97,23 +98,49 @@ export function createCollector({ editor, caret = () => null, trap = () => '', u
     const text = JSON.stringify(head).slice(0, -1) + ',"events":' + json + '}';
     return { index: index++, text };
   }
-  function send() { if (socket?.readyState === 1) for (const item of queue) if (!item.sent) { socket.send(item.text); item.sent = true; } }
-  function connect() {
-    if (closed || socket) return;
-    let ws;
-    try { ws = new win.WebSocket(url); } catch { schedule(); return; }
-    socket = ws;
-    ws.onopen = () => { retry = 0; connected = true; for (const item of queue) item.sent = false; send(); };
-    ws.onmessage = ({ data }) => {
-      let reply = null; try { reply = JSON.parse(data); } catch {}
-      if (Number.isSafeInteger(reply?.ack)) {
-        acked = Math.max(acked, reply.ack);
-        while (queue.length && queue[0].index <= reply.ack) queue.shift();
-        waiting = waiting.filter(({ upTo, resolve }) => (acked >= upTo ? (resolve(true), false) : true));
+  // A host that can't take WebSockets (Vercel's functions) gets the same signed batches as POSTs to the same path, one at
+  // a time and in order: the page switches once its first WebSocket attempts fail without ever opening.
+  let http = false, failures = 0, posting = false;
+  const postURL = () => { const target = new URL(url, win.location?.href ?? 'http://localhost/'); target.protocol = target.protocol.replace(/^ws/, 'http'); return target.href; };
+  function received(reply) {
+    if (Number.isSafeInteger(reply?.ack)) {
+      acked = Math.max(acked, reply.ack);
+      while (queue.length && queue[0].index <= reply.ack) queue.shift();
+      waiting = waiting.filter(({ upTo, resolve }) => (acked >= upTo ? (resolve(true), false) : true));
+    }
+    if (reply?.error) { refused = reply.error; }
+  }
+  async function post() {
+    if (posting || refused) return;
+    posting = true;
+    try {
+      for (let item = queue.find(i => !i.sent); item && !refused; item = queue.find(i => !i.sent)) {
+        let reply;
+        try {
+          const response = await win.fetch(postURL(), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: item.text, credentials: 'same-origin' });
+          reply = await response.json();
+        } catch { return; } // offline or busy: the next flush tries again
+        item.sent = true; connected = true; received(reply);
       }
-      if (reply?.error) { refused = reply.error; }
+    } finally { posting = false; }
+  }
+  function send() {
+    if (http) { post(); return; }
+    if (socket?.readyState === 1) for (const item of queue) if (!item.sent) { socket.send(item.text); item.sent = true; }
+  }
+  function connect() {
+    if (closed || socket || http) return;
+    let ws;
+    try { ws = new win.WebSocket(url); } catch { http = true; send(); return; }
+    socket = ws;
+    let opened = false;
+    ws.onopen = () => { opened = true; retry = 0; connected = true; for (const item of queue) item.sent = false; send(); };
+    ws.onmessage = ({ data }) => { let reply = null; try { reply = JSON.parse(data); } catch {} received(reply); };
+    ws.onclose = () => {
+      if (socket === ws) socket = null;
+      if (!opened && !connected && ++failures >= 2 && win.fetch) { http = true; for (const item of queue) item.sent = false; send(); return; }
+      if (!closed && !refused) schedule();
     };
-    ws.onclose = () => { if (socket === ws) socket = null; if (!closed && !refused) schedule(); };
     ws.onerror = () => {};
   }
   function schedule() { if (closed || timer) return; const ms = RECONNECT_MS[Math.min(retry++, RECONNECT_MS.length - 1)]; timer = win.setTimeout(() => { timer = 0; connect(); }, ms); }

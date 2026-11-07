@@ -18,6 +18,10 @@ const browser = path.join(root, 'extra/experiments/noir-compact/browser'), bb = 
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 if (JSON.parse(await readFile(path.join(bb, 'package.json'), 'utf8')).version !== '5.2.1') throw new Error('Unexpected bb.js version.');
 
+// --js-only rebuilds just the page scripts (esbuild) into the existing dist/write, keeping its WebAssembly, programs
+// and keys: for a change to the editor's JavaScript on a machine without the Rust and Noir build outputs.
+const jsOnly = process.argv.includes('--js-only');
+if (!jsOnly) {
 // The Rust modules, from their pinned lockfiles. The recorder takes its randomness from the page.
 const cargo = (dir, target, env = {}) => execFileSync('cargo', ['rustc', '--release', '--locked', '--lib', '--crate-type', 'cdylib',
   '--target', 'wasm32-unknown-unknown', '--target-dir', path.join(root, 'build', target)], { cwd: path.join(root, dir), stdio: 'inherit', env: { ...process.env, ...env } });
@@ -48,6 +52,7 @@ for (const [prefix, pins] of [['long-', KEYS], ['long2-', KEYS2], ['long3-', KEY
   await writeFile(path.join(out, prefix + name + '.vk'), bytes);
 }
 
+}
 // bb.js loads its WebAssembly and thread worker from this folder, never from a network address of its own.
 const swaps = {
   [/fetch_code\/browser\/index\.js$/.source]: `export async function fetchCode(shared) {
