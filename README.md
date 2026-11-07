@@ -14,12 +14,11 @@ deployment. Proof validity comes from cryptographic checks, not the host's verdi
 Read the numbered questions in order. The implementation details at the end are
 for anyone who wants to build or inspect it.
 
-**Where this is going:** [VISION.md](extra/docs/VISION.md) reframes Huma from an app that
+**Where this is going:** [VISION.md](docs/VISION.md) reframes Huma from an app that
 proves one document into a network where people build a verified human track
 record from everyday creation, checked where content is read, with physical
 co-presence between users as the moat. The mechanisms are in
-[HUMAN-PRESENCE.md](extra/docs/HUMAN-PRESENCE.md) and
-[MEDIA-PROVENANCE.md](extra/docs/MEDIA-PROVENANCE.md).
+[HUMAN-PRESENCE.md](docs/HUMAN-PRESENCE.md) and [MEDIA-PROVENANCE.md](docs/MEDIA-PROVENANCE.md).
 
 The long-term vision includes capture clients on **Mac, iPhone, iPad and Android**,
 an open evidence format, feed integrations and a verification SDK. Each content
@@ -452,7 +451,7 @@ The five-second complete-service target is met by the short fixture. Larger
 sessions and 10k-character support remain open. A separate capacity-profiling
 attack measured 14–36% fewer gates by right-sizing each profile to its actual
 session; those tighter profiles are research candidates, not the shipped baseline.
-See [PROVER-PERFORMANCE.md](extra/docs/PROVER-PERFORMANCE.md). Earlier measurements follow as
+See [PROVER-PERFORMANCE.md](docs/PROVER-PERFORMANCE.md). Earlier measurements follow as
 research history, rather than the current app baseline.
 
 The previous eight-slot V5 profile remains supported. On its saved 250-character
@@ -581,7 +580,7 @@ encoded-to-decoded association is signed, not ZK-decoded. Fixtures use generic
 decoded-byte chunks and local test challenges; they do not implement the final
 tile/audio-block sampling geometry. The browser/Node SDK exposes these missing
 layers explicitly. This is the first measured layer of the media design in
-[MEDIA-PROVENANCE.md](extra/docs/MEDIA-PROVENANCE.md), with further policies still to build.
+[MEDIA-PROVENANCE.md](docs/MEDIA-PROVENANCE.md), with further policies still to build.
 
 Independent entry points are `frontend/verify-core/node.mjs` and
 `frontend/verify-core/browser.mjs`. Call `verify(source, readerPolicy, expectedContent)`
@@ -842,8 +841,8 @@ The attack benchmark needs physical HID injectors, adaptive timing generators,
 replayed real traces and a person tapping while automation types. We will measure
 accepted fakes, operator attention and honest-user friction. The local challenge
 schedule is reported as local, without claiming an independent source of randomness.
-[HUMAN-PRESENCE.md](extra/docs/HUMAN-PRESENCE.md) describes the design and build order.
-[MEDIA-PROVENANCE.md](extra/docs/MEDIA-PROVENANCE.md) does the same for images, audio and
+[HUMAN-PRESENCE.md](docs/HUMAN-PRESENCE.md) describes the design and build order.
+[MEDIA-PROVENANCE.md](docs/MEDIA-PROVENANCE.md) does the same for images, audio and
 video: multi-sensor capture, physical challenges and policies that can later be
 proved privately. Under the new plan, authenticated collector reports come first;
 ZK upgrades the assurance about computation. Co-presence witnesses and an opt-in
@@ -1003,8 +1002,7 @@ this does not add camera/microphone capture to the app.
 pass, including signed S3 requests to a local test server. R2 credentials are not
 configured, and no real Coinbase sign-in or public R2 upload has been accepted.
 No Base transaction is submitted by this sharing flow. Base anchoring remains the
-separate milestone in
-[VISION §5](extra/docs/VISION.md#5-portable-proofs-stored-anywhere-public-record-on-base).
+separate milestone in [VISION §5](docs/VISION.md#5-portable-proofs-stored-anywhere-public-record-on-base).
 
 ## Current issues and how you can help
 
@@ -1227,8 +1225,6 @@ the Mac master-and-proof workflow.
 
 The sections below preserve the setup and protocol details in this same document.
 They describe development tools, not steps an ordinary writer should need.
-This is a polyglot repository rather than one package-manager workspace; run
-`make help` from the repository root to list its install, build and test entry points.
 
 ### A. Where is the code?
 
@@ -1236,14 +1232,14 @@ This is a polyglot repository rather than one package-manager workspace; run
 | --- | --- |
 | [extra/Sources/Huma](extra/Sources/Huma) | Native editor, signed capture, proof creation, saving and verification UI |
 | [extra/Sources/HumaCore](extra/Sources/HumaCore) | Documents, sessions, text policy, signing/key storage and service clients |
-| [backend/zkvm](backend/zkvm) | RISC Zero replay program, local worker and shared native/WASM verification |
-| [frontend](frontend) | Website, browser reader, local registry and research deck |
+| [zkvm](zkvm) | RISC Zero replay program, local worker and shared native/WASM verification |
+| [web](web) | Website, browser reader, local registry and research deck |
 | [frontend/verify-core](frontend/verify-core) | Shared statement contract, DOM-free verification API and bounded browser/Node workers |
 | [backend/integrations/attestation](backend/integrations/attestation) | Apple checks, portable evidence and optional service |
 | [extra/experiments/noir-compact](extra/experiments/noir-compact) | Compact-format and reusable-profile research |
 | [extra/experiments/noir-replay](extra/experiments/noir-replay) | Small complete V2 circuit and scaling fixtures |
 | [extra/experiments/noir-prover](extra/experiments/noir-prover) | Narrow signature/hash microbenchmarks |
-| [extra/docs/PROVER-PERFORMANCE.md](extra/docs/PROVER-PERFORMANCE.md) | Prover profiling, right-sized profile measurements and thread scaling |
+| [PROVER-PERFORMANCE.md](docs/PROVER-PERFORMANCE.md) | Prover profiling, right-sized profile measurements and thread scaling |
 
 Source and machine-readable results are retained. Superseded standalone project
 documents have been consolidated here. Third-party license notices are retained.
@@ -1262,8 +1258,8 @@ npm ci --prefix backend/integrations/attestation --ignore-scripts
 npm ci --prefix extra/experiments/noir-replay/runtime --ignore-scripts
 python3 backend/integrations/noir/prepare.py
 python3 extra/experiments/noir-prover/prepare.py
-swift build --package-path extra --jobs 2
-BIN_DIR="$(swift build --package-path extra --show-bin-path)"
+swift build --jobs 2
+BIN_DIR="$(swift build --show-bin-path)"
 swiftc -parse-as-library -I "$BIN_DIR" extra/experiments/noir-replay/WorkerBench.swift \
   "$BIN_DIR/HumaCore.o" -o build/research/noir-tools/worker-bench
 DEVELOPER_DIR=/Library/Developer/CommandLineTools \
@@ -1321,7 +1317,7 @@ installed command-line SDK can be selected with
 For the website and local registry:
 
 ```sh
-npm ci --prefix frontend --ignore-scripts
+npm ci --prefix web --ignore-scripts
 node frontend/registry.mjs
 ```
 
@@ -1330,9 +1326,9 @@ account requirement for verification; hosting uses the installed storage SDK.
 The optional React research deck has its own build:
 
 ```sh
-npm ci --prefix frontend
-npm run build --prefix frontend
-npm run typecheck --prefix frontend
+npm ci --prefix web
+npm run build --prefix web
+npm run typecheck --prefix web
 ```
 
 The deck is served at `/deck`; `frontend/dist` contains generated assets.
@@ -1576,7 +1572,7 @@ then generates and verifies a proof. Cryptographic child processes cannot make
 outbound connections. The external monitor enforces witness memory/deadline
 limits; the app's worker harness enforces proving cancellation/deadline/CPU limits.
 An existing proof directory is never overwritten. Public fixture verification
-can be repeated without proving using `npm test --prefix frontend`.
+can be repeated without proving using `npm test --prefix web`.
 
 Build the browser reader without installing any Noir compiler or proving SRS:
 
@@ -1792,10 +1788,10 @@ records its separate successful 4.344-second short-session proof.
 Useful existing checks include:
 
 ```sh
-swift test --package-path extra
+swift test
 cargo test --manifest-path backend/zkvm/Cargo.toml -p huma-replay-core -p huma-replay-verifier --locked
 node backend/zkvm/tests/browser-verifier.mjs
-npm test --prefix frontend
+npm test --prefix web
 npm test --prefix backend/integrations/attestation
 python3 -u backend/zkvm/tests/native-worker.py
 ```
@@ -1822,7 +1818,7 @@ The independent compact Rust lockfile reported zero known vulnerabilities and on
 unmaintained `paste` warning (`RUSTSEC-2024-0436`). Its registry yanked-package check
 timed out; it must not be described as completed. No advisory is suppressed.
 
-The `frontend` lockfile pins S3 SDK 3.1156.0 and Coinbase SDK 1.60.0, with Coinbase
+The `web` lockfile pins S3 SDK 3.1156.0 and Coinbase SDK 1.60.0, with Coinbase
 frontend packages 0.0.128. Vite is now 6.4.4 with React plugin 4.7.0, and compatible
 transitive build packages were refreshed. Both pages build, and the existing
 deck's TypeScript check passes. The saved npm audit comparison fell from **14 findings

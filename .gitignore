@@ -11,3 +11,7 @@ target/
 __pycache__/
 .env*
 !.env.example
+# Detection evaluation: recorded sessions (raw events) and the harness registry store stay local.
+frontend/detection/eval/sessions/
+frontend/detection/eval/store/
+frontend/detection/model.json
