@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Deploy the Huma backend on the server (EC2) straight from this git checkout. Needs only git and Docker.
 #
-#   ./deploy-server.sh            pull, package, build and (re)start the server on 127.0.0.1:4318
+#   ./deploy-server.sh            pull, package, build and (re)start the server on 127.0.0.1:$HUMA_REGISTRY_PORT (default 4318)
 #   ENV_FILE=/path/.env ./deploy-server.sh
 #
 # Settings come from .env in this folder (or ENV_FILE). No R2 keys? Put HUMA_STORAGE_BACKEND=local in it.
 # No World ID keys? Put HUMA_WORLD_OPTIONAL=true in it, or every share answers 503.
-# Put Caddy (or nginx) in front for the public site: reverse_proxy 127.0.0.1:4318.
+# Put Caddy (or nginx) in front for the public site: reverse_proxy 127.0.0.1:<that port>.
 set -euo pipefail
 cd "$(dirname "$0")"
 ENV_FILE="${ENV_FILE:-$PWD/.env}"
@@ -33,9 +33,12 @@ docker run -d --name huma --restart unless-stopped --network host \
   --env-file "$ENV_FILE" -e HUMA_REGISTRY_HOST=127.0.0.1 \
   -v huma-data:/app/frontend/data huma-host >/dev/null
 
+# The port is HUMA_REGISTRY_PORT from the env file, 4318 when it isn't set. Caddy must proxy to the same one.
+PORT="$(grep -E '^HUMA_REGISTRY_PORT=' "$ENV_FILE" | tail -1 | cut -d= -f2- | tr -d '"'"'"' \r')"
+PORT="${PORT:-4318}"
 for _ in $(seq 1 30); do
-  if curl -fs -o /dev/null http://127.0.0.1:4318/; then
-    echo "==> Huma is up on http://127.0.0.1:4318"
+  if curl -fs -o /dev/null "http://127.0.0.1:$PORT/"; then
+    echo "==> Huma is up on http://127.0.0.1:$PORT (point Caddy's reverse_proxy at 127.0.0.1:$PORT)"
     exit 0
   fi
   sleep 1
