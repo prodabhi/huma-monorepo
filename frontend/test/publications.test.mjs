@@ -5,8 +5,7 @@ import { createHash } from 'node:crypto';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { S3Client } from '@aws-sdk/client-s3';
-import { LocalObjectStore, R2ObjectStore, configuredObjectStore } from '../object-store.mjs';
+import { LocalObjectStore } from '../object-store.mjs';
 import { createRegistry } from '../registry.mjs';
 import { checkDownloadedPublication, expectedMaster } from '../publication-contract.mjs';
 import { verify } from '../verify-core/node.mjs';
@@ -132,38 +131,6 @@ test('public master keeps exact final whitespace, and expired staging cannot app
   const another = await (await prepare(request, upload(proof, text))).json();
   now += 11 * 60 * 1000;
   assert.equal((await approve(request, another)).status, 404);
-});
-
-test('R2 adapter sends signed S3 requests, handles duplicate writes and rejects swapped/oversized objects', { timeout: 15000 }, async t => {
-  const objects = new Map(), seen = [];
-  const server = http.createServer(async (req, res) => {
-    seen.push(req.headers);
-    assert.match(req.headers.authorization, /Credential=test-r2-access\/[0-9]{8}\/auto\/s3\/aws4_request/);
-    const key = new URL(req.url, 'http://localhost').pathname;
-    if (req.method === 'PUT') {
-      const chunks = []; for await (const chunk of req) chunks.push(chunk);
-      if (objects.has(key)) { res.writeHead(412, { 'Content-Type': 'application/xml' }); res.end('<Error><Code>PreconditionFailed</Code></Error>'); }
-      else { assert.equal(req.headers['if-none-match'], '*'); objects.set(key, Buffer.concat(chunks)); res.writeHead(200); res.end(); }
-    } else {
-      const bytes = objects.get(key); if (!bytes) { res.writeHead(404); res.end(); }
-      else { res.writeHead(200, { 'Content-Length': bytes.length }); res.end(bytes); }
-    }
-  });
-  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-  const client = new S3Client({ endpoint: `http://127.0.0.1:${server.address().port}`, region: 'auto', forcePathStyle: true, maxAttempts: 1,
-    credentials: { accessKeyId: 'test-r2-access', secretAccessKey: 'test-r2-secret' }, requestChecksumCalculation: 'WHEN_REQUIRED', responseChecksumValidation: 'WHEN_REQUIRED' });
-  const store = new R2ObjectStore({ bucket: 'test-masters', client });
-  t.after(async () => { store.close(); server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); });
-  const bytes = Buffer.from('exact master'), key = 'objects/' + hash(bytes);
-  await store.put(key, bytes); await store.put(key, bytes);
-  assert.deepEqual(await store.get(key, bytes.length), bytes);
-  await assert.rejects(store.get(key, 1));
-  objects.set('/test-masters/' + key, Buffer.from('swapped'));
-  await assert.rejects(store.get(key, 65536));
-  await assert.rejects(store.put(key, Buffer.from('wrong hash')));
-  assert.ok(seen.length >= 5);
-  assert.throws(() => configuredObjectStore('/unused', { HUMA_STORAGE_BACKEND: 'r2' }));
-  assert.throws(() => new R2ObjectStore({ bucket: 'test-masters', endpoint: 'http://untrusted.invalid', accessKeyId: 'x', secretAccessKey: 'y' }));
 });
 
 test('storage retry reuses a durable grant and a new publication cannot bypass the allowance', { timeout: 30000 }, async t => {

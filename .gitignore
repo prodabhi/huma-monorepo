@@ -15,3 +15,6 @@ __pycache__/
 frontend/detection/eval/sessions/
 frontend/detection/eval/store/
 frontend/detection/model.json
+# Vercel link and prebuilt output (backend/scripts/deploy-vercel.sh).
+.vercel/
+.vercel

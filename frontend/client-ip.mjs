@@ -5,7 +5,13 @@ import { isIP } from 'node:net';
 
 const loopback = address => /^(::ffff:)?127\./.test(address) || address === '::1';
 
-export function clientIP(req) {
+export function clientIP(req, env = process.env) {
+  // On Vercel (VERCEL=1 in its functions) the socket is Vercel's own proxy; its edge sets X-Real-IP to the client and
+  // overwrites anything the client sent, so that header is the address.
+  if (env.VERCEL === '1') {
+    const real = req.headers?.['x-real-ip'];
+    if (typeof real === 'string' && isIP(real.trim())) return bucket(real.trim()) || 'unknown';
+  }
   const socket = req.socket?.remoteAddress ?? '';
   let address = socket;
   if (loopback(socket)) {

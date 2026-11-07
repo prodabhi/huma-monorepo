@@ -4,6 +4,7 @@
 // and the random number the browser keeps — never a visitor's address (requests come from this server, geo lookup off),
 // text, title or link. Session replays (pages/replay.mjs) come through here too, at /ph/, with every word hidden.
 import { clientIP } from './client-ip.mjs';
+import { DEFAULT_SITE_URL, siteURL } from './site.mjs';
 
 export const EVENTS = Object.freeze(['$pageview', 'mac_download_clicked', 'sign_in_started', 'signed_in', 'recording_started',
   'recording_stopped', 'page_proved', 'page_shared', 'link_copied', 'posted_on_x', 'posted_on_linkedin', 'report_downloaded', 'document_downloaded']);
@@ -30,9 +31,9 @@ function system(agent = '') {
   return { $os: os, $browser: browser };
 }
 /** The event's own properties, as allowed: anything else is dropped. Null for an event that isn't one of ours. */
-export function eventFrom(body, agent) {
+export function eventFrom(body, agent, site = DEFAULT_SITE_URL) {
   if (!body || typeof body !== 'object' || !EVENTS.includes(body.event) || !/^[a-f0-9]{32}$/.test(body.id ?? '')) return null;
-  const path = eventPath(body.path), properties = { $pathname: path, $current_url: 'https://huma.social' + path, ...system(agent),
+  const path = eventPath(body.path), properties = { $pathname: path, $current_url: site + path, ...system(agent),
     $process_person_profile: false, $geoip_disable: true, $lib: 'huma-web' };
   if (typeof body.referrer === 'string' && /^[a-z0-9.-]{1,100}$/.test(body.referrer)) properties.$referring_domain = body.referrer;
   if (typeof body.reason === 'string') properties.reason = body.reason.slice(0, 120);
@@ -45,6 +46,7 @@ export function eventFrom(body, agent) {
 }
 
 export function configuredEvents(env = process.env, { fetch: send = globalThis.fetch, now = Date.now } = {}) {
+  const site = siteURL(env);
   const key = /^phc_[A-Za-z0-9_-]{20,80}$/.test(env.POSTHOG_KEY ?? '') ? env.POSTHOG_KEY : null;
   let host = 'https://us.i.posthog.com';
   try { if (env.POSTHOG_HOST) { const url = new URL(env.POSTHOG_HOST); if (url.protocol === 'https:') host = url.origin; } } catch {}
@@ -81,7 +83,7 @@ export function configuredEvents(env = process.env, { fetch: send = globalThis.f
     },
     /** Keeps one event to send (false when it isn't one, or this client sent too many this minute). */
     add(req, body) {
-      const event = eventFrom(body, req.headers['user-agent']);
+      const event = eventFrom(body, req.headers['user-agent'], site);
       if (!event) return false;
       const ip = clientIP(req), minute = Math.floor(now() / 60000);
       if (swept !== minute) { swept = minute; for (const [client, entry] of clients) if (entry.minute !== minute) clients.delete(client); }

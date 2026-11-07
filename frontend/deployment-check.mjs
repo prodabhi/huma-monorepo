@@ -1,9 +1,8 @@
-// Offline operator check. It never authenticates, contacts R2 or writes objects.
+// Offline operator check. It never authenticates, contacts Arkiv or writes objects.
 import { readFile, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { configuredObjectStore } from './object-store.mjs';
 import { publicationLimits } from './upload-quotas.mjs';
 import { shareAssetFiles } from './share-assets.mjs';
 import { ASSETS as COMPACT } from '../extra/experiments/noir-compact/browser/profile.mjs';
@@ -11,8 +10,10 @@ import { ASSETS as ASSURANCE } from '../extra/experiments/noir-compact/browser/a
 import { VK_PIN as MEDIA } from '../extra/experiments/noir-media/reader/profile.mjs';
 
 const root = fileURLToPath(new URL('./', import.meta.url));
-const required = ['R2_ENDPOINT', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY',
-  'PRIVY_APP_ID', 'PRIVY_APP_SECRET'];
+const required = ['ARKIV_ACCESS_KEY', 'ARKIV_PRIVATE_KEY', 'ARKIV_ENCRYPTION_KEY', 'PRIVY_APP_ID', 'PRIVY_APP_SECRET'];
+// The shapes arkiv-store.mjs insists on, checked without connecting: its account key, the encryption key and the lifetime.
+const arkivValid = env => /^0x[0-9a-fA-F]{64}$/.test(env.ARKIV_PRIVATE_KEY ?? '') && /^[0-9a-fA-F]{64}$/.test(env.ARKIV_ENCRYPTION_KEY ?? '') &&
+  (env.ARKIV_EXPIRY_DAYS === undefined || /^(?:[1-9]|[1-9]\d|1[0-7]\d|18[0-2])$/.test(env.ARKIV_EXPIRY_DAYS));
 const files = ['pages/verify.html', 'pages/verify.mjs', 'pages/site.css', 'pages/foundation.html',
   'publication-contract.mjs', 'verify-core/browser.mjs', 'verify-core/worker.mjs',
   'verify-core/core.mjs', 'verify-core/contract.mjs', 'dist/share/index.html',
@@ -21,13 +22,9 @@ const files = ['pages/verify.html', 'pages/verify.mjs', 'pages/site.css', 'pages
 
 export async function checkPublicationDeployment({ env = process.env, origin, webRoot = root } = {}) {
   const configuration = Object.fromEntries(required.map(name => [name, typeof env[name] === 'string' && !!env[name].trim()]));
-  configuration.HUMA_STORAGE_BACKEND = env.HUMA_STORAGE_BACKEND === 'r2';
-  let r2ConfigurationValid = false, quotaConfigurationValid = false, httpsOriginProvided = false;
-  if (env.HUMA_STORAGE_BACKEND === 'r2' && required.slice(0, 4).every(name => configuration[name])) {
-    let store;
-    try { store = configuredObjectStore('', env); r2ConfigurationValid = store.kind === 'r2'; }
-    catch {} finally { store?.close(); }
-  }
+  configuration.HUMA_STORAGE_BACKEND = env.HUMA_STORAGE_BACKEND === 'arkiv';
+  const arkivConfigurationValid = configuration.HUMA_STORAGE_BACKEND && configuration.ARKIV_ACCESS_KEY && arkivValid(env);
+  let quotaConfigurationValid = false, httpsOriginProvided = false;
   try { publicationLimits(env); quotaConfigurationValid = true; } catch {}
   try {
     const url = new URL(origin);
@@ -55,9 +52,9 @@ export async function checkPublicationDeployment({ env = process.env, origin, we
     } catch { missingAssets.push(file); }
   }
   return { kind: 'huma-publication-deployment-check-v1', offlineOnly: true, environmentValuesPrinted: false,
-    configuredForLiveAcceptance: Object.values(configuration).every(Boolean) && r2ConfigurationValid &&
+    configuredForLiveAcceptance: Object.values(configuration).every(Boolean) && arkivConfigurationValid &&
       quotaConfigurationValid && httpsOriginProvided && !missingAssets.length && !mismatchedPins.length,
-    configuration, r2ConfigurationValid, quotaConfigurationValid, httpsOriginProvided, missingAssets, mismatchedPins,
+    configuration, arkivConfigurationValid, quotaConfigurationValid, httpsOriginProvided, missingAssets, mismatchedPins,
     liveAcceptanceVerified: false,
     manualChecks: ['Add this HTTPS origin to the Privy app\'s allowed origins.',
       'Run one publisher instance while staging is process-local.',

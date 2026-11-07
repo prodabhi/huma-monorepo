@@ -1,7 +1,7 @@
 # Arkiv as Huma's storage
 
-`HUMA_STORAGE_BACKEND=arkiv` keeps what Huma stores on [Arkiv](https://docs.arkiv.network) instead of a local folder or
-Cloudflare R2: shared pages (text and proofs), publication records, accounts' documents, short links, writer pages,
+`HUMA_STORAGE_BACKEND=arkiv`, the hosted site's storage, keeps what Huma stores on [Arkiv](https://docs.arkiv.network)
+instead of a local folder: shared pages (text and proofs), publication records, accounts' documents, short links, writer pages,
 and handles. Everything that stores something goes through one interface
 (`object-store.mjs`), so the app is unchanged; `arkiv-store.mjs` is the new backend behind it.
 
@@ -50,8 +50,9 @@ Pages already stored in the local folder are not copied over; the Arkiv backend 
 - **Daily upload counters** (`quotas/`) change on every upload, and **browser sessions' nonces** (`sessions/`) on every
   Start Recording, so both stay in the local folder: a transaction each would keep a writer waiting several seconds to
   begin, for state that lapses within a day.
-- **Not on Arkiv:** the proving points (16 to 32 MB), the landing video and the Mac installer. They are static files,
-  too big for entities, and are served from the folder or R2 as before.
+- **Not on Arkiv:** the proving points (16 to 32 MB) and the Mac installer. They are too big for entities: the browser's
+  proving points are static files of the website, and the Mac app's installer and proving setup are GitHub release assets
+  (`frontend/releases.mjs`).
 
 ## How anyone can check it
 
@@ -83,8 +84,7 @@ nothing.
 - **Cost and speed.** Every write is a transaction with gas, and one confirmed (measured) takes roughly 3 to 10 seconds. A
   small page, record or state change is one transaction. A 1 MB file is nine, one after another; a 32 MB page would be
   about 270 and take tens of minutes.
-- **Confidentiality is from the public, not the host.** The server holds the encryption key, so it can read everything,
-  as it could with R2. Encrypting with a key that only the link holds would be a different design.
+- **Confidentiality is from the public, not the host.** The server holds the encryption key, so it can read everything. Encrypting with a key that only the link holds would be a different design.
 - **Testnet.** Arkiv's Rabdi network may be reset. Treat it as a hackathon backend, not a place to keep the only copy.
 
 ## Tests

@@ -92,7 +92,7 @@ def main():
     # The points the largest program needed (v2's final1024: 2,060,088), rounded up to 2^21 at 32 bytes each. v3's
     # largest (final10000: 1,027,301) needs half; the file stays the same so installed Macs keep theirs.
     # bb unpacks them once into the user's cache. Release builds leave them out (64 MB that don't compress): the app
-    # downloads them once and checks this fingerprint (HumaCore ProvingSetup, backend/scripts/upload-engine.mjs).
+    # downloads them once and checks this fingerprint (HumaCore ProvingSetup, backend/scripts/github-release.mjs engine).
     with open(BUILD/'noir-crs'/'bn254_g1_compressed.dat','rb') as source:points=source.read(CRS_POINTS*32)
     assert len(points)==CRS_POINTS*32 and hashlib.sha256(points).hexdigest()==CRS_SHA256
     if os.environ.get('HUMA_EXTERNAL_SETUP')!='1':

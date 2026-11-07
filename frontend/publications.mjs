@@ -891,8 +891,6 @@ export function createPublications({ directory, objectStore = configuredObjectSt
     return { replay: replay !== null };
   }
   return { handle, streams, close: () => { clearInterval(cleanup); streams.close(); pending.clear(); retained = 0; objectStore.close(); }, storage: objectStore.kind,
-    releaseURL: (key, seconds, at) => objectStore.releaseURL?.(key, seconds, at) ?? null,
-    releaseExists: async key => (await objectStore.releaseExists?.(key)) === true,
     /** A shared page sent to a writing request: checked like a reader opening the link (token, not removed), with
      *  what the requester's inbox shows. `signature` (optional) is the sharing Mac's signature of requestMessage. */
     requestPage: async (id, token, requestID, signature) => {

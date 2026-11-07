@@ -1,4 +1,4 @@
-// Bundled Mac adapters + a local approval fixture. No real Privy/R2 account,
+// Bundled Mac adapters + a local approval fixture. No real Privy/Arkiv account,
 // wallet, device key or biometric prompt is used; the receipt is cached public data.
 import { createRegistry } from '../registry.mjs';
 import { spawn } from 'node:child_process';

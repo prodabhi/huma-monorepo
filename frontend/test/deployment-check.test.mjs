@@ -5,9 +5,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { checkPublicationDeployment } from '../deployment-check.mjs';
 
-const configured = () => ({ HUMA_STORAGE_BACKEND: 'r2',
-  R2_ENDPOINT: 'https://' + '0'.repeat(32) + '.r2.cloudflarestorage.com', R2_BUCKET: 'huma-fixture',
-  R2_ACCESS_KEY_ID: 'fixture-access-id', R2_SECRET_ACCESS_KEY: 'fixture-secret-value',
+const configured = () => ({ HUMA_STORAGE_BACKEND: 'arkiv',
+  ARKIV_ACCESS_KEY: 'ark_live_fixture-access', ARKIV_PRIVATE_KEY: '0x' + '1a'.repeat(32), ARKIV_ENCRYPTION_KEY: '2b'.repeat(32),
   PRIVY_APP_ID: 'fixture-app', PRIVY_APP_SECRET: 'fixture-secret' });
 const origin = 'https://huma.example';
 
@@ -23,21 +22,23 @@ test('offline deployment check validates real built reader pins without claiming
   }
 });
 
-test('local storage and missing R2 configuration cannot pass the hosted deployment check', async () => {
+test('local storage and missing Arkiv configuration cannot pass the hosted deployment check', async () => {
   const report = await checkPublicationDeployment({ env: { PRIVY_APP_ID: 'fixture-app' }, origin });
   assert.equal(report.configuredForLiveAcceptance, false);
-  assert.equal(report.r2ConfigurationValid, false);
+  assert.equal(report.arkivConfigurationValid, false);
   assert.equal(report.configuration.HUMA_STORAGE_BACKEND, false);
-  assert.equal(report.configuration.R2_SECRET_ACCESS_KEY, false);
+  assert.equal(report.configuration.ARKIV_PRIVATE_KEY, false);
   assert.equal(report.configuration.PRIVY_APP_ID, true);
 });
 
-test('malformed private endpoint is rejected without echoing its value', async () => {
-  const env = configured(); env.R2_ENDPOINT = 'https://private:DO-NOT-PRINT@untrusted.invalid';
-  const report = await checkPublicationDeployment({ env, origin });
-  assert.equal(report.r2ConfigurationValid, false);
-  assert.equal(JSON.stringify(report).includes('DO-NOT-PRINT'), false);
-  assert.equal(JSON.stringify(report).includes('untrusted.invalid'), false);
+test('malformed Arkiv keys or lifetime are rejected without echoing their values', async () => {
+  for (const [name, value] of [['ARKIV_PRIVATE_KEY', '0xDO-NOT-PRINT'], ['ARKIV_ENCRYPTION_KEY', 'DO-NOT-PRINT'], ['ARKIV_EXPIRY_DAYS', '183']]) {
+    const env = configured(); env[name] = value;
+    const report = await checkPublicationDeployment({ env, origin });
+    assert.equal(report.arkivConfigurationValid, false);
+    assert.equal(report.configuredForLiveAcceptance, false);
+    assert.equal(JSON.stringify(report).includes('DO-NOT-PRINT'), false);
+  }
 });
 
 test('invalid daily quota or non-HTTPS/path origin blocks live configuration', async () => {

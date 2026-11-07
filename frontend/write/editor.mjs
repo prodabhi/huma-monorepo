@@ -1861,7 +1861,7 @@ async function start() {
     $('unsupportedText').textContent = 'Huma needs a computer for now. Send yourself the link, then open it in Chrome, Edge, Firefox or Safari there.';
     $('sendLink').hidden = false;
     $('sendLink').onclick = async () => {
-      const url = 'https://huma.social/write';
+      const url = location.origin + '/write';
       try { if (navigator.share) { await navigator.share({ title: 'Huma', text: 'Write on Huma on my computer', url }); return; } } catch (e) { if (e?.name === 'AbortError') return; }
       try { await navigator.clipboard.writeText(url); say('Link copied. Send it to yourself.'); } catch { say(url); }
     };

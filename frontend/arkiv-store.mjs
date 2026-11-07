@@ -1,6 +1,6 @@
 // Arkiv as the object store (HUMA_STORAGE_BACKEND=arkiv): pages, proofs, records, documents, short links, writer pages
 // and sessions are kept as Arkiv entities (https://docs.arkiv.network), through the same put/get/quota interface as the
-// local-folder and R2 stores (object-store.mjs), so nothing that stores something needs to know where it goes.
+// local-folder store (object-store.mjs), so nothing that stores something needs to know where it goes.
 //
 // What is different about Arkiv, and what this does about it:
 //   Public.     Anyone can read an entity. Every payload is encrypted here (AES-256-GCM, ARKIV_ENCRYPTION_KEY, the key

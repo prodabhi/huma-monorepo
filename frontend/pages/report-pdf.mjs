@@ -21,7 +21,9 @@
 //   stopped? [[label, value]]: a recording that stopped before it was proved, and why; there's no score, rules or proof
 //   textHash? the text's SHA-256 when there's no proof to carry it
 
-export const VERIFY_URL = 'https://huma.social/verify', DOWNLOAD_URL = 'https://huma.social/download', SITE_URL = 'https://huma.social';
+// The site the report points to: the one this page was loaded from, or huma.social where there's no page (tests).
+export const SITE_URL = globalThis.location?.origin ?? 'https://huma.social', SITE_NAME = new URL(SITE_URL).host;
+export const VERIFY_URL = SITE_URL + '/verify', DOWNLOAD_URL = SITE_URL + '/download';
 export const REPLAY_FILE = 'Huma-replay.json';
 /** The tier shown with the score; the Mac app's own reports, made before tiers were passed in, are the strong check. */
 const tierOf = report => report.tier ?? (report.where === 'browser' ? 'Web browser · basic check (typing rhythm only)' : 'Mac app · strong check');
@@ -375,8 +377,8 @@ export async function makeReport(report, { PDFLib, fontkit, fonts, mark }) {
     if (report.qr) drawQR(W - M - qrSize, top, qrSize);
     caps('Check it', M, top);
     const check = !p ? [{ text: 'A stopped recording has no proof to check. Its typing is measured above.' }]
-        : report.link ? [{ text: 'Open the shared page', url: report.link }, { text: ', or drop this PDF into ' }, { text: 'huma.social/verify', url: VERIFY_URL }, { text: '.' }]
-        : [{ text: 'Drop this PDF into ' }, { text: 'huma.social/verify', url: VERIFY_URL }, { text: '.' }];
+        : report.link ? [{ text: 'Open the shared page', url: report.link }, { text: ', or drop this PDF into ' }, { text: SITE_NAME + '/verify', url: VERIFY_URL }, { text: '.' }]
+        : [{ text: 'Drop this PDF into ' }, { text: SITE_NAME + '/verify', url: VERIFY_URL }, { text: '.' }];
     drawLines(lines(check, room, 10), M, top + 12, 10, 14);
     caps('Links', M, top + 34);
     const sources = refs.filter(item => item.key !== 'page' && item.key !== 'verify');
@@ -391,8 +393,8 @@ export async function makeReport(report, { PDFLib, fontkit, fonts, mark }) {
     y += markHeight + 16;
     caps('Huma', middle(capsWidth('Huma', 24, bold, 8)), y, 24, INK, bold, 8);
     y += 32;
-    text('huma.social', middle(width('huma.social', 12)), y, 12, serif, LINK);
-    link(middle(width('huma.social', 12)), y - 2, width('huma.social', 12), 16, SITE_URL);
+    text(SITE_NAME, middle(width(SITE_NAME, 12)), y, 12, serif, LINK);
+    link(middle(width(SITE_NAME, 12)), y - 2, width(SITE_NAME, 12), 16, SITE_URL);
     y += 32;
     rule(y, INK, 0.9, W / 2 - 56, W / 2 + 56); rule(y + 3, INK, 0.35, W / 2 - 56, W / 2 + 56);
     y += 20;
@@ -411,7 +413,7 @@ export async function makeReport(report, { PDFLib, fontkit, fonts, mark }) {
     const range = (a, b) => (a === b ? `${a}` : `${a}–${b}`);
     const steps = [
         ...(pastedAny ? ['Shaded text was pasted; the rest was typed.'] : mix ? ['All of the document was typed.'] : []),
-        p ? 'To check it, drop this PDF into huma.social/verify.' : 'A stopped recording has no score or proof.',
+        p ? `To check it, drop this PDF into ${SITE_NAME}/verify.` : 'A stopped recording has no score or proof.',
         'Each page shows the text’s SHA-256.',
     ];
     const qr = 104, column = CONTENT - qr - 40, stepLines = steps.map(step => lines([{ text: step.trim() }], column - 16, 9.5));
@@ -453,7 +455,7 @@ export async function makeReport(report, { PDFLib, fontkit, fonts, mark }) {
     if (report.qr) {
         const qx = W - M - qr;
         drawQR(qx, lower, qr);
-        const caption = report.link ? ['Scan to see it live', 'huma.social'] : ['Scan to check it', 'huma.social/verify'];
+        const caption = report.link ? ['Scan to see it live', SITE_NAME] : ['Scan to check it', SITE_NAME + '/verify'];
         text(caption[0], qx + (qr - width(caption[0], 9.5, bold)) / 2, lower + qr + 9, 9.5, bold);
         text(caption[1], qx + (qr - width(caption[1], 8.5)) / 2, lower + qr + 22, 8.5, serif, GREY);
     }
@@ -485,7 +487,7 @@ export async function makeReport(report, { PDFLib, fontkit, fonts, mark }) {
 
     if (report.attachment) {
         await doc.attach(report.attachment.bytes, report.attachment.name, {
-            mimeType: 'application/json', description: 'The page proof. Drop this PDF or the file into huma.social/verify.',
+            mimeType: 'application/json', description: `The page proof. Drop this PDF or the file into ${SITE_NAME}/verify.`,
             creationDate: report.savedAt, modificationDate: report.savedAt, afRelationship: AFRelationship.Data });
     }
     if (report.replay) {

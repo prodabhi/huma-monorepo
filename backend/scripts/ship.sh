@@ -1,10 +1,11 @@
 #!/bin/bash
 # One command to release Huma.
 #   backend/scripts/ship.sh 0.1.5 "First note." "Second note."   tests, new version, notarized installer, signed update feed,
-#                                                         uploads, website, older installers removed, live checks
+#                                                         uploads (GitHub release), website (Vercel), live checks
 #   backend/scripts/ship.sh --built                              ship the installer backend/scripts/release.sh last built, and the website
 #   backend/scripts/ship.sh --web                                the website only (nothing about the Mac app)
-# Needs .env.local (R2) and .env.deploy (server). Every upload is checked; anything already uploaded is left as it is.
+# Needs GITHUB_TOKEN (in .env.local) for the release uploads, and this folder linked to Vercel (`npx vercel link`).
+# Every upload is checked; anything already uploaded is left as it is.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 MODE=${1:-}
@@ -39,31 +40,15 @@ if [ "$MODE" != "--web" ]; then
     grep -q "<sparkle:shortVersionString>$VERSION<" frontend/pages/appcast.xml || { echo "The update feed isn't for $VERSION."; exit 1; }
 fi
 
-cd frontend
-# The website ships frontend/dist as built, so rebuild the share, deck and proof-checking bundles from their current sources.
-step "Web bundles"
-npm run build --silent >/dev/null
-node ../experiments/noir-compact/browser/build.mjs --web >/dev/null
-node write/build.mjs >/dev/null
 if [ "$MODE" != "--web" ]; then
-    step "R2: the Mac app's proving points"
-    node --env-file=../.env.local ../backend/scripts/upload-engine.mjs
-    step "Installer $VERSION"
-    node --env-file=../.env.local ../backend/scripts/upload-release.mjs
+    step "GitHub release: the Mac app's proving points"
+    node --env-file=.env.local backend/scripts/github-release.mjs engine
+    step "GitHub release: installer $VERSION"
+    node --env-file=.env.local backend/scripts/github-release.mjs installer
 fi
-cd ..
+# The website (deploy-vercel.sh rebuilds every web bundle from its current sources first).
 step "Website"
-./backend/scripts/deploy-web.sh
-if [ "$MODE" != "--web" ]; then
-    step "Removing older installers"
-    (cd frontend && HUMA_KEEP="releases/Huma-$VERSION.dmg" node --env-file=../.env.local --input-type=module -e '
-const { S3Client, DeleteObjectCommand, ListObjectsV2Command } = await import("@aws-sdk/client-s3");
-const c = new S3Client({ region: "auto", endpoint: process.env.R2_ENDPOINT, credentials: { accessKeyId: process.env.R2_ACCESS_KEY_ID, secretAccessKey: process.env.R2_SECRET_ACCESS_KEY } });
-const Bucket = process.env.R2_BUCKET, list = async () => ((await c.send(new ListObjectsV2Command({ Bucket, Prefix: "releases/" }))).Contents ?? []).map(o => o.Key);
-if (!(await list()).includes(process.env.HUMA_KEEP)) throw new Error("The new installer is missing; nothing removed.");
-for (const Key of await list()) if (Key !== process.env.HUMA_KEEP) await c.send(new DeleteObjectCommand({ Bucket, Key }));
-console.log("installers now:", (await list()).join(", "));')
-fi
+./backend/scripts/deploy-vercel.sh
 
 step "Live checks"
 if [ "$MODE" != "--web" ]; then

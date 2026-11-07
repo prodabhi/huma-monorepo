@@ -40,7 +40,7 @@ build-macos:
 	backend/scripts/build.sh
 
 build-zkvm-browser:
-	backend/zkvm/scripts/build-browser.sh
+	bash backend/zkvm/scripts/build-browser.sh
 
 typecheck:
 	npm --prefix frontend run typecheck

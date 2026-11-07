@@ -1386,12 +1386,12 @@ bytes; the two identifiers have different purposes.
 
 ### D. Sharing limits and optional evidence
 
-For hosted originals, configure [`.env.example`](.env.example)'s server-only R2
-and CDP variables in the existing `.env.local`; keep the R2 bucket private. From
-`frontend/`, run `npm run build:share` and `npm run start:configured`. The server defaults
-to localhost. An HTTPS deployment must preserve the API paths and allow its origin
-in the CDP project. R2 uses the S3 endpoint and `auto` region described in
-[Cloudflare's documentation](https://developers.cloudflare.com/r2/get-started/s3/).
+For hosted originals, the site stores pages, proofs and records on Arkiv
+(`HUMA_STORAGE_BACKEND=arkiv`; see [docs/ARKIV.md](docs/ARKIV.md)). Configure
+[`.env.example`](.env.example)'s server-only Arkiv and CDP variables in `.env.local`
+for a local run: from `frontend/`, run `npm run build:share` and
+`npm run start:configured`. The server defaults to localhost. An HTTPS deployment
+must preserve the API paths and allow its origin in the CDP project.
 Coinbase access tokens are checked server-side with
 [CDP's validation API](https://docs.cdp.coinbase.com/api-reference/v2/rest-api/end-user-accounts/validate-end-user-access-token).
 
@@ -1402,47 +1402,36 @@ npm run check:publication -- --origin https://your-host.example
 ```
 
 This offline check reports missing configuration by variable name, validates the
-R2 endpoint and quota settings, checks the built approval page and pinned reader
+shape of the Arkiv keys and the quota settings, checks the built approval page and pinned reader
 assets, and requires an HTTPS origin. It never prints credential values, signs
-in or uploads. A passing check means configured for live acceptance; bucket access,
+in or uploads. A passing check means configured for live acceptance; Arkiv access,
 the CDP allowed origin and a real approved download/verification still need testing.
 
-A portable hosting bundle can be built from the current compiled reader and
-approval assets. It uses an explicit runtime file list, includes a hash manifest,
-and leaves out credentials, private drafts, witnesses and native proving tools:
+The website is hosted on Vercel. Its assets need Rust, Noir outputs and the proving
+setup, which only exist on a build machine, so they are built locally and uploaded
+as a prebuilt deployment:
 
 ```sh
-node backend/scripts/package-publication.mjs build/HumaPublicationHost-release
-docker build -t huma-publication-host:release build/HumaPublicationHost-release
+npx vercel@latest login && npx vercel@latest link   # once
+backend/scripts/deploy-vercel.sh                    # production; --preview for a preview URL
 ```
 
-Use a new output directory for each bundle; packaging refuses to overwrite one.
-Build the image on the target architecture. The current acceptance is **Linux
-arm64, Node 24.22.1**, running as a non-root user with a read-only root filesystem
-and no external network. Eight cached synthetic proof/master pairs passed the real
-verification and publication routes against a loopback S3 fixture. This validates
-the packaged runtime, not real R2 credentials or Coinbase sign-in.
+[`vercel-build.mjs`](backend/scripts/vercel-build.mjs) turns the reviewed host
+package ([`package-publication.mjs`](backend/scripts/package-publication.mjs): an
+explicit runtime file list with a hash manifest, leaving out credentials, private
+drafts, witnesses and native proving tools) into one Node function, and serves the
+checker and prover WebAssembly, the writer's assets, its proving points and the deck
+as static files with the headers the server sends. Server settings are the Vercel
+project's Environment Variables: `HUMA_STORAGE_BACKEND=arkiv`, the Arkiv keys,
+`HUMA_SESSION_SECRET` (shared by every instance) and the Privy/World ID/Turnstile keys.
 
-On the chosen server, keep its configured environment file outside this bundle:
-
-```sh
-docker run -d --name huma-publications --restart unless-stopped \
-  -p 127.0.0.1:4318:4318 --env-file /absolute/private/path/publication.env \
-  -e HUMA_STORAGE_BACKEND=r2 -e HUMA_REGISTRY_HOST=0.0.0.0 -e HUMA_REGISTRY_PORT=4318 \
-  --read-only --cap-drop ALL --security-opt no-new-privileges=true \
-  --cpus 2 --memory 1g \
-  --tmpfs /app/frontend/data:uid=1000,gid=1000,mode=0700 \
-  --tmpfs /tmp:uid=1000,gid=1000,mode=0700 \
-  huma-publication-host:release
-```
-
-Route the chosen HTTPS origin to that loopback port, register the origin with
-Coinbase CDP, and set the same host in the Mac app. Run one publisher instance
-while preparation state is process-local. Nothing has been deployed by these
-local acceptance tests. The server-only lockfile has **zero npm advisories**;
-the existing full website dependency tree still has seven moderate advisories.
-Browser approval chunks are copied from Vite's complete import graph, including
-lazy wallet assets; unknown files in its build directory are not packaged.
+Vercel limits what the server can do: the editor's live event stream
+(`/api/sessions/stream`) is a WebSocket, which Vercel functions can't accept;
+requests are at most 4.5 MB; publication staging, Arkiv mode's daily counters and
+browser session nonces are process-local, so a request can reach an instance that
+doesn't hold them. The Mac app's installer and proving points are GitHub release
+assets ([`github-release.mjs`](backend/scripts/github-release.mjs)), which
+`/download/Huma.dmg` and `/engine/proving-setup` link to.
 
 `POST /api/publications/prepare` stages a verified public upload. A ten-minute
 capability protects its browser review/polling endpoint. Authenticated explicit
@@ -1451,18 +1440,18 @@ checks them. Masters are capped at 32 MiB and public proof packages at 2 MiB;
 the Mac text uploader has its existing smaller text/proof limits. At most two
 preparations and two approvals run concurrently; staging holds at most 16 requests
 and 64 MiB. Staging is process-local and expires on restart; run one publisher
-instance until staging is distributed or routed consistently. The private bucket
-stores content-addressed objects plus protected publication records.
+instance until staging is distributed or routed consistently. Arkiv stores
+content-addressed objects plus protected publication records, encrypted.
 
-Daily publication quotas persist alongside those records. Defaults are **1,000
+Daily publication quotas persist in the server's local folder. Defaults are **1,000
 publications / 1 GiB globally**, and **100 publications / 128 MiB per uploader**,
 per server UTC day. `.env.example` names the four adjustable limits. Global count
 is bounded at 2,000 to keep the daily ledger within its 512 KiB limit. This is an
 upload allowance, not a cap on all provider charges.
 
 Before uploading content, one conditional update reserves its declared master
-and proof bytes against both allowances. R2 uses the object's ETag and atomic
-conditional writes, so competing writers cannot spend the same remaining slot.
+and proof bytes against both allowances under a file lock with atomic replacement,
+so competing writers in one process folder cannot spend the same remaining slot.
 Retrying the same prepared publication reuses its reservation. A failed content
 upload keeps its reservation; it is not rolled back into an allowance another
 request might already be using. Unknown or corrupt quota state fails closed.
@@ -1471,7 +1460,7 @@ Quota accounting is a hosting policy, not a trusted timestamp in the proof.
 Local preview uses a private file with a lock, atomic replacement and synced
 contents. If the process is killed while holding its lock, approvals stop safely;
 an operator must stop all local publisher processes before removing the abandoned
-`.lock` file. R2 conditional writes do not use that filesystem lock. Real provider
+`.lock` file. Real provider
 acceptance and review of the remaining dependency findings still precede public launch.
 
 The shipped server rejects the retired proof-only `POST /api/proofs` route.

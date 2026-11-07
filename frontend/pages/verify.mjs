@@ -100,6 +100,11 @@ let presenting = false;
 let pageJournal, pageUnmet = [], pageBrowser = false, pagePasskey = false;
 /** What the page's report says (downloadReport), gathered as the page is checked; null on the verification tool. */
 let printable = null;
+// Declared here, above the shared-link load below: that load awaits at the top level, so anything it reaches
+// (showScore, showDetection) must already be initialised or it throws before initialization.
+/** The score row as last shown, and the host's typing verdict (showDetection), so either can redraw the other. */
+let scoreShown = null, detectionShown = null;
+const detectionHolds = detection => detection?.enforced === true && (detection.platform === 'mac' ? detection.band === 'likely_automated' : !(detection.band === 'likely_human' && detection.integrity === 'pass'));
 function renderLong(report) {
     reportElement.replaceChildren(); reportElement.hidden = false;
     const j = report.journal; pageJournal = j; pageBrowser = writtenInBrowser(j);
@@ -750,9 +755,8 @@ async function downloadReport() {
     setTimeout(() => URL.revokeObjectURL(a.href), 60000);
 }
 /** The host's verdict on a browser page's streamed typing (detection/judge.mjs), from its receipt: shown with the
- *  score, and where the host enforces it, holding the score at 50 as the host does. */
-let scoreShown = null, detectionShown = null;
-const detectionHolds = detection => detection?.enforced === true && (detection.platform === 'mac' ? detection.band === 'likely_automated' : !(detection.band === 'likely_human' && detection.integrity === 'pass'));
+ *  score, and where the host enforces it, holding the score at 50 as the host does. Its state is declared near the
+ *  top of this module, since a shared link scores the page while the module is still awaiting its load. */
 function showDetection(detection) {
     if (!detection || typeof detection !== 'object') return;
     detectionShown = detection;

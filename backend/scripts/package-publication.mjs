@@ -11,7 +11,7 @@ import { POSTS, IMAGES } from '../../frontend/blog.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const names = (prefix, files) => files.split(' ').map(file => prefix + file);
 export const fixed = [
-  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs hash-record.mjs server-util.mjs websocket.mjs'),
+  ...names('frontend/', 'registry.mjs releases.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs hash-record.mjs server-util.mjs websocket.mjs site.mjs'),
   // The typing analysis of a browser page's streamed session (frontend/detection): its receiver, checks, features, traps, scoring and tables.
   ...names('frontend/detection/', 'stream.mjs session.mjs integrity.mjs features.mjs stats.mjs keyboard.mjs traps.mjs score.mjs judge.mjs baseline.mjs model.mjs thresholds.json bigrams.json wordfreq.json'),
   'frontend/write/canary.mjs',
@@ -40,8 +40,7 @@ export async function packagePublication(destination) {
   destination = path.resolve(destination);
   if (destination === root || root.startsWith(destination + path.sep)) throw Error('Use a new output directory.');
   const mapping = new Map(fixed.map(file => [file, file]));
-  for (const [output, input] of Object.entries({ 'package.json': 'backend/hosting/package.json', 'package-lock.json': 'backend/hosting/package-lock.json',
-    Dockerfile: 'backend/hosting/Dockerfile', '.dockerignore': 'backend/hosting/.dockerignore' })) mapping.set(output, input);
+  for (const [output, input] of Object.entries({ 'package.json': 'backend/hosting/package.json', 'package-lock.json': 'backend/hosting/package-lock.json' })) mapping.set(output, input);
   for (const name of Object.keys({ ...COMPACT, ...ASSURANCE })) {
     mapping.set('extra/experiments/noir-compact/browser/assets/' + name, 'extra/experiments/noir-compact/browser/assets/' + name);
     mapping.set('frontend/dist/compact/assets/' + name, 'frontend/dist/compact/assets/' + name);

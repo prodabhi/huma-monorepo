@@ -19,6 +19,8 @@ import { fail as failure } from './server-util.mjs';
 import { upgrade as upgradeSocket } from './websocket.mjs';
 import { clientAddress } from './sessions.mjs';
 import { POSTS, IMAGES } from './blog.mjs';
+import { installerURL, engineURL, released } from './releases.mjs';
+import { siteURL } from './site.mjs';
 
 // Writers' faces: DiceBear "Dylan" (Natalia Spivak, CC BY 4.0), the same face for the same seed.
 // Made once per seed and kept (at most a few thousand). Its metadata, which credits the artist and license, stays.
@@ -33,12 +35,10 @@ function face(seed) {
     faces.set(seed, svg);
     return svg;
 }
-// The Mac app version /download/Huma.dmg serves; backend/scripts/upload-release.mjs uploads releases/Huma-<version>.dmg.
+// The Mac app version /download/Huma.dmg serves: the GitHub release v<version> (releases.mjs, backend/scripts/github-release.mjs).
 const HUMA_RELEASE = '0.1.10';
 // The Mac app's proving points (64 MB that don't compress), kept out of the installer; the app checks their fingerprint.
-const PROVING_SETUP = 'engine/bn254_g1_compressed-3e1ac096.dat';
-// Whether each of these is in R2 yet, asked at most once a minute.
-const releaseChecks = new Map();
+const PROVING_SETUP = 'bn254_g1_compressed-3e1ac096.dat';
 // Writing in the browser (frontend/write, built into dist/write): its prover needs threads, so the page and everything it
 // loads are cross-origin isolated. Only these files, by name.
 const WRITE_ISOLATION = { 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Embedder-Policy': 'require-corp', 'Cross-Origin-Resource-Policy': 'same-origin' };
@@ -49,9 +49,9 @@ const WRITE_ISOLATION = { 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Or
 const writePolicy = (turnstile, world) => turnstile.enabled || world.enabled ? { 'Content-Security-Policy': `default-src 'self'; script-src 'self' 'wasm-unsafe-eval'${turnstile.enabled ? ' ' + TURNSTILE_SCRIPT_ORIGIN : ''}; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'${turnstile.enabled ? ' ' + TURNSTILE_SCRIPT_ORIGIN : ''}${world.enabled ? ' ' + BRIDGE_ORIGIN : ''}; frame-src ${turnstile.enabled ? TURNSTILE_SCRIPT_ORIGIN : "'none'"}; base-uri 'none'; frame-ancestors 'none'` } : {};
 const WRITE_TYPES = { '.js': 'text/javascript', '.wasm': 'application/wasm', '.json': 'application/json', '.vk': 'application/octet-stream', '.dat': 'application/octet-stream' };
 // The first 2^19 or 2^20 proving points, which a browser needs to prove a page: read once from the setup the Mac app
-// downloads (HUMA_PROVING_SETUP_FILE, the development copy, or R2), checked against their pins, kept in memory.
+// downloads (HUMA_PROVING_SETUP_FILE, the development copy, or its GitHub release), checked against their pins, kept in memory.
 const points = new Map();
-function provingPoints(log, publications) {
+function provingPoints(log) {
     if (!points.has(log)) points.set(log, (async () => {
         const length = 32 << log, file = process.env.HUMA_PROVING_SETUP_FILE ?? path.join(root, '../build/research/noir-crs/bn254_g1_compressed.dat');
         let bytes = Buffer.alloc(length);
@@ -59,7 +59,7 @@ function provingPoints(log, publications) {
             const handle = await open(file);
             try { if ((await handle.read(bytes, 0, length, 0)).bytesRead !== length) throw new Error('Short setup file.'); } finally { await handle.close(); }
         } catch {
-            const response = await fetch(publications.releaseURL(PROVING_SETUP), { headers: { Range: `bytes=0-${length - 1}` }, signal: AbortSignal.timeout(60000) });
+            const response = await fetch(engineURL(PROVING_SETUP), { headers: { Range: `bytes=0-${length - 1}` }, signal: AbortSignal.timeout(60000) });
             bytes = Buffer.from(await response.arrayBuffer());
         }
         if (bytes.length !== length || createHash('sha256').update(bytes).digest('hex') !== POINTS[log]) throw new Error('Proving points differ from their pin.');
@@ -164,7 +164,9 @@ function verifyPublic(source) {
     });
 }
 
-export async function createRegistry({ store = path.join(root, 'data'), publicationOptions = {}, allowLegacyUploads = false } = {}) {
+// HUMA_DATA_DIR moves the server's own folder (legacy proofs, streams, local counters) where the host lets it write:
+// on Vercel the code is read-only and only /tmp is writable (backend/hosting/vercel.mjs).
+export async function createRegistry({ store = process.env.HUMA_DATA_DIR || path.join(root, 'data'), publicationOptions = {}, allowLegacyUploads = false } = {}) {
     await mkdir(store, { recursive: true });
     // One Turnstile check for the page's own gate and for publishing (tests pass theirs in publicationOptions).
     const turnstile = publicationOptions.turnstile ?? configuredTurnstile();
@@ -172,11 +174,7 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
     const publications = createPublications({ directory: path.join(store, 'publications'), ...publicationOptions, turnstile, worldId: world });
     const humanCheck = turnstileRoutes(turnstile), worldCheck = worldIDRoutes(world);
     const visits = eventRoutes(publicationOptions.events ?? configuredEvents());
-    const released = async key => {
-        let check = releaseChecks.get(key);
-        if (!check || check.at < Date.now() - 60000) releaseChecks.set(key, check = { at: Date.now(), ready: await publications.releaseExists(key) });
-        return check.ready;
-    };
+    const site = siteURL();
     const requests = createRequests({ objectStore: publications.objectStore, page: publications.requestPage, shortPage: publications.shortPage });
     const documents = createDocuments({ objectStore: publications.objectStore, deviceKey, deviceSigned, worldId: world });
     const ids = new Set((await readdir(store)).filter(name => /^[a-f0-9]{64}\.json$/.test(name)).map(name => name.slice(0, -5)));
@@ -235,7 +233,7 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
             if (req.method === 'GET' && (url.pathname === '/write' || url.pathname.startsWith('/write/'))) {
                 const log = url.pathname.match(/^\/write\/points\/(19|20)$/)?.[1];
                 if (log) {
-                    const body = await provingPoints(Number(log), publications);
+                    const body = await provingPoints(Number(log));
                     res.writeHead(200, { ...headers, ...WRITE_ISOLATION, 'Content-Type': 'application/octet-stream', 'Content-Length': body.length,
                         'Cache-Control': 'public, max-age=31536000, immutable' }); res.end(body); return;
                 }
@@ -263,8 +261,8 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
             if (req.method === 'GET' && /^\/verify\/[a-f0-9]{64}$/.test(url.pathname)) files[url.pathname] = files['/verify'];
             // Writing requests: make one, the writer's page for it, and the requester's inbox (its key stays in the #).
             if (req.method === 'GET' && /^\/r\/[a-f0-9]{32}(\/inbox)?$/.test(url.pathname)) files[url.pathname] = files['/ask'];
-            // The Mac app comes straight from Cloudflare R2 through a one-hour signed link. Until it's uploaded
-            // (checked at most once a minute), the button returns to the download page, which says so.
+            // The Mac app and its proving points come straight from their GitHub release (releases.mjs). Until the installer
+            // is uploaded (checked at most once a minute), the button returns to the download page, which says so.
             const faceSeed = url.pathname.match(/^\/avatar\/([^/]+)\.svg$/)?.[1];
             if (req.method === 'GET' && faceSeed !== undefined) {
                 if (!AVATAR_SEED.test(faceSeed)) throw failure(404, 'Not found.');
@@ -274,16 +272,13 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
                 res.end(body); return;
             }
             if (req.method === 'GET' && url.pathname === '/engine/proving-setup') {
-                let location = null;
-                if (await released(PROVING_SETUP)) try { location = publications.releaseURL(PROVING_SETUP); } catch {}
-                if (!location) throw failure(404, 'Not found.');
+                const location = engineURL(PROVING_SETUP);
+                if (!(await released(location))) throw failure(404, 'Not found.');
                 res.writeHead(302, { ...headers, Location: location }); res.end(); return;
             }
             if (req.method === 'GET' && url.pathname === '/download/Huma.dmg') {
-                const key = `releases/Huma-${HUMA_RELEASE}.dmg`;
-                let location = null;
-                if (await released(key)) try { location = publications.releaseURL(key); } catch {}
-                res.writeHead(302, { ...headers, Location: location ?? '/download#soon' }); res.end(); return;
+                const location = installerURL(HUMA_RELEASE);
+                res.writeHead(302, { ...headers, Location: (await released(location)) ? location : '/download#soon' }); res.end(); return;
             }
             // The landing page's picture (pages/foundation-media/), kept a day in the browser.
             const media = url.pathname.match(/^\/foundation-media\/([a-z0-9-]+\.(jpg|webp))$/);
@@ -319,7 +314,7 @@ export async function createRegistry({ store = path.join(root, 'data'), publicat
                 const title = name ? escape(name) + ' typed this · Huma' : 'Typed by a person · Huma';
                 const tags = `<meta property="og:type" content="article">\n<meta property="og:site_name" content="Huma">\n<meta property="og:title" content="${title}">\n` +
                     `<meta property="og:description" content="Typed key by key in Huma. Open the link to check it yourself.">\n` +
-                    `<meta property="og:image" content="https://huma.social/img/og-page.png">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n` +
+                    `<meta property="og:image" content="${site}/img/og-page.png">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n` +
                     `<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:site" content="@huma_social">\n<meta name="huma-page" content="${shared}">\n<title>${title}</title>\n` +
                     // Only people with the link (and its key) can read the page, so it stays out of search.
                     `<meta name="robots" content="noindex">\n` +
