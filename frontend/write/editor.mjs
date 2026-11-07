@@ -1726,41 +1726,6 @@ function scoreWhy({ score, unmet }) {
   return [...(score.capped ? ['Held at 50: the typing didn’t look like a person’s.'] : []), about,
     tips.length ? `To score more, ${tips.join(', ')}.` : ''].filter(Boolean).join(' ');
 }
-// On-chain verification (onchain.mjs, backend/onchain): after Finish, the page proved again for the EVM in this tab and
-// sent to Huma's relayer, which has HumaPagesV3 on Base check every proof and record the page. Optional: the page's
-// proof, report and link don't wait for it or depend on it. Shown only where the server has it on, and only right after
-// Finish here (the inputs it needs stay in this tab).
-let chainConfig = null, chainDone = null;
-const onchainConfig = () => (chainConfig ??= fetch('/api/onchain', { credentials: 'omit' }).then(r => (r.ok ? r.json() : { enabled: false })).catch(() => ({ enabled: false })));
-function chainLink(record) {
-  const a = Object.assign(document.createElement('a'), { href: record.url, target: '_blank', rel: 'noopener noreferrer', textContent: 'View transaction' });
-  $('chainStatus').replaceChildren(`Verified on-chain · ${record.network ?? 'Base'} · block ${record.block.toLocaleString('en-US')} · `, a);
-}
-async function showChainRow(reopened) {
-  $('chainRow').hidden = true;
-  const config = await onchainConfig();
-  if (reopened || !config.enabled || !prover?.canProveForChain) return;
-  $('chainRow').hidden = false;
-  if (chainDone) { $('chainVerify').hidden = true; chainLink(chainDone); return; }
-  $('chainVerify').hidden = false; $('chainVerify').disabled = false; $('chainVerify').textContent = 'Verify On-Chain'; $('chainStatus').textContent = '';
-}
-$('chainVerify').onclick = async () => {
-  const button = $('chainVerify'), status = $('chainStatus'), config = await onchainConfig();
-  button.disabled = true;
-  try {
-    status.textContent = 'Proving for the chain…';
-    const page = await prover.proveForChain(({ done, total }) => { status.textContent = `Proving for the chain · ${done} of ${total}`; });
-    status.textContent = `Checking on ${config.network}…`;
-    const response = await fetch('/api/onchain/pages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(page), credentials: 'omit' });
-    const answer = await response.json().catch(() => ({}));
-    if (!response.ok || !answer.verified) throw new Error(answer.error || 'On-chain verification failed. Try again.');
-    chainDone = { ...answer, network: config.network };
-    button.hidden = true; chainLink(chainDone); say('Verified on-chain.');
-  } catch (error) {
-    status.textContent = error.message || 'On-chain verification failed. Try again.';
-    button.textContent = 'Try Again'; button.disabled = false;
-  }
-};
 async function done(result, { reopened = false } = {}) {
   recording = null; show('done', 'Proved'); $('parts').textContent = '';
   try { proved = await provedPage(result); } catch { proved = null; }
@@ -1780,7 +1745,6 @@ async function done(result, { reopened = false } = {}) {
   $('doneText').textContent = [n.toLocaleString() + (n === 1 ? ' word' : ' words'), ...(minutes ? [`written over ${minutes} min`] : []),
     ...(c ? [percentLabel(c.total ? (c.typed + c.external) / c.total : 0) + ' typed'] : []), ...(pasted ? [percentLabel(pasted) + ' pasted'] : [])].join(' · ');
   updateShare(); replayOn = listedOn = null; $('replayRow').hidden = $('listedRow').hidden = true; showShareChoices();
-  showChainRow(reopened);
   if (proved) { $('doneScoreValue').textContent = String(proved.score.value); $('doneTier').textContent = checkTier(proved.score.browser, proved.score.passkey).label; $('doneScore').hidden = false; }
   const why = proved ? scoreWhy(proved) : '';
   $('doneWhy').hidden = !why; $('doneWhy').textContent = why;

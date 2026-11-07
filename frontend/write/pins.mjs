@@ -10,14 +10,3 @@ export const PROGRAMS = {
   final10000: { bytecode: '21da3a3c460175280b96937a3c9e6851725dceee711a90af1d511ac9be7aeb78', vk: '842cdcaebc3c382f4c4f4b478cf08a8505be2a54ebe0e789270cf033aa013ce8', log: 20 },
 };
 export const POINTS = { 19: '1d03ebeb73e1a6d426e44a2ccc88b04125ca185ab9d1679817380502a723fa80', 20: 'f767d001dd244d42bb3863f0edc7644356ba33c662fe4fe6fb98793f8b918bd4', g2: '01797bfc4de5a96f0e516a9ea4537d18786dc30cb991aca4274c95822b69c32f' };
-// The same programs' checking keys for the EVM (bb `-t evm`: keccak transcript), which the Solidity verifiers in
-// backend/onchain were generated from (backend/onchain/keys): the browser proves a page again with these for on-chain
-// verification (prove.mjs, proveForChain). Same circuits; only the key's encoding differs.
-export const EVM_KEYS = {
-  chunk1024: '6ad04af747228f1210546cd87410dd4a0f251e173a68d787f79e6c3c4e549c84',
-  final1024: '76aeb8a5d534323e93a027216c6a7f6d473f23bf2dce88f3cd3e34bb0e19c86d',
-  chunk4096: 'be5416b5191b13674073ed9059492e8da678417f01ecbd95128b1bbcf8f2b0ea',
-  final4096: 'f854db254a69e7987bd5aaff5975cd1aeefbc306b036b691e6d7452311231980',
-  chunk10000: 'd529874c563cdbe03b4cf1b74019e5d336d93ee5bb693d8b03197fbfd30062e4',
-  final10000: '2e03d734560be05dafad2ef1c1d7b9f8e29f2265bf02f3a5456d75df8d85a8a7',
-};

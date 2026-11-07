@@ -265,31 +265,6 @@ export class PageProver {
       .envelope(source, { requireSignedCapture: true, expectedKey: await sha256(publicKey) }, summary.text);
     if (!report.verified) throw new Error('The page proof didn’t check.');
     learn('check', performance.now() - checkStarted, tier);
-    // Kept for on-chain verification (proveForChain), only for this page and only in this tab.
-    this.chainInputs = { tier, chunks: summary.chunks, final: summary.final, pageProof: source };
     return { envelope, report, recording: saved, text: summary.text, parts: count, reused, proveMs: performance.now() - started };
-  }
-  /** Whether the page just finished here can be proved for on-chain verification (its inputs are still in this tab). */
-  get canProveForChain() { return Boolean(this.chainInputs); }
-  /**
-   * After finish(): proves the same page again for the EVM (the same circuits, a keccak transcript), which the Solidity
-   * verifiers in backend/onchain check. Returns { tier, parts: [{ proof, publicInputs }], final } as base64 and pageProof
-   * (the page proof just made, whose signed events the contract checks too), what POST /api/onchain/pages takes. `onStep({ done, total })` as each proof is made. Uses the second prover too, when ready.
-   */
-  async proveForChain(onStep = () => {}) {
-    const page = this.chainInputs;
-    if (!page) throw new Error('Finish the page here first.');
-    const total = page.chunks.length + 1; let done = 0;
-    onStep({ done, total });
-    const one = async (worker, name, input) => {
-      const proved = await worker.ask({ type: 'prove-evm', name, input });
-      onStep({ done: ++done, total });
-      return { proof: b64(proved.proof), publicInputs: b64(proved.publicInputs) };
-    };
-    const second = this.second?.ready ? this.second : null;
-    const sealing = one(second ?? this.main, 'final' + page.tier, JSON.stringify(page.final));
-    const parts = [];
-    for (const input of page.chunks) parts.push(await one(this.main, 'chunk' + page.tier, JSON.stringify(input)));
-    return { tier: page.tier, parts, final: await sealing, pageProof: page.pageProof };
   }
 }

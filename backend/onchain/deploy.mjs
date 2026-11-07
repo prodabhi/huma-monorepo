@@ -37,15 +37,14 @@ const deploy = async (name, args = []) => {
   const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 180000 });
   if (receipt.status !== 'success' || !receipt.contractAddress) throw new Error(`${name}: deployment failed (${hash})`);
   console.log(JSON.stringify({ contract: name, address: receipt.contractAddress, tx: hash, gasUsed: String(receipt.gasUsed) }));
-  transactions[name] = hash;
   return receipt.contractAddress;
 };
 
-const verifiers = {}, transactions = {};
+const verifiers = {};
 for (const name of ['HumaChunk1024Verifier', 'HumaFinal1024Verifier', 'HumaChunk4096Verifier', 'HumaFinal4096Verifier', 'HumaChunk10000Verifier', 'HumaFinal10000Verifier'])
   verifiers[name] = await deploy(name);
 const pages = await deploy('HumaPagesV3', [verifiers.HumaChunk1024Verifier, verifiers.HumaFinal1024Verifier, verifiers.HumaChunk4096Verifier,
   verifiers.HumaFinal4096Verifier, verifiers.HumaChunk10000Verifier, verifiers.HumaFinal10000Verifier]);
-const out = { chainId, rpc: rpc.replace(/\/\/([^/]*@)?/, '//'), deployer: account.address, HumaPagesV3: pages, verifiers, transactions, at: new Date().toISOString() };
+const out = { chainId, rpc: rpc.replace(/\/\/([^/]*@)?/, '//'), deployer: account.address, HumaPagesV3: pages, verifiers, at: new Date().toISOString() };
 writeFileSync(path.join(here, 'deployments', `${chainId}.json`), JSON.stringify(out, null, 2) + '\n');
 console.log(JSON.stringify({ HumaPagesV3: pages, saved: `deployments/${chainId}.json` }));

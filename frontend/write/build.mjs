@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PROGRAMS, EVM_KEYS } from './pins.mjs';
+import { PROGRAMS } from './pins.mjs';
 import { KEYS, KEYS2, KEYS3 } from '../../backend/integrations/noir/long/reader.mjs';
 import { ASSETS } from '../../extra/experiments/noir-compact/browser/profile.mjs';
 
@@ -46,12 +46,6 @@ for (const [prefix, pins] of [['long-', KEYS], ['long2-', KEYS2], ['long3-', KEY
   const bytes = await readFile(path.join(browser, 'assets', prefix + name + '.vk'));
   if (sha(bytes) !== pin || (prefix === 'long3-' && sha(bytes) !== PROGRAMS[name].vk)) throw new Error('Key pin mismatch: ' + prefix + name);
   await writeFile(path.join(out, prefix + name + '.vk'), bytes);
-}
-// The EVM checking keys for on-chain verification (backend/onchain/keys), pinned like the others.
-for (const [name, pin] of Object.entries(EVM_KEYS)) {
-  const bytes = await readFile(path.join(root, 'backend/onchain/keys', `long3-${name}.evm.vk`));
-  if (sha(bytes) !== pin) throw new Error('EVM key pin mismatch: ' + name);
-  await writeFile(path.join(out, `long3-${name}-evm.vk`), bytes);
 }
 
 // bb.js loads its WebAssembly and thread worker from this folder, never from a network address of its own.
