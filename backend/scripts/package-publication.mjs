@@ -11,7 +11,7 @@ import { POSTS, IMAGES } from '../../frontend/blog.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const names = (prefix, files) => files.split(' ').map(file => prefix + file);
 export const fixed = [
-  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs hash-record.mjs server-util.mjs websocket.mjs onchain.mjs'),
+  ...names('frontend/', 'registry.mjs registry-verifier.mjs publications.mjs publication-verifier.mjs object-store.mjs upload-quotas.mjs publication-contract.mjs replay-core.mjs requests.mjs documents.mjs deployment-check.mjs share-assets.mjs turnstile-verify.mjs sessions.mjs client-ip.mjs events.mjs worldid-verify.mjs arkiv-store.mjs hash-record.mjs server-util.mjs websocket.mjs'),
   // The typing analysis of a browser page's streamed session (frontend/detection): its receiver, checks, features, traps, scoring and tables.
   ...names('frontend/detection/', 'stream.mjs session.mjs integrity.mjs features.mjs stats.mjs keyboard.mjs traps.mjs score.mjs judge.mjs baseline.mjs model.mjs thresholds.json bigrams.json wordfreq.json'),
   'frontend/write/canary.mjs',
@@ -19,7 +19,7 @@ export const fixed = [
   'frontend/pages/write.html', 'frontend/write/pins.mjs',
   ...names('frontend/dist/write/', 'write.js prover.js bb-thread.js replay.js grammar.js writer-actions.js recorder.wasm witness.wasm grammar.wasm barretenberg-threads.wasm g2.dat'
     + ' long-chunk.vk long-final1024.vk long-final4096.vk long-final10000.vk long2-final1024.vk long2-final4096.vk long2-final10000.vk'
-    + ['chunk1024', 'final1024', 'chunk4096', 'final4096', 'chunk10000', 'final10000'].map(n => ` long3-${n}.json long3-${n}.vk long3-${n}-evm.vk`).join('')),
+    + ['chunk1024', 'final1024', 'chunk4096', 'final4096', 'chunk10000', 'final10000'].map(n => ` long3-${n}.json long3-${n}.vk`).join('')),
   ...names('frontend/verify-core/', 'browser.mjs worker.mjs core.mjs contract.mjs node.mjs node-worker.mjs node-engine.mjs'),
   ...names('frontend/pages/', 'ask.html ask.js guide-prove.html guide-detector.html robots.txt sitemap.xml llms.txt download.html download.js privacy.html terms.html partials/nav.html partials/footer.html partials/footer-compact.html partials/cta-short.html partials/cta-end.html notfound.html appcast.xml verify.html verify.mjs writer.html writer.mjs track.mjs visit.mjs replay-player.mjs site.css replay-worker.mjs brand/huma-mark.svg brand/icon-512.png fonts/inter.woff2 fonts/OFL.txt fonts/newsreader-latin.woff2 fonts/newsreader-latin-ext.woff2 fonts/NEWSREADER-OFL.txt img/og-page.png img/og-home.jpg'),
   // A shared page's PDF report: its maker, fonts, QR code (MIT) and PDF library (MIT), loaded only when it's made.
