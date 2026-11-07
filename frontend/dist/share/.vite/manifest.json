@@ -1,0 +1,32 @@
+{
+  "../node_modules/@worldcoin/idkit-core/dist/index.js": {
+    "file": "assets/index-LLH75d0v.js",
+    "name": "index",
+    "src": "../node_modules/@worldcoin/idkit-core/dist/index.js",
+    "isDynamicEntry": true
+  },
+  "index.html": {
+    "file": "assets/index-DNc4Osa2.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "dynamicImports": [
+      "src/WorldSignIn.jsx"
+    ],
+    "css": [
+      "assets/index-CHieyZTz.css"
+    ]
+  },
+  "src/WorldSignIn.jsx": {
+    "file": "assets/WorldSignIn-C99xMAvt.js",
+    "name": "WorldSignIn",
+    "src": "src/WorldSignIn.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html"
+    ],
+    "dynamicImports": [
+      "../node_modules/@worldcoin/idkit-core/dist/index.js"
+    ]
+  }
+}

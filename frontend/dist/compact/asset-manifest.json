@@ -1,0 +1,110 @@
+{
+  "sdk": "5.2.1",
+  "assets": {
+    "cast256.vk": {
+      "bytes": 3680,
+      "sha256": "149d13f114a80bc03df8966aa5b716ba86acc383c48c620e0bdb1afb09f4b600"
+    },
+    "journal-abi.json": {
+      "bytes": 2611,
+      "sha256": "d3ac50086728791ab41503666e4f5454b9bfe30000abf2ddfefd624a7c21c952"
+    },
+    "g2.dat": {
+      "bytes": 128,
+      "sha256": "01797bfc4de5a96f0e516a9ea4537d18786dc30cb991aca4274c95822b69c32f"
+    },
+    "barretenberg.wasm": {
+      "bytes": 10571126,
+      "sha256": "662ed50ca7275398817ae780733a9fc1ad1681776c75615cb81ecd737bca17e6"
+    },
+    "barretenberg-threads.wasm": {
+      "bytes": 10475904,
+      "sha256": "454527654830b95af0c75d639194587119f4f25e20739254c2eb7bc7c5fec5a9"
+    },
+    "assurance256.vk": {
+      "bytes": 3680,
+      "sha256": "1cab7a6b3ce5947916ad8bc09616c801de66f896eecc6677dbaf43284696a496"
+    },
+    "assurance256-v2.vk": {
+      "bytes": 3680,
+      "sha256": "9faf09ad7af8b403cd8ea02cd1f896c96971f19bc03182660cc2008c8218f714"
+    },
+    "assurance-abi.json": {
+      "bytes": 2557,
+      "sha256": "729cc9a345f5b8a37549cddbe3ef848edb7bfc8d051867c016928ddabbf3fdc5"
+    },
+    "assurance256-cp32.vk": {
+      "bytes": 3680,
+      "sha256": "5b3a98abe325feca9d5187668fc3e97ab0486b0a0f1e5cb2f904de1c67621b11"
+    },
+    "assurance-cp32-abi.json": {
+      "bytes": 2559,
+      "sha256": "39aa83ef3ddeb5cb43c4f424d39f9ae349cc031241e5650da3678b3f96b9d075"
+    },
+    "assurance64.vk": {
+      "bytes": 3680,
+      "sha256": "bf1319ff4d1bc49029fa4875a9c5f529a5d17ec85bae5547ace311bbbbc3d3df"
+    },
+    "assurance128-cp32.vk": {
+      "bytes": 3680,
+      "sha256": "f8360140d689befc8f23b1794d5f0a9fe373a415804bd8881acdc4886af7f19c"
+    },
+    "long-chunk.vk": {
+      "bytes": 3680,
+      "sha256": "b9e817091fcdd28ebbd43c21b068ab9a0e776f6cafa198335e531195ca18dfeb"
+    },
+    "long-final1024.vk": {
+      "bytes": 3680,
+      "sha256": "42d690d98c77c3ad2b83d986b12a5397bd8a1c634a55a316295c5bcd631c13fd"
+    },
+    "long-final4096.vk": {
+      "bytes": 3680,
+      "sha256": "4d6e31a67bf2a1b294b4cce61a31764e589f7d70357b5330fc94c51a63b046df"
+    },
+    "long-final10000.vk": {
+      "bytes": 3680,
+      "sha256": "842cdcaebc3c382f4c4f4b478cf08a8505be2a54ebe0e789270cf033aa013ce8"
+    },
+    "long2-final1024.vk": {
+      "bytes": 3680,
+      "sha256": "ccc8f6538f604edcbc026c2a04b5d7bde7bbcad6652d2184ff5db94b9fafaf51"
+    },
+    "long2-final4096.vk": {
+      "bytes": 3680,
+      "sha256": "79315d8e8666d5922d49acf9879787c77253cae19ecca3eb7ff78e1b5fce2f16"
+    },
+    "long2-final10000.vk": {
+      "bytes": 3680,
+      "sha256": "8c7eaff3a810517bd82ed2d7de5747ee8f8fe4f4f57b4f31db3b62f8955e7f77"
+    },
+    "long3-chunk1024.vk": {
+      "bytes": 3680,
+      "sha256": "8d8a3bae78664b1b3883b94a1e361d56ee573b7102acc5c18bfd6e721490396b"
+    },
+    "long3-final1024.vk": {
+      "bytes": 3680,
+      "sha256": "c9ce374434fdda60af5c436336410bacc83bdadfaef034ac33432d82a1b3cc28"
+    },
+    "long3-chunk4096.vk": {
+      "bytes": 3680,
+      "sha256": "a73280bcdb84a952e6ca84bc7bcf264dcaea0ee480b3dde00933d7d123782894"
+    },
+    "long3-final4096.vk": {
+      "bytes": 3680,
+      "sha256": "75414e8be776c623d3eca1177fa1ba2af5f094cd6605427826e0af8c1e5ee95f"
+    },
+    "long3-chunk10000.vk": {
+      "bytes": 3680,
+      "sha256": "fd0f825f50bfc0312b617bc02141c73a2691df7f444eee5ddd78b219cd3d0ba0"
+    },
+    "long3-final10000.vk": {
+      "bytes": 3680,
+      "sha256": "842cdcaebc3c382f4c4f4b478cf08a8505be2a54ebe0e789270cf033aa013ce8"
+    },
+    "media-membership.vk": {
+      "bytes": 3680,
+      "sha256": "8cada434b665ae722250b38cfc394dab269e71aa1efec9365fef1e347fbeae9a"
+    }
+  },
+  "inputFiles": 51
+}

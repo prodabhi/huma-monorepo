@@ -9,3 +9,5 @@
 *.dmg binary
 *.woff2 binary
 *.ttf binary
+# Built files the server deploys from (deploy-server.sh): stored byte for byte, their checksums are pinned.
+frontend/dist/** -text
