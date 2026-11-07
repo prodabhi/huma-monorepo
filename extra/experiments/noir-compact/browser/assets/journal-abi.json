@@ -1,0 +1,154 @@
+{
+  "kind": "struct",
+  "path": "Journal",
+  "fields": [
+    {
+      "name": "session_nonce",
+      "type": {
+        "kind": "array",
+        "length": 2,
+        "type": {
+          "kind": "field"
+        }
+      }
+    },
+    {
+      "name": "capture_root",
+      "type": {
+        "kind": "field"
+      }
+    },
+    {
+      "name": "text_hash",
+      "type": {
+        "kind": "array",
+        "length": 32,
+        "type": {
+          "kind": "integer",
+          "sign": "unsigned",
+          "width": 8
+        }
+      }
+    },
+    {
+      "name": "byte_length",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "raw_byte_length",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "initial_bytes",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "edits",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "samples",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "captures",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "typing",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "paste",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "op_count",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "checkpoint_count",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 32
+      }
+    },
+    {
+      "name": "start_unix",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 64
+      }
+    },
+    {
+      "name": "end_unix",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 64
+      }
+    },
+    {
+      "name": "elapsed",
+      "type": {
+        "kind": "integer",
+        "sign": "unsigned",
+        "width": 64
+      }
+    },
+    {
+      "name": "clock_back",
+      "type": {
+        "kind": "boolean"
+      }
+    },
+    {
+      "name": "checkpoint_roots",
+      "type": {
+        "kind": "array",
+        "length": 8,
+        "type": {
+          "kind": "field"
+        }
+      }
+    }
+  ]
+}
