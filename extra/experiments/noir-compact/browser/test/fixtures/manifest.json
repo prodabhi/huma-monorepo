@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Bucket50",
+    "proofIdentity": "d255d702c607ff061dd6f2aa5110b5d111a150ee3a50e96432d275a4b1187e8e",
+    "keyHash": "2266c01e9438b894858c8e60e6e0ba866ecf6badb86c859644847caa4f6c1975",
+    "signatures": 2,
+    "elapsedMillis": "7300"
+  },
+  {
+    "name": "Bucket250",
+    "proofIdentity": "dd0e8360dbe93324bc1d0792f31f32bccf63b81dac110573bc96130266439b68",
+    "keyHash": "2a1eba7828ace8874bac212436f5c75a855ee9ab3ea72310847e51c85e7c51aa",
+    "signatures": 5,
+    "elapsedMillis": "36500"
+  },
+  {
+    "name": "BucketUnicode",
+    "proofIdentity": "b62b629b5ea350c4f4ae8fd6f0ac32daeeb8502e8f6e9ef0211f94d1ae842175",
+    "keyHash": "32655cd238d57339b4820f40e3aca7e0e0a3dfea0a5f83d56652e6d70fc20924",
+    "signatures": 3,
+    "elapsedMillis": "15"
+  }
+]
