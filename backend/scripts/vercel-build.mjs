@@ -13,7 +13,8 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { packagePublication } from './package-publication.mjs';
 import { POINTS } from '../../frontend/write/pins.mjs';
-import { BRIDGE_ORIGIN } from '../../frontend/worldid-verify.mjs';
+// frontend/worldid-verify.mjs BRIDGE_ORIGIN (not imported: that module needs npm packages this build runs without).
+const BRIDGE_ORIGIN = 'https://bridge.worldcoin.org';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const output = path.join(root, '.vercel/output'), statics = path.join(output, 'static'), fn = path.join(output, 'functions/index.func');
@@ -52,7 +53,16 @@ await copyFile(path.join(web, 'dist/device-verifier.js'), path.join(statics, 'de
 // 3. The browser prover's proving points (/write/points/19 and /20), cut from the setup and checked against their pins.
 const setup = process.env.HUMA_PROVING_SETUP_FILE ?? path.join(root, 'build/research/noir-crs/bn254_g1_compressed.dat');
 await mkdir(path.join(statics, 'write/points'), { recursive: true });
-const handle = await open(setup).catch(() => { throw Error(`Proving setup not found at ${setup} (set HUMA_PROVING_SETUP_FILE).`); });
+// Without the local setup (Vercel's own build machines), Aztec's public copy of the same points: checked against the pins below.
+const PUBLIC_SETUP = 'https://crs.aztec-cdn.foundation/g1_compressed.dat';
+const handle = await open(setup).catch(async () => {
+  console.log('Proving setup not found locally; downloading the first 2^20 points from ' + PUBLIC_SETUP);
+  const response = await fetch(PUBLIC_SETUP, { headers: { Range: `bytes=0-${(32 << 20) - 1}` } });
+  if (!response.ok) throw Error(`Proving setup not found at ${setup} and the download failed (${response.status}).`);
+  const downloaded = Buffer.from(await response.arrayBuffer()).subarray(0, 32 << 20), file = path.join(root, 'build/proving-setup.dat');
+  await mkdir(path.dirname(file), { recursive: true }); await writeFile(file, downloaded);
+  return open(file);
+});
 try {
   for (const log of [19, 20]) {
     const bytes = Buffer.alloc(32 << log);

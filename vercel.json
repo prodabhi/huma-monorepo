@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'Dependencies are installed by the build into the function'",
+  "buildCommand": "node backend/scripts/vercel-build.mjs"
+}
