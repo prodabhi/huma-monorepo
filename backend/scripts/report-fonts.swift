@@ -1,11 +1,11 @@
-// swiftc -O scripts/report-fonts.swift -o /tmp/report-fonts && /tmp/report-fonts web/pages/fonts/inter.woff2 web/pages/fonts/inter-report.ttf
+// swiftc -O backend/scripts/report-fonts.swift -o /tmp/report-fonts && /tmp/report-fonts frontend/pages/fonts/inter.woff2 frontend/pages/fonts/inter-report.ttf
 // (and the same for geist-mono): the site's fonts as plain TrueType for the shared page's PDF report (report-pdf.mjs),
 // whose font library can't read WOFF2 or variable fonts. It keeps the default (Regular) outlines and metrics only.
 // With a third argument, "variable", it keeps every table instead, for a fixed weight made with fontTools:
-//   /tmp/report-fonts web/pages/fonts/inter.woff2 /tmp/inter-var.ttf variable
+//   /tmp/report-fonts frontend/pages/fonts/inter.woff2 /tmp/inter-var.ttf variable
 //   fonttools varLib.instancer /tmp/inter-var.ttf wght=600 -o /tmp/inter-600.ttf
 //   pyftsubset /tmp/inter-600.ttf --unicodes='*' --drop-tables+=GSUB,GPOS,GDEF,STAT,gasp,HVAR,MVAR \
-//     --output-file=web/pages/fonts/inter-semibold-report.ttf
+//     --output-file=frontend/pages/fonts/inter-semibold-report.ttf
 import CoreText
 import Foundation
 let args = CommandLine.arguments

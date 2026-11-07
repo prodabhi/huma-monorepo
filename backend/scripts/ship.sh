@@ -3,7 +3,7 @@
 #   backend/scripts/ship.sh 0.1.5 "First note." "Second note."   tests, new version, notarized installer, signed update feed,
 #                                                         uploads, website, older installers removed, live checks
 #   backend/scripts/ship.sh --built                              ship the installer backend/scripts/release.sh last built, and the website
-#   backend/scripts/ship.sh --web                                the website only
+#   backend/scripts/ship.sh --web                                the website only (nothing about the Mac app)
 # Needs .env.local (R2) and .env.deploy (server). Every upload is checked; anything already uploaded is left as it is.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -32,8 +32,8 @@ if [[ $MODE =~ ^[0-9] ]]; then
     done
     HUMA_RELEASE_NOTES="$NOTES" ./backend/scripts/appcast.sh
 fi
-VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" extra/Resources/Info.plist)
 if [ "$MODE" != "--web" ]; then
+    VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" extra/Resources/Info.plist)
     SIGNATURE=$(grep -o 'sparkle:edSignature="[^"]*"' frontend/pages/appcast.xml | cut -d'"' -f2)
     .build/artifacts/sparkle/Sparkle/bin/sign_update --account huma --verify build/release/Huma.dmg "$SIGNATURE"
     grep -q "<sparkle:shortVersionString>$VERSION<" frontend/pages/appcast.xml || { echo "The update feed isn't for $VERSION."; exit 1; }
@@ -43,13 +43,11 @@ cd frontend
 # The website ships frontend/dist as built, so rebuild the share, deck and proof-checking bundles from their current sources.
 step "Web bundles"
 npm run build --silent >/dev/null
-node ../extra/experiments/noir-compact/browser/build.mjs --web >/dev/null
+node ../experiments/noir-compact/browser/build.mjs --web >/dev/null
 node write/build.mjs >/dev/null
-step "R2: video permission, hero video, proving points"
-node --env-file=../.env.local ../backend/scripts/r2-cors.mjs
-node --env-file=../.env.local ../backend/scripts/upload-media.mjs
-node --env-file=../.env.local ../backend/scripts/upload-engine.mjs
 if [ "$MODE" != "--web" ]; then
+    step "R2: the Mac app's proving points"
+    node --env-file=../.env.local ../backend/scripts/upload-engine.mjs
     step "Installer $VERSION"
     node --env-file=../.env.local ../backend/scripts/upload-release.mjs
 fi
@@ -68,11 +66,10 @@ console.log("installers now:", (await list()).join(", "));')
 fi
 
 step "Live checks"
-echo "update feed: $(curl -s https://huma.social/appcast.xml | grep -o 'shortVersionString>[0-9.]*' | head -1 | cut -d'>' -f2)"
 if [ "$MODE" != "--web" ]; then
+    echo "update feed: $(curl -s https://huma.social/appcast.xml | grep -o 'shortVersionString>[0-9.]*' | head -1 | cut -d'>' -f2)"
     echo "download matches this build: $([ "$(curl -sSL https://huma.social/download/Huma.dmg | shasum -a 256 | cut -c1-64)" = "$(shasum -a 256 build/release/Huma.dmg | cut -c1-64)" ] && echo yes || echo NO)"
+    echo "proving points: $(curl -s -o /dev/null -w '%{http_code}' https://huma.social/engine/proving-setup)"
 fi
-VIDEO=$(curl -s -o /dev/null -w '%{redirect_url}' https://huma.social/foundation-media/hero.mp4)
-echo "video allowed on huma.social: $(curl -s -o /dev/null -D - -r 0-0 -H 'Origin: https://huma.social' "$VIDEO" | grep -qi '^access-control-allow-origin: https://huma.social' && echo yes || echo NO)"
-echo "proving points: $(curl -s -o /dev/null -w '%{http_code}' https://huma.social/engine/proving-setup)"
+echo "home picture: $(curl -s -o /dev/null -w '%{http_code}' https://huma.social/foundation-media/hero-art.webp)"
 echo "example page: $(curl -s -o /dev/null -w '%{http_code}' https://huma.social/example)"

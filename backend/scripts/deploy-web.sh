@@ -10,8 +10,8 @@ SSH=(ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=8
 node backend/scripts/package-publication.mjs "$TMP/host" >/dev/null
 COPYFILE_DISABLE=1 tar -C "$TMP/host" --no-xattrs --exclude=node_modules -czf "$TMP/host.tgz" .
 (cd frontend && node --env-file=../.env.local ../backend/scripts/stage-host.mjs "$TMP/host.tgz" "$TMP/host-url.txt")
-# Only the /original/<id>#<token> part of the example link is kept.
-EXAMPLE=$(grep -oE "/original/[a-f0-9]{64}#[a-f0-9]{64}" <<<"${HUMA_EXAMPLE_LINK:-}" | head -1 || true)
+# Only the page link in the example (/original/<id>#<token>, or a short /p/<code>#<key>) is kept.
+EXAMPLE=$(grep -oE "/original/[a-f0-9]{64}#[a-f0-9]{64}|/p/[A-Za-z0-9]{8,12}#[A-Za-z0-9]{16}" <<<"${HUMA_EXAMPLE_LINK:-}" | head -1 || true)
 # Turnstile's keys (.env.local), when set, become the server's: read here without being shown.
 key() { grep -E "^$1=" .env.local 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '"'"'"' \r' || true; }
 TURNSTILE_SITE=$(key HUMA_TURNSTILE_SITE_KEY); TURNSTILE_SECRET=$(key TURNSTILE_SECRET_KEY)
@@ -23,7 +23,7 @@ curl -fsS --retry 3 -o /tmp/host.tgz "$URL"
 echo "$SUM  /tmp/host.tgz" | sha256sum -c --quiet
 # Huma 0.2 has no on-chain records: the relayer wallet key and contract settings are removed from the server.
 sudo sed -i "/^HUMA_PAGES_ADDRESS=/d; /^HUMA_RELAYER_KEY=/d; /^HUMA_RELAYER_DAILY_LIMIT=/d; /^HUMA_CHAIN=/d; /^HUMA_CHAIN_RPC=/d" /opt/huma/.env
-if echo "$EXAMPLE" | grep -Eq "^/original/[a-f0-9]{64}(#[a-f0-9]{64})?$"; then
+if echo "$EXAMPLE" | grep -Eq "^(/original/[a-f0-9]{64}(#[a-f0-9]{64})?|/p/[A-Za-z0-9]{8,12}(#[A-Za-z0-9]{16})?)$"; then
   sudo sed -i "/^HUMA_EXAMPLE_LINK=/d" /opt/huma/.env; echo "HUMA_EXAMPLE_LINK=$EXAMPLE" | sudo tee -a /opt/huma/.env >/dev/null
 fi
 if echo "$TSITE" | grep -Eq "^0x[A-Za-z0-9_-]{10,100}$" && echo "$TSECRET" | grep -Eq "^0x[A-Za-z0-9_-]{10,100}$"; then
